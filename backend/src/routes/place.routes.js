@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VerifyUser } from "../middlewares/auth.middleware.js";
+import { VerifyUser } from "../middlewares/auth.middlewares.js";
 import {
   createPlace,
   getAllPlaces,
