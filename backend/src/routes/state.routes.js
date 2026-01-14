@@ -16,6 +16,7 @@ router.route("/:id").get(getStateById);
 
 /* Admin routes */
 router.route("/").post(VerifyUser, createState);
+router.route("/bulk").post( createState);
 router.route("/:id").post(VerifyUser, updateState);
 router.route("/:id").delete(VerifyUser, deleteState);
 

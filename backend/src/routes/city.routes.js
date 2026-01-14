@@ -17,7 +17,8 @@ router.route("/:id").get(getCityById);
 router.route("/state/:stateId").get(getCitiesByState);
 
 /* Admin routes */
-router.route("/").post(VerifyUser, createCity);
+router.route("/register-city").post(VerifyUser, createCity); 
+// router.route("/register-city").post(createCity);
 router.route("/:id").post(VerifyUser, updateCity);
 router.route("/:id").delete(VerifyUser, deleteCity);
 
