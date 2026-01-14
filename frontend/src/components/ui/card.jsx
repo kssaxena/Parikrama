@@ -2,16 +2,29 @@ import React from "react";
 import { BiSolidNavigation } from "react-icons/bi";
 import Button from "../../components/Button";
 import { truncateString } from "../../utils/Utility-functions";
+import { Link } from "react-router-dom";
 
-const Card = ({ name, city, state, category, description, lat, long }) => {
+const Card = ({
+  name,
+  city,
+  state,
+  category,
+  description,
+  lat,
+  long,
+  placeId,
+}) => {
   const openMaps = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${long}`;
     window.open(url, "_blank");
   };
   return (
-    <div className="bg-neutral-200 w-full px-10 py-5 flex justify-between items-center rounded-xl text-sm">
+    <Link
+      to={`/current/place/${placeId}`}
+      className="bg-neutral-200 w-full px-10 py-5 flex justify-between items-center rounded-xl text-sm"
+    >
       <div>
-        <h1 className="text-2xl tracking-wide uppercase">{(name)}</h1>
+        <h1 className="text-2xl tracking-wide uppercase">{name}</h1>
         <h2>
           <span>{city}</span>,<span>{state}</span>
         </h2>
@@ -35,7 +48,7 @@ const Card = ({ name, city, state, category, description, lat, long }) => {
           <span className="">Get Directions</span>
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
 

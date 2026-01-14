@@ -9,9 +9,11 @@ import { FetchData } from "./utils/FetchFromApi";
 import { useEffect } from "react";
 import AdminRegistrationForm from "./pages/admin/AdminRegistrationForm";
 import SearchResult from "./pages/searchResult/SearchResult";
+import CurrentPlace from "./pages/place/currentPlace";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
+  // console.log(user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,10 +28,11 @@ function App() {
     const reLogin = async () => {
       try {
         const res = await FetchData(
-          "/auth/refresh-token", // ✅ SINGLE endpoint
+          "admin/auth/refresh-tokens", // ✅ SINGLE endpoint
           "post",
           { refreshToken }
         );
+        // console.log(res);
 
         const { user, tokens } = res.data.data;
 
@@ -38,8 +41,9 @@ function App() {
         localStorage.setItem("RefreshToken", tokens.RefreshToken);
 
         // Update redux
-        dispatch(setUser(user));
+        dispatch(addUser(user));
       } catch (error) {
+        // console.log(error);
         localStorage.clear();
         dispatch(clearUser());
       } finally {
@@ -63,6 +67,19 @@ function App() {
           <Route
             path="/admin/register-admin"
             element={<AdminRegistrationForm />}
+          />
+          <Route path="/current/place/:placeId" element={<CurrentPlace />} />
+          <Route
+            path="/admin/register-place"
+            //element={<AdminRegistrationForm />}
+          />
+          <Route
+            path="/admin/register-city"
+            //element={<AdminRegistrationForm />}
+          />
+          <Route
+            path="/admin/register-state"
+            //element={<AdminRegistrationForm />}
           />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
 

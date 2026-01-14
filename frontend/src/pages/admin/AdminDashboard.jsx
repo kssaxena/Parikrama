@@ -3,28 +3,25 @@ import LoadingUI from "../../components/LoadingUI";
 import { FetchData } from "../../utils/FetchFromApi";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../components/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../redux/slices/authSlice";
+import { City, Place, State } from "../../components/ui/TableUI";
 
 const AdminDashboard = ({ startLoading, stopLoading }) => {
-  const [data, setData] = useState(null);
-  const dispatch = useDispatch();
+  const [placeData, setPlaceData] = useState([]);
+  const [stateData, setStateData] = useState([]);
+  const [cityData, setCityData] = useState([]);
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [headData, setHeadData] = useState([]);
-  const [allHeadData, setAllHeadData] = useState([]);
-  const [employeeData, setEmployeeData] = useState([]);
-  const [allEmployeeData, setAllEmployeeData] = useState([]);
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         startLoading();
-        const res = await FetchData("admin/dashboard", "get", null, true);
-        setData(res.data.data.admin);
-        setHeadData(res.data.data.admin.createdHeads);
-        setEmployeeData(res.data.data.admin.createdEmployees);
-        setAllHeadData(res.data.data.allHead);
-        setAllEmployeeData(res.data.data.allEmployee);
+        const res = await FetchData("admin/dashboard/data", "get");
+        setPlaceData(res.data.data.place);
+        setCityData(res.data.data.city);
+        setStateData(res.data.data.state);
       } finally {
         stopLoading();
       }
@@ -40,119 +37,23 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   };
 
   const userDetails = [
-    { label: "Name", value: data?.name },
-    { label: "Email", value: data?.email },
-    { label: "Phone number", value: data?.phoneNumber },
-    { label: "Admin Id", value: data?.employeeId },
-    { label: "Role", value: data?.role },
-    { label: "Total HODs created", value: data?.stats?.totalHeads },
-    { label: "Total Employees created", value: data?.stats?.totalEmployees },
+    { label: "Name", value: user?.name },
+    { label: "Email", value: user?.email },
+    { label: "Phone number", value: user?.phoneNumber },
+    { label: "Admin Id", value: user?.employeeId },
+    { label: "Role", value: user?.role },
   ];
 
   const commands = [
-    { label: "Register new Admin", path: "/admin/register-admin" },
-    { label: "Register new HOD", path: "/admin/register-head" },
-    { label: "Register new Employee", path: "/admin/register-employee" },
+    { label: "Add new Place", path: "/admin/register-place" },
+    { label: "Add new City", path: "/admin/register-city" },
+    { label: "Add new State", path: "/admin/register-state" },
   ];
 
-  const HeadDataUI = ({ Text = "", TableData, Role = "" }) => {
-    const TableHeaders = [
-      "Employee ID",
-      "Name",
-      "Email",
-      "Designation",
-      "Status",
-    ];
-    return (
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-6">{Text}</h2>
-        <div className="w-full h-full mt-1">
-          <table className="w-full text-sm text-left bg-white rounded-xl shadow-sm overflow-hidden">
-            <thead className="bg-gray-100 text-gray-600">
-              <tr>
-                {TableHeaders.map((header, index) => (
-                  <th
-                    key={index}
-                    className="px-5 py-3 font-medium tracking-wide"
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {TableData?.length > 0 ? (
-                TableData?.slice(0, 20).map((data) => (
-                  <tr
-                    key={data._id}
-                    className="hover:bg-gray-50 transition-colors duration-200 border-b"
-                  >
-                    <td className="px-5 py-3 text-red-500 font-medium">
-                      {Role === "Head" ? (
-                        <h1 className="hover:underline">{data?.employeeId}</h1>
-                      ) : (
-                        // <Link
-                        //   to={`/employees/current-head/${data._id}`}
-                        //   className="hover:underline"
-                        // >
-                        //   {data?.employeeId}
-                        // </Link>
-                        <Link
-                          to={`/employees/current-employee/${data._id}`}
-                          className="hover:underline text-blue-500"
-                        >
-                          {data?.employeeId}
-                        </Link>
-                      )}
-                      {/* <Link
-                        to={`/employees/current-employee/${data._id}`}
-                        className="hover:underline"
-                      >
-                        {data?.employeeId}
-                      </Link> */}
-                    </td>
-                    <td className="px-5 py-3 text-gray-700">{data?.name}</td>
-                    <td className="px-5 py-3 text-gray-700">{data?.email}</td>
-                    {/* <td className="px-5 py-3 text-gray-700">{data?.role}</td> */}
-                    <td className="px-5 py-3 text-gray-700">
-                      {data?.designation}
-                    </td>
-                    <td>
-                      <h1 className="text-center font-semibold">
-                        {data?.isActive === true ? (
-                          <p className="text-green-600 bg-green-200 text-center px-2 py-1 w-fit">
-                            Active
-                          </p>
-                        ) : (
-                          <p className="text-red-600 bg-red-200 text-center w-fit">
-                            Inactive
-                          </p>
-                        )}
-                      </h1>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={TableHeaders.length}
-                    className="px-5 py-6 text-center text-gray-500"
-                  >
-                    No Data found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  };
-
-  return user && user?.role === "Admin" ? (
-    <div className="p-6">
+  return user ? (
+    <div className="p-6 px-20">
       <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
-      <div className="flex md:flex-row flex-col md:w-1/2 w-full justify-around md:items-center items-start shadow-2xl p-5 rounded-xl bg-neutral-200">
+      <div className="flex w-full shadow-2xl p-5 rounded-xl bg-neutral-200 justify-between ">
         <div className="md:space-y-2">
           {userDetails.map((item, index) => (
             <h1 key={index}>
@@ -160,12 +61,12 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
             </h1>
           ))}
         </div>
-        <div className="flex flex-col justify-center items-start gap-5">
+        <div className="flex justify-center items-start gap-5">
           {commands.map((item, index) => (
             <Button
               key={index}
               label={item.label}
-              className={"w-full"}
+              className={"w-full text-nowrap"}
               onClick={() => navigate(item.path)}
             />
           ))}
@@ -176,10 +77,9 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
           />
         </div>
       </div>
-      <HeadDataUI TableData={headData} Text="Your created HODs" Role="Head" />
-      <HeadDataUI TableData={allHeadData} Text="All HODs" Role="Head" />
-      <HeadDataUI TableData={employeeData} Text="Your created employees" />
-      <HeadDataUI TableData={allEmployeeData} Text="All employees" />
+      <Place TableData={placeData} Text="Listed Places" />
+      <City TableData={cityData} Text="Listed Cities" />
+      <State TableData={stateData} Text="Listed States" />
     </div>
   ) : (
     <div className="flex justify-center items-center w-full">

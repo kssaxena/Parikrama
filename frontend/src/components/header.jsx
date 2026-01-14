@@ -20,16 +20,13 @@ const Header = () => {
         <div className="hidden md:flex items-center gap-4">
           {user ? (
             <Link
-              to={`/${user?.role}/dashboard`}
+              to={`/admin/dashboard`}
               className="bg-[#DF3F33] px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-white "
             >
-              {window.location.pathname === "/"
+              {window.location.pathname === "/" &&
+              window.location.pathname === "*"
                 ? "Go to Dashboard"
                 : `Welcome ${user.name}`}
-              ,{" "}
-              <span className="bg-green-200 font-bold text-green-700 text-xs p-1 ">
-                {user.role}
-              </span>{" "}
             </Link>
           ) : (
             <Button label="Admin Login" onClick={() => navigate("/login")} />
