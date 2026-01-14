@@ -4,17 +4,73 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 /**
- * CREATE CITY
+ * CREATE CITY (SINGLE + BULK)
  */
 export const createCity = asyncHandler(async (req, res) => {
+
+  /**
+   * 🔹 BULK INSERT
+   * Expected body:
+   * {
+   *   "cities": [
+   *     { "name": "Indore", "stateId": "...", "lat": 22.7, "lng": 75.8 }
+   *   ]
+   * }
+   */
+  if (Array.isArray(req.body.cities)) {
+    const cities = req.body.cities;
+
+    if (!cities.length) {
+      throw new ApiError(400, "Cities array cannot be empty");
+    }
+
+    const formattedCities = cities.map((city) => {
+      const { name, stateId, lat, lng } = city;
+
+      if (!name || !stateId || lat == null || lng == null) {
+        throw new ApiError(
+          400,
+          "Each city must have name, stateId, lat, lng"
+        );
+      }
+
+      return {
+        name: name.trim(),
+        state: stateId,
+        location: {
+          type: "Point",
+          coordinates: [lng, lat],
+        },
+      };
+    });
+
+    const insertedCities = await City.insertMany(formattedCities, {
+      ordered: false, // ✅ skip duplicates, continue insert
+    });
+
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        {
+          insertedCount: insertedCities.length,
+          cities: insertedCities,
+        },
+        "Cities added successfully"
+      )
+    );
+  }
+
+  /**
+   * 🔹 SINGLE INSERT (OLD BEHAVIOR)
+   */
   const { name, stateId, lat, lng } = req.body;
 
-  if (!name || !stateId || !lat || !lng) {
+  if (!name || !stateId || lat == null || lng == null) {
     throw new ApiError(400, "All fields are required");
   }
 
   const city = await City.create({
-    name,
+    name: name.trim(),
     state: stateId,
     location: {
       type: "Point",
@@ -22,8 +78,11 @@ export const createCity = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(201).json(new ApiResponse(201, city, "City created"));
+  res.status(201).json(
+    new ApiResponse(201, city, "City created")
+  );
 });
+
 
 /**
  * GET ALL CITIES

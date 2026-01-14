@@ -3,10 +3,96 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-/**
- * CREATE PLACE
- */
+
+//  * CREATE PLACE (SINGLE + BULK)
 export const createPlace = asyncHandler(async (req, res) => {
+
+  /**
+   * 🔹 BULK INSERT
+   * Expected body:
+   * {
+   *   "places": [
+   *     {
+   *       "name": "...",
+   *       "cityId": "...",
+   *       "stateId": "...",
+   *       "category": "...",
+   *       "lat": 0,
+   *       "lng": 0,
+   *       "description": "...",
+   *       "averageTimeSpent": 90,
+   *       "entryFee": 0
+   *     }
+   *   ]
+   * }
+   */
+  if (Array.isArray(req.body.places)) {
+    const places = req.body.places;
+
+    if (!places.length) {
+      throw new ApiError(400, "Places array cannot be empty");
+    }
+
+    const formattedPlaces = places.map((p) => {
+      const {
+        name,
+        cityId,
+        stateId,
+        category,
+        lat,
+        lng,
+        description,
+        averageTimeSpent,
+        entryFee,
+      } = p;
+
+      if (
+        !name ||
+        !cityId ||
+        !stateId ||
+        lat == null ||
+        lng == null
+      ) {
+        throw new ApiError(
+          400,
+          "Each place must have name, cityId, stateId, lat, lng"
+        );
+      }
+
+      return {
+        name: name.trim(),
+        city: cityId,
+        state: stateId,
+        category: category || "General",
+        description: description || "",
+        averageTimeSpent: averageTimeSpent || 60,
+        entryFee: entryFee || 0,
+        location: {
+          type: "Point",
+          coordinates: [lng, lat],
+        },
+      };
+    });
+
+    const insertedPlaces = await Place.insertMany(formattedPlaces, {
+      ordered: false,
+    });
+
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        {
+          insertedCount: insertedPlaces.length,
+          places: insertedPlaces,
+        },
+        "Places added successfully"
+      )
+    );
+  }
+
+  /**
+   * 🔹 SINGLE INSERT
+   */
   const {
     name,
     cityId,
@@ -19,12 +105,12 @@ export const createPlace = asyncHandler(async (req, res) => {
     entryFee,
   } = req.body;
 
-  if (!name || !cityId || !stateId || !lat || !lng) {
+  if (!name || !cityId || !stateId || lat == null || lng == null) {
     throw new ApiError(400, "Required fields missing");
   }
 
   const place = await Place.create({
-    name,
+    name: name.trim(),
     city: cityId,
     state: stateId,
     category,
@@ -37,8 +123,11 @@ export const createPlace = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(201).json(new ApiResponse(201, place, "Place created"));
+  res
+    .status(201)
+    .json(new ApiResponse(201, place, "Place created"));
 });
+
 
 /**
  * GET ALL PLACES

@@ -36,10 +36,12 @@ import stateRoutes from "./routes/state.routes.js";
 import cityRoutes from "./routes/city.routes.js";
 import placeRoutes from "./routes/place.routes.js";
 import routeRoutes from "./routes/route.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 app.use("/api/v1/states", stateRoutes);
 app.use("/api/v1/cities", cityRoutes);
 app.use("/api/v1/places", placeRoutes);
 app.use("/api/v1/routes", routeRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 export { app };
