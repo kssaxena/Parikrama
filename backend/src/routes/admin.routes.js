@@ -8,6 +8,7 @@ import {
   loginAdmin,
   regenerateAdminRefreshToken,
 } from "../controllers/admin.controllers.js";
+import { deletePromotion, makePromotion, updatePromotionImages } from "../controllers/promotion.controllers.js";
 
 const router = Router();
 
@@ -19,6 +20,15 @@ router.route("/refresh-tokens").post(regenerateAdminRefreshToken);
 router.route("/states").get(getAllStates);
 router.route("/cities").get(getAllCities);
 router.route("/places").get(getAllPlaces);
+
+//routes for promotions
+router
+  .route("/promotions/make-new")
+  .post(VerifyUser, upload.array("images", 5), makePromotion);
+router
+  .route("/promotions/modify/:promotionId")
+  .post(VerifyUser, upload.array("images", 5), updatePromotionImages);
+router.route("/promotions/delete/:promotionId").delete(VerifyUser, deletePromotion);
 // router.route("/states").get(VerifyUser, getAllStates);
 // router.route("/cities").get(VerifyUser, getAllCities);
 // router.route("/places").get(VerifyUser, getAllPlaces);
