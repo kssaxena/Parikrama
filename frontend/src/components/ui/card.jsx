@@ -21,31 +21,28 @@ const Card = ({
   return (
     <Link
       to={`/current/place/${placeId}`}
-      className="bg-neutral-200 w-full px-10 py-5 flex justify-between items-center rounded-xl text-sm"
+      className="bg-neutral-100 w-full px-10 py-5 flex justify-between items-center rounded-xl hover:shadow-xl duration-3000 ease-in-out"
     >
       <div>
-        <h1 className="text-2xl tracking-wide uppercase">{name}</h1>
-        <h2>
+        <h1 className="text-xl tracking-wide uppercase">{name}</h1>
+        <h2 className="text-xs">
           <span>{city}</span>,<span>{state}</span>
         </h2>
-        <h1>
-          <strong>Category: </strong>
+        <h1 className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]">
+          {/* <strong>Category: </strong> */}
           {category}
         </h1>
-        <h1>
-          <strong>Description: </strong>
-          {truncateString(description, 30)}
-        </h1>
+        <h1 className="text-xs">{truncateString(description, 50)}</h1>
       </div>
       <div>
         <button
           onClick={openMaps}
-          className={`bg-transparent px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out hover:text-[#DF3F33] border h-full flex flex-col justify-center items-center text-neutral-500`}
+          className={`bg-transparent px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out hover:text-[#FFC20E] border h-full flex flex-col justify-center items-center text-neutral-500`}
         >
           <span>
             <BiSolidNavigation className="text-3xl" />
           </span>
-          <span className="">Get Directions</span>
+          <span className="text-black">Get Directions</span>
         </button>
       </div>
     </Link>

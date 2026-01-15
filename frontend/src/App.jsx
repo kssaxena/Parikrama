@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import AdminRegistrationForm from "./pages/admin/AdminRegistrationForm";
 import SearchResult from "./pages/searchResult/SearchResult";
 import CurrentPlace from "./pages/place/currentPlace";
+import AddNewPlace from "./pages/place/addNewPlace";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -71,7 +72,7 @@ function App() {
           <Route path="/current/place/:placeId" element={<CurrentPlace />} />
           <Route
             path="/admin/register-place"
-            //element={<AdminRegistrationForm />}
+            element={<AddNewPlace />}
           />
           <Route
             path="/admin/register-city"

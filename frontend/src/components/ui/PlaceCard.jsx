@@ -35,7 +35,7 @@ const PlaceCard = ({ place }) => {
           </p>
 
           {/* Category */}
-          <span className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700">
+          <span className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]">
             {place?.category}
           </span>
 
@@ -48,7 +48,10 @@ const PlaceCard = ({ place }) => {
         {/* Meta Info */}
         <div className="flex justify-between text-sm text-gray-500 pt-4">
           <span>⏱ {place?.averageTimeSpent} min</span>
-          <span> ₹{place?.entryFee}</span>
+          <span className="bg-[#39B54A] text-white inline-block w-fit text-xs px-3 py-1 rounded-full">
+            {" "}
+            ₹{place?.entryFee}
+          </span>
         </div>
       </div>
     </Link>
@@ -80,7 +83,7 @@ const ExpandedPlaceCard = ({ place }) => {
           </p>
 
           {/* Category */}
-          <span className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700">
+          <span className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]">
             {place?.category}
           </span>
 
@@ -93,17 +96,20 @@ const ExpandedPlaceCard = ({ place }) => {
         {/* Meta Info */}
         <button
           onClick={openMaps}
-          className={`bg-transparent px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out hover:text-[#DF3F33] border h-full flex flex-col justify-center items-center text-neutral-500`}
+          className={`bg-transparent px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:shadow-2xl transition duration-150 ease-in-out hover:text-[#FFC20E] border h-full flex flex-col justify-center items-center text-neutral-500`}
         >
           <span>
             <BiSolidNavigation className="text-3xl" />
           </span>
-          <span className="">Get Directions</span>
+          <span className="text-black">Get Directions</span>
         </button>
       </div>
       <div className="flex justify-between text-sm text-gray-500 px-5 pb-5">
-        <span>⏱ {place?.averageTimeSpent} min</span>
-        <span> ₹{place?.entryFee}</span>
+        <span >⏱ {place?.averageTimeSpent} min</span>
+        <span className="bg-[#39B54A] text-white inline-block w-fit text-xs px-3 py-1 rounded-full">
+          {" "}
+          ₹{place?.entryFee}
+        </span>
       </div>
     </div>
   );
