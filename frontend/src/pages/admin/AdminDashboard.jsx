@@ -46,8 +46,8 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
 
   const commands = [
     { label: "Add new Place", path: "/admin/register-place" },
-    { label: "Add new City", path: "/admin/register-city" },
-    { label: "Add new State", path: "/admin/register-state" },
+    { label: "Add new City / State", path: "/admin/register-city-state" },
+    // { label: "Add new State", path: "/admin/register-state" },
   ];
 
   return user ? (

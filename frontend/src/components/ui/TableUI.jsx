@@ -26,7 +26,8 @@ const Place = ({ Text = "", TableData }) => {
           </thead>
           <tbody>
             {TableData?.length > 0 ? (
-              TableData?.slice(0, 20).map((data) => (
+              TableData?.map((data) => (
+                // TableData?.slice(0, 20).map((data) => (
                 <tr
                   key={data._id}
                   className="hover:bg-gray-50 transition-colors duration-200 border-b"

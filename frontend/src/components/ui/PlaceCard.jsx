@@ -1,5 +1,11 @@
+import { useState } from "react";
 import { BiSolidNavigation } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import RandomImageSlider from "./RandomImageSlider";
+import { useMemo } from "react";
+import Button from "../Button";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const PlaceCard = ({ place }) => {
   return (
@@ -20,7 +26,8 @@ const PlaceCard = ({ place }) => {
     >
       {/* Image / Placeholder */}
       <div className="h-40 w-full bg-gray-100 flex items-center justify-center lg:h-auto lg:w-1/2">
-        <span className="text-gray-400 text-sm">No Image</span>
+        <img src={place?.images[0]?.url} />
+        {/* <span className="text-gray-400 text-sm">No Image</span> */}
       </div>
 
       {/* Content */}
@@ -58,17 +65,38 @@ const PlaceCard = ({ place }) => {
   );
 };
 const ExpandedPlaceCard = ({ place }) => {
+  const { user } = useSelector((state) => state.auth);
   const lat = place?.location?.coordinates[1];
   const long = place?.location?.coordinates[0];
+
+  const images = useMemo(() => {
+    return place?.images?.length ? place.images.map((img) => img.url) : [];
+  }, [place?.images]);
+
   const openMaps = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${long}`;
     window.open(url, "_blank");
   };
+
+  const deletePlace = async () => {
+    try {
+      const response = await FetchData(
+        `places/delete-place/${user?._id}/${place?._id}`,
+        "delete"
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
-    <div className="w-full bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
+    <div className="w-full bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden flex flex-col pb-2">
       {/* Image / Placeholder */}
       <div className="h-[400px] w-full bg-gray-100 flex items-center justify-center">
-        <span className="text-gray-400 text-sm">No Image</span>
+        {images.length > 0 ? (
+          <RandomImageSlider images={images} />
+        ) : (
+          <span className="text-gray-400">No images available</span>
+        )}
       </div>
 
       {/* Content */}
@@ -105,12 +133,36 @@ const ExpandedPlaceCard = ({ place }) => {
         </button>
       </div>
       <div className="flex justify-between text-sm text-gray-500 px-5 pb-5">
-        <span >⏱ {place?.averageTimeSpent} min</span>
+        <span>⏱ {place?.averageTimeSpent} min</span>
         <span className="bg-[#39B54A] text-white inline-block w-fit text-xs px-3 py-1 rounded-full">
           {" "}
           ₹{place?.entryFee}
         </span>
       </div>
+      {user ? (
+        <div className="flex justify-center items-center gap-10">
+          <Button
+            label={
+              <h1 className="flex justify-center items-center gap-2">
+                <FaEdit />
+                Edit
+              </h1>
+            }
+          />
+          <Button
+            label={
+              <h1 className="flex justify-center items-center gap-2">
+                <FaTrash /> Delete
+              </h1>
+            }
+            className={
+              "text-black hover:bg-red-500 hover:text-white duration-300 ease-in-out"
+            }
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

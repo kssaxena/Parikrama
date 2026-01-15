@@ -94,6 +94,7 @@ const Hero = ({ stopLoading, startLoading }) => {
                     description={places?.description}
                     lat={places?.location?.coordinates[1]}
                     long={places?.location?.coordinates[0]}
+                    image={places?.images[0]?.url}
                   />
                 </div>
               ))}
