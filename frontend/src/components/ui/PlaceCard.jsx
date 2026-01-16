@@ -6,6 +6,8 @@ import { useMemo } from "react";
 import Button from "../Button";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
+import { FetchData } from "../../utils/FetchFromApi";
 
 const PlaceCard = ({ place }) => {
   return (
@@ -69,6 +71,7 @@ const PlaceCard = ({ place }) => {
 };
 const ExpandedPlaceCard = ({ place }) => {
   const { user } = useSelector((state) => state.auth);
+  const [popup, setPopup] = useState(false);
   const lat = place?.location?.coordinates[1];
   const long = place?.location?.coordinates[0];
 
@@ -87,6 +90,9 @@ const ExpandedPlaceCard = ({ place }) => {
         `places/delete-place/${user?._id}/${place?._id}`,
         "delete"
       );
+      console.log(response);
+      alert(response.data.message);
+      navigate("/admin/dashboard");
     } catch (err) {
       console.log(err);
     }
@@ -153,6 +159,7 @@ const ExpandedPlaceCard = ({ place }) => {
             }
           />
           <Button
+            onClick={() => setPopup(true)}
             label={
               <h1 className="flex justify-center items-center gap-2">
                 <FaTrash /> Delete
@@ -166,6 +173,23 @@ const ExpandedPlaceCard = ({ place }) => {
       ) : (
         ""
       )}
+      <AnimatePresence>
+        {popup && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full bg-white flex justify-center items-center flex-col"
+          >
+            <h1>Are you sure you want to delete this Place ?</h1>
+            <div className="flex justify-center items-center gap-5 py-5">
+              <Button label={"Cancel"} onClick={() => setPopup(false)} />
+              <Button label={"Confirm"} onClick={() => deletePlace()} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

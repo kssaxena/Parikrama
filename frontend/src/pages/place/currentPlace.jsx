@@ -10,7 +10,6 @@ const CurrentPlace = ({ startLoading, stopLoading }) => {
   const { placeId } = useParams();
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
   const [data, setData] = useState();
-  console.log(data);
   const [recommendations, setRecommendations] = useState([]);
 
   const currentPlace = async () => {
