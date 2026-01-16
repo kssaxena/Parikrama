@@ -110,7 +110,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 const dashboardData = asyncHandler(async (req, res) => {
   const state = await State.find();
   const city = await City.find().populate("state");
-  const place = await Place.find().populate("city state");
+  const place = await Place.find({ isActive: true }).populate("city state");
 
   return res.status(200).json(
     new ApiResponse(200, {

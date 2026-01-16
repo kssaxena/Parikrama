@@ -24,6 +24,6 @@ router
   .route("/register-new-place/:adminId")
   .post(upload.array("images", 5), createPlace);
 router.route("/:id").post(VerifyUser, updatePlace);
-router.route("/:id").delete(VerifyUser, deletePlace);
+router.route("/delete-place/:adminId/:id").delete(deletePlace);
 
 export default router;

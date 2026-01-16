@@ -216,13 +216,21 @@ export const updatePlace = asyncHandler(async (req, res) => {
  * SOFT DELETE PLACE
  */
 export const deletePlace = asyncHandler(async (req, res) => {
+  console.log("controller reached");
+  const { adminId } = req.params;
+  console.log("admin", adminId);
+  console.log("id", req.params.id);
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) return new ApiError(404, "Invalid Admin");
   const deleted = await Place.findByIdAndUpdate(
     req.params.id,
     { isActive: false },
     { new: true }
   );
+  console.log(deleted);
 
   if (!deleted) throw new ApiError(404, "Place not found");
 
-  res.status(200).json(new ApiResponse(200, null, "Place removed"));
+  res.status(200).json(new ApiResponse(200, deleted, "Place removed"));
 });
