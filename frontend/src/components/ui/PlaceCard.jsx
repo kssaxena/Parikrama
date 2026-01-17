@@ -21,7 +21,6 @@ const PlaceCard = ({ place }) => {
         shadow-sm 
         hover:shadow-md 
         transition
-        lg:w-1/2
         lg:flex
         overflow-hidden
       "
