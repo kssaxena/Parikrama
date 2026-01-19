@@ -1,5 +1,3 @@
-// use tags or keys for search engines and categories.
-
 import mongoose from "mongoose";
 
 const placeSchema = new mongoose.Schema(
@@ -19,7 +17,7 @@ const placeSchema = new mongoose.Schema(
     description: String,
     category: {
       type: String,
-      enum: ["Temple", "Nature", "Adventure", "Heritage", "Food", "Other"],
+      // enum: ["Temple", "Nature", "Adventure", "Heritage", "Food", "Other"],
     },
 
     location: {
@@ -49,7 +47,7 @@ const placeSchema = new mongoose.Schema(
     popularityScore: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 placeSchema.index({ location: "2dsphere" });
