@@ -6,6 +6,7 @@ import logo2 from "../assets/Logo2.png";
 import { CiMenuFries } from "react-icons/ci";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -40,12 +41,19 @@ const Header = () => {
             className="fixed top-0 left-0 h-screen w-full flex justify-center items-end"
           >
             <div
-              className="bg-black/50 w-full h-full"
+              className="bg-black/80 w-full h-full"
               onClick={() => setPopup(false)}
             ></div>
             <div className="md:w-1/2 w-[90%] bg-white flex justify-between items-start flex-col h-full py-20 px-20">
               <div className="flex justify-center items-center gap-5 p-5">
-                <Button label={"Close"} onClick={() => setPopup(false)} />
+                <Button
+                  label={
+                    <h1 className="flex justify-center items-center">
+                      <IoMdClose /> Close
+                    </h1>
+                  }
+                  onClick={() => setPopup(false)}
+                />
               </div>
               {/* logo  */}
               <div className="flex items-center justify-center flex-col w-full">
