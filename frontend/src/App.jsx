@@ -14,6 +14,7 @@ import AddNewPlace from "./pages/place/addNewPlace";
 import AddNewStateCity from "./pages/state-city/addNewState-City";
 import CurrentStateCity from "./pages/state-city/currentState-City";
 import EditPlace from "./pages/place/editPlace";
+import FacilitatorAuth from "./pages/facilitator/FacilitatorAuth";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -68,6 +69,7 @@ function App() {
           {/* ================= PUBLIC ================= */}
           <Route path="/" element={<Hero />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/facilitator" element={<FacilitatorAuth />} />
           <Route
             path="/admin/register-admin"
             element={<AdminRegistrationForm />}

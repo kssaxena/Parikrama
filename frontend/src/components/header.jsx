@@ -63,7 +63,7 @@ const Header = () => {
               <div className="flex flex-col justify-center items-center w-full gap-5">
                 <Button
                   label={"Facilitator Login"}
-                  onClick={() => LinkNavigate("/login")}
+                  onClick={() => LinkNavigate("/login/facilitator")}
                 />
 
                 {/* Desktop Buttons */}
