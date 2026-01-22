@@ -1,0 +1,59 @@
+import { Router } from "express";
+import {
+  registerFacilitator,
+  loginFacilitator,
+  logoutFacilitator,
+  refreshFacilitatorToken,
+  getCurrentFacilitator,
+  updateFacilitatorProfile,
+  addFacilitatorSlots,
+  bookFacilitatorSlot,
+  verifyFacilitator,
+} from "../controllers/facilitator.controllers.js";
+
+import { VerifyFacilitator } from "../middlewares/facilitatorAuth.middleware.js";
+import { VerifyUser } from "../middlewares/auth.middlewares.js";
+import { VerifyAdmin } from "../middlewares/adminAuth.middleware.js";
+
+const router = Router();
+
+/* ================= AUTH ================= */
+
+// Register facilitator
+router.route("/register").post(registerFacilitator);
+
+// Login facilitator
+router.route("/login").post(loginFacilitator);
+
+// Refresh token
+router.route("/refresh-token").post(refreshFacilitatorToken);
+
+// Logout facilitator
+router.route("/logout").post(VerifyFacilitator, logoutFacilitator);
+
+/* ================= PROFILE ================= */
+
+// Get own profile
+router.route("/me").get(VerifyFacilitator, getCurrentFacilitator);
+
+// Update own profile
+router
+  .route("/update-profile")
+  .patch(VerifyFacilitator, updateFacilitatorProfile);
+
+/* ================= AVAILABILITY ================= */
+
+// Add availability slots
+router.route("/slots").post(VerifyFacilitator, addFacilitatorSlots);
+
+/* ================= BOOKINGS ================= */
+
+// User books a facilitator slot
+router.route("/book-slot").post(VerifyUser, bookFacilitatorSlot);
+
+/* ================= ADMIN ================= */
+
+// Admin verifies facilitator
+router.route("/admin/verify").post(VerifyAdmin, verifyFacilitator);
+
+export default router;

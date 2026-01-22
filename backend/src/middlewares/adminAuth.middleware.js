@@ -1,0 +1,9 @@
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+
+export const VerifyAdmin = asyncHandler(async (req, _, next) => {
+  if (!req.user || req.user.role !== "Admin") {
+    throw new ApiError(403, "Admin access required");
+  }
+  next();
+});
