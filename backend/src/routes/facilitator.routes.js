@@ -14,19 +14,26 @@ import {
 import { VerifyFacilitator } from "../middlewares/facilitatorAuth.middleware.js";
 import { VerifyUser } from "../middlewares/auth.middlewares.js";
 import { VerifyAdmin } from "../middlewares/adminAuth.middleware.js";
+import { upload } from "../middlewares/multer.middlewares.js";
 
 const router = Router();
 
 /* ================= AUTH ================= */
 
 // Register facilitator
-router.route("/register").post(registerFacilitator);
+router.route("/register").post(
+  upload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "documentImage", maxCount: 2 },
+  ]),
+  registerFacilitator,
+);
 
 // Login facilitator
 router.route("/login").post(loginFacilitator);
 
 // Refresh token
-router.route("/refresh-token").post(refreshFacilitatorToken);
+router.route("/auth/refresh-token").post(refreshFacilitatorToken);
 
 // Logout facilitator
 router.route("/logout").post(VerifyFacilitator, logoutFacilitator);

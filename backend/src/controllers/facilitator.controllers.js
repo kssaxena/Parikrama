@@ -2,10 +2,40 @@ import { Facilitator } from "../models/facilitator.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { UploadImages } from "../utils/imageKit.io.js";
+import Jwt from "jsonwebtoken";
+import { generateAccessAndRefreshTokens } from "../utils/TokenGenerator.js";
 
 const registerFacilitator = asyncHandler(async (req, res) => {
-  const { name, email, phone, password, role, place, city, state } = req.body;
+  const {
+    name,
+    email,
+    phone,
+    password,
+    role,
+    place,
+    city,
+    state,
+    experienceYears,
+    bio,
+    languages,
+    documentNumber,
+  } = req.body;
 
+  console.log(
+    name,
+    email,
+    phone,
+    password,
+    role,
+    place,
+    city,
+    state,
+    experienceYears,
+    bio,
+    languages,
+    documentNumber,
+  );
   if (!name || !phone || !password || !role || !place || !city || !state) {
     throw new ApiError(400, "Required fields missing");
   }
@@ -18,6 +48,46 @@ const registerFacilitator = asyncHandler(async (req, res) => {
     throw new ApiError(409, "Facilitator already exists");
   }
 
+  const sanitize = (str = "") =>
+    str
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9-_]/g, "")
+      .replace(/\s+/g, "-");
+
+  const safeName = sanitize(name);
+  const safePhone = sanitize(phone);
+
+  /* ---------------- PROFILE IMAGE ---------------- */
+  let profileImages = [];
+  if (req.files?.profileImage?.length) {
+    const img = req.files.profileImage[0];
+    const uploaded = await UploadImages(img.filename, {
+      folderStructure: `facilitators/${safeName}-${safePhone}/profile`,
+    });
+
+    profileImages.push({
+      url: uploaded.url,
+      fileId: uploaded.fileId,
+    });
+  }
+
+  /* ---------------- DOCUMENT IMAGES ---------------- */
+  let documents = [];
+  if (req.files?.documentImage?.length) {
+    for (const doc of req.files.documentImage) {
+      const uploaded = await UploadImages(doc.filename, {
+        folderStructure: `facilitators/${safeName}-${safePhone}/documents`,
+      });
+
+      documents.push({
+        url: uploaded.url,
+        fileId: uploaded.fileId,
+      });
+    }
+  }
+
   const facilitator = await Facilitator.create({
     name,
     email,
@@ -27,6 +97,15 @@ const registerFacilitator = asyncHandler(async (req, res) => {
     place,
     city,
     state,
+    experienceYears: Number(experienceYears) || 0,
+    languages: languages ? languages.split(",").map((l) => l.trim()) : [],
+    images: profileImages,
+    bio,
+    languages,
+    verification: {
+      documentNumber,
+      documents: documents,
+    },
   });
 
   res
@@ -90,32 +169,27 @@ const logoutFacilitator = asyncHandler(async (req, res) => {
 });
 
 const refreshFacilitatorToken = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  const token = req.body.refreshToken;
 
-  if (!refreshToken) {
-    throw new ApiError(401, "Refresh token required");
-  }
+  if (!token) throw new ApiError(401, "Unauthorized request");
 
-  const facilitator = await Facilitator.findOne({ refreshToken });
-  if (!facilitator) {
-    throw new ApiError(403, "Invalid refresh token");
-  }
+  const decoded = Jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
-  const newAccessToken = facilitator.generateAccessToken();
-  const newRefreshToken = facilitator.generateRefreshToken();
+  const facilitator = await Facilitator.findById(decoded._id).select(
+    "-password",
+  );
+  if (!facilitator) throw new ApiError(401, "Invalid refresh token");
 
-  facilitator.refreshToken = newRefreshToken;
-  await facilitator.save();
+  const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
+    facilitator._id,
+    "Facilitator",
+  );
 
-  res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      },
-      "Token refreshed",
-    ),
+  return res.status(201).json(
+    new ApiResponse(201, {
+      user: facilitator,
+      tokens: { AccessToken, RefreshToken },
+    }),
   );
 });
 

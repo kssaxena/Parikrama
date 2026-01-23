@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Admin } from "../models/admin.models.js";
 import { UploadImages } from "../utils/imageKit.io.js";
+import { Facilitator } from "../models/facilitator.models.js";
 
 //  * CREATE PLACE (SINGLE + BULK)
 export const createPlace = asyncHandler(async (req, res) => {
@@ -192,10 +193,27 @@ export const getPlacesByCity = asyncHandler(async (req, res) => {
  * GET SINGLE PLACE
  */
 export const getPlaceById = asyncHandler(async (req, res) => {
-  const place = await Place.findById(req.params.id).populate("city state");
-  if (!place || !place.isActive) throw new ApiError(404, "Place not found");
+  const placeId = req.params.id;
 
-  res.status(200).json(new ApiResponse(200, place));
+  /* -------- PLACE -------- */
+  const place = await Place.findById(placeId).populate("city state");
+  if (!place || !place.isActive) {
+    throw new ApiError(404, "Place not found");
+  }
+
+  /* -------- FACILITATORS FOR THIS PLACE -------- */
+  const facilitators = await Facilitator.find({
+    place: placeId,
+    isActive: true,
+    isVerified: true,
+  }).populate("city state");
+
+  res.status(200).json(
+    new ApiResponse(200, {
+      place,
+      facilitators,
+    }),
+  );
 });
 
 /**

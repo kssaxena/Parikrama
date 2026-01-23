@@ -41,7 +41,7 @@ const facilitatorSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["Guide", "Pandit", "Instructor", "Local Host"],
+      // enum: ["Guide", "Pandit", "Instructor", "Local Host"],
       required: true,
     },
 
@@ -89,9 +89,13 @@ const facilitatorSchema = new mongoose.Schema(
         default: "Pending",
       },
 
+      documentNumber: {
+        type: String,
+      },
+
       documents: [
         {
-          type: String,
+          // type: String,
           url: String,
           fileId: String,
         },
@@ -208,10 +212,9 @@ const facilitatorSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-facilitatorSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+facilitatorSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 facilitatorSchema.methods.comparePassword = function (password) {
