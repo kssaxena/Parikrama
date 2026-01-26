@@ -1,3 +1,4 @@
+import { Admin } from "../models/admin.models.js";
 import { Place } from "../models/place.models.js";
 import { Promotion } from "../models/promotions.models.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -6,38 +7,52 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { UploadImages } from "../utils/imageKit.io.js";
 
 export const makePromotion = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+  const { name, priority, placeId } = req.body;
+  const { adminId } = req.params;
+  if (!adminId) return ApiError(400, "Not a valid admin");
+
+  const admin = await Admin.find({ adminId });
+  if (!admin) return ApiError(400, "Not a valid admin");
 
   if (!name) {
     throw new ApiError(400, "Promotion name is required");
   }
 
-  const images = req.files;
+  const image = req.file;
+  console.log(image);
 
-  if (!images || !images.length) {
+  if (!image) {
     throw new ApiError(400, "At least one image is required");
   }
 
   const uploadedImages = [];
 
-  for (const img of images) {
-    const uploaded = await UploadImages(img.filename, {
-      folderStructure: `all-promotions/${name
-        .trim()
-        .replace(/\s+/g, "-")
-        .toLowerCase()}`,
-    });
+  const sanitize = (str = "") =>
+    str
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9-_]/g, "")
+      .replace(/\s+/g, "-");
 
-    uploadedImages.push({
-      url: uploaded.url,
-      altText: name,
-      fileId: uploaded.fileId,
-    });
-  }
+  const safeName = sanitize(name);
+  const safeId = sanitize(placeId);
+
+  const uploaded = await UploadImages(image.filename, {
+    folderStructure: `all-promotions/${safeName}-${safeId}`,
+  });
+
+  uploadedImages.push({
+    url: uploaded.url,
+    altText: name,
+    fileId: uploaded.fileId,
+  });
 
   const promotion = await Promotion.create({
     name: name.trim(),
     images: uploadedImages,
+    priority: priority,
+    place: placeId,
   });
 
   res
@@ -123,6 +138,27 @@ export const updatePromotionImages = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json(
-      new ApiResponse(200, promotion, "Promotion images updated successfully")
+      new ApiResponse(200, promotion, "Promotion images updated successfully"),
+    );
+});
+
+export const getAllPromotions = asyncHandler(async (req, res) => {
+  const promotionsMin = await Promotion.find({ priority: "Min" });
+  if (!promotionsMin) throw new ApiError(404, "No promotions found");
+
+  const promotionsMid = await Promotion.find({ priority: "Mid" });
+  if (!promotionsMid) throw new ApiError(404, "No promotions found");
+
+  const promotionsMax = await Promotion.find({ priority: "Max" });
+  if (!promotionsMax) throw new ApiError(404, "No promotions found");
+
+  res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        { promotionsMin, promotionsMid, promotionsMax },
+        "Promotions fetched successfully",
+      ),
     );
 });

@@ -1,0 +1,15 @@
+import { Router } from "express";
+import {
+  getAllPromotions,
+  makePromotion,
+} from "../controllers/promotion.controllers.js";
+import { upload } from "../middlewares/multer.middlewares.js";
+
+const router = Router();
+
+router
+  .route("/make/promotions/:adminId")
+  .post(upload.single("image"), makePromotion);
+router.route("/get/all/promotions").get(getAllPromotions);
+
+export default router;

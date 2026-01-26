@@ -9,15 +9,18 @@ const promotionSchema = new mongoose.Schema(
       default: "Min",
     },
 
-    images: [
-      {
-        fileId: { type: String, required: true },
-        url: { type: String, required: true },
-        altText: { type: String, default: "" },
-      },
-    ],
+    images: {
+      fileId: { type: String, required: true },
+      url: { type: String, required: true },
+      altText: { type: String, default: "" },
+    },
+    place: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Place",
+      required: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Promotion = mongoose.model("Promotion", promotionSchema);

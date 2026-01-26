@@ -38,6 +38,7 @@ import placeRoutes from "./routes/place.routes.js";
 import routeRoutes from "./routes/route.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import facilitatorRoutes from "./routes/facilitator.routes.js";
+import promotionRoutes from "./routes/promotion.routes.js";
 
 app.use("/api/v1/states", stateRoutes);
 app.use("/api/v1/cities", cityRoutes);
@@ -45,5 +46,6 @@ app.use("/api/v1/places", placeRoutes);
 app.use("/api/v1/routes", routeRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/facilitator", facilitatorRoutes);
+app.use("/api/v1/promotions", promotionRoutes);
 
 export { app };
