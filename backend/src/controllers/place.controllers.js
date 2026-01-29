@@ -109,11 +109,21 @@ export const createPlace = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Maximum 5 images allowed per place");
   }
 
+  const sanitize = (str = "") =>
+    str
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9-_]/g, "")
+      .replace(/\s+/g, "-");
+
+  const safeName = sanitize(name);
+
   const uploadedImages = [];
 
   for (const img of images) {
     const uploaded = await UploadImages(img.filename, {
-      folderStructure: `places/${name
+      folderStructure: `places/${safeName
         .trim()
         .replace(/\s+/g, "-")
         .toLowerCase()}`,
