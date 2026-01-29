@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../components/Button";
 import { IoMdLogOut } from "react-icons/io";
@@ -8,40 +8,42 @@ import { FaCopy, FaRegCopy, FaStar } from "react-icons/fa";
 import useCopyUrl from "../../components/hooks/CopyUrl";
 import { MdEmail, MdOutlineWork } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
+import LoadingUI from "../../components/LoadingUI";
+import { FetchData } from "../../utils/FetchFromApi";
 
-const FacilitatorDashboard = () => {
+const FacilitatorDashboard = ({ startLoading, stopLoading }) => {
   const { user } = useSelector((state) => state.auth);
+  const [data, setData] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { copied, copy } = useCopyUrl();
 
+  const DashboardData = async () => {
+    try {
+      startLoading();
+      const response = await FetchData(
+        `facilitator/current-facilitator/dashboard/${user?._id}`,
+        "get",
+      );
+      setData(response.data.data);
+    } catch (err) {
+    } finally {
+      stopLoading();
+    }
+  };
+
+  useEffect(() => {
+    DashboardData();
+  }, []);
+
   const FacilitatorProfile = ({ facilitator }) => {
     if (!facilitator) return null;
-    console.log(facilitator);
     const logout = () => {
       localStorage.clear();
       dispatch(clearUser());
       alert("You are logged out successfully");
       navigate("/");
     };
-
-    // const CopyUrlButton = () => {
-    //   const [copied, setCopied] = useState(false);
-
-    //   const copyUrl = async () => {
-    //     await navigator.clipboard.writeText(
-    //       `https://parikrama.riderskart.in/facilitator/review/${facilitator?._id}`,
-    //     );
-    //     // await navigator.clipboard.writeText(window.location.href);
-    //     setCopied(true);
-    //     setTimeout(() => setCopied(false), 2000);
-    //   };
-
-    //   return (
-    //     <Button onClick={copyUrl} label={copied ? <FaCopy /> : <FaRegCopy />} />
-    //   );
-    // };
-
     const {
       name,
       email,
@@ -236,12 +238,19 @@ const FacilitatorDashboard = () => {
       </div>
     );
   };
-  return (
+  return data ? (
     <div className="md:px-20">
       <h2 className="text-2xl font-bold mb-6">Facilitator Dashboard</h2>
-      <FacilitatorProfile facilitator={user} />
+      <FacilitatorProfile facilitator={data} />
+    </div>
+  ) : (
+    <div className="flex justify-center items-center w-full">
+      <h2 className="text-2xl font-bold text-center">
+        <p className="text-5xl ">⚠️</p>
+        Restricted Access !! Please log in to view the dashboard.
+      </h2>
     </div>
   );
 };
 
-export default FacilitatorDashboard;
+export default LoadingUI(FacilitatorDashboard);

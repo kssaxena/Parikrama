@@ -33,7 +33,7 @@ const FacilitatorLogin = ({ startLoading, stopLoading }) => {
         localStorage.setItem("role", "Facilitator");
 
         dispatch(clearUser());
-        dispatch(addUser({ user: facilitator }));
+        dispatch(addUser(facilitator));
 
         navigate("/facilitator/dashboard");
       }
