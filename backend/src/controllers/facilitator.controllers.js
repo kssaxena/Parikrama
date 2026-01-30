@@ -5,6 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { UploadImages } from "../utils/imageKit.io.js";
 import Jwt from "jsonwebtoken";
 import { generateAccessAndRefreshTokens } from "../utils/TokenGenerator.js";
+import { Admin } from "../models/admin.models.js";
 
 const registerFacilitator = asyncHandler(async (req, res) => {
   const {
@@ -204,7 +205,8 @@ const refreshFacilitatorToken = asyncHandler(async (req, res) => {
 
 const getCurrentFacilitator = asyncHandler(async (req, res) => {
   const { facilitatorId } = req.params;
-  const facilitator = await Facilitator.findById(facilitatorId);
+  const facilitator =
+    await Facilitator.findById(facilitatorId).populate("state city place");
 
   if (!facilitator) {
     throw new ApiError(404, "Facilitator not found");
@@ -423,6 +425,104 @@ const addFacilitatorReview = asyncHandler(async (req, res) => {
   );
 });
 
+const activateFacilitator = asyncHandler(async (req, res) => {
+  const { adminId, facilitatorId } = req.params;
+  if (!adminId || !facilitatorId) throw new ApiError(400, "Invalid request");
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new ApiError(400, "Not a valid admin");
+
+  const facilitator = await Facilitator.findByIdAndUpdate(facilitatorId, {
+    isVerified: true,
+  });
+  if (!facilitator) throw new ApiError(400, "Not a valid facilitator");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, facilitator, "Activated successfully"));
+});
+
+const deactivateFacilitator = asyncHandler(async (req, res) => {
+  const { adminId, facilitatorId } = req.params;
+  if (!adminId || !facilitatorId) throw new ApiError(400, "Invalid request");
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new ApiError(400, "Not a valid admin");
+
+  const facilitator = await Facilitator.findByIdAndUpdate(facilitatorId, {
+    isVerified: false,
+  });
+  if (!facilitator) throw new ApiError(400, "Not a valid facilitator");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, facilitator, "Deactivated successfully"));
+});
+
+const AcceptDocumentVerification = asyncHandler(async (req, res) => {
+  const { adminId, facilitatorId } = req.params;
+
+  if (!adminId || !facilitatorId) {
+    throw new ApiError(400, "Invalid request");
+  }
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) {
+    throw new ApiError(403, "Not a valid admin");
+  }
+
+  const facilitator = await Facilitator.findByIdAndUpdate(
+    facilitatorId,
+    {
+      "verification.status": "Approved",
+      "verification.verifiedBy": adminId,
+      "verification.verifiedAt": Date.now(),
+      // isVerified: true,
+    },
+    { new: true },
+  );
+
+  if (!facilitator) {
+    throw new ApiError(404, "Not a valid facilitator");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, facilitator, "Documents verified successfully"));
+});
+
+const RejectDocumentVerification = asyncHandler(async (req, res) => {
+  const { adminId, facilitatorId } = req.params;
+
+  if (!adminId || !facilitatorId) {
+    throw new ApiError(400, "Invalid request");
+  }
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) {
+    throw new ApiError(403, "Not a valid admin");
+  }
+
+  const facilitator = await Facilitator.findByIdAndUpdate(
+    facilitatorId,
+    {
+      "verification.status": "Rejected",
+      "verification.verifiedBy": adminId,
+      "verification.verifiedAt": Date.now(),
+      // isVerified: true,
+    },
+    { new: true },
+  );
+
+  if (!facilitator) {
+    throw new ApiError(404, "Not a valid facilitator");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, facilitator, "Documents rejected successfully"));
+});
+
 export {
   registerFacilitator,
   loginFacilitator,
@@ -435,4 +535,8 @@ export {
   bookFacilitatorSlot,
   verifyFacilitator,
   addFacilitatorReview,
+  activateFacilitator,
+  deactivateFacilitator,
+  AcceptDocumentVerification,
+  RejectDocumentVerification,
 };

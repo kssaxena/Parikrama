@@ -8,9 +8,12 @@ import {
   updateFacilitatorProfile,
   addFacilitatorSlots,
   bookFacilitatorSlot,
-  verifyFacilitator,
   addFacilitatorReview,
   facilitatorDashboard,
+  activateFacilitator,
+  deactivateFacilitator,
+  AcceptDocumentVerification,
+  RejectDocumentVerification,
 } from "../controllers/facilitator.controllers.js";
 
 import { VerifyFacilitator } from "../middlewares/facilitatorAuth.middleware.js";
@@ -66,7 +69,16 @@ router.route("/book-slot").post(VerifyUser, bookFacilitatorSlot);
 /* ================= ADMIN ================= */
 
 // Admin verifies facilitator
-router.route("/admin/verify").post(VerifyAdmin, verifyFacilitator);
+router.route("/activate/:adminId/:facilitatorId").post(activateFacilitator);
+router
+  .route("/de-activate/:adminId/:facilitatorId")
+  .post(deactivateFacilitator);
+router
+  .route("/approve/documents/:adminId/:facilitatorId")
+  .post(AcceptDocumentVerification);
+router
+  .route("/reject/documents/:adminId/:facilitatorId")
+  .post(RejectDocumentVerification);
 
 router.route("/user/:facilitatorId/reviews").post(addFacilitatorReview);
 

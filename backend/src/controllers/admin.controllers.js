@@ -7,6 +7,7 @@ import Jwt from "jsonwebtoken";
 import { State } from "../models/state.models.js";
 import { City } from "../models/city.models.js";
 import { Place } from "../models/place.models.js";
+import { Facilitator } from "../models/facilitator.models.js";
 // import { generateUniqueEmployeePin } from "../utils/UniquePinEmployee.js";
 
 const regenerateAdminRefreshToken = asyncHandler(async (req, res) => {
@@ -21,14 +22,14 @@ const regenerateAdminRefreshToken = asyncHandler(async (req, res) => {
 
   const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
     admin._id,
-    "Admin"
+    "Admin",
   );
 
   return res.status(201).json(
     new ApiResponse(201, {
       user: admin,
       tokens: { AccessToken, RefreshToken },
-    })
+    }),
   );
 });
 
@@ -55,7 +56,7 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
 
   if (existingAdmin) {
     return next(
-      new ApiError(400, "Admin with same email or employeeId already exists")
+      new ApiError(400, "Admin with same email or employeeId already exists"),
     );
   }
 
@@ -93,7 +94,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
   const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
     admin._id,
-    "Admin"
+    "Admin",
   );
 
   return res.status(200).json(
@@ -103,7 +104,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
         AccessToken,
         RefreshToken,
       },
-    })
+    }),
   );
 });
 
@@ -111,13 +112,25 @@ const dashboardData = asyncHandler(async (req, res) => {
   const state = await State.find();
   const city = await City.find().populate("state");
   const place = await Place.find({ isActive: true }).populate("city state");
+  const inactivePlace = await Place.find({ isActive: false }).populate(
+    "city state",
+  );
+  const activeFacilitator = await Facilitator.find({
+    isVerified: true,
+  }).populate("state city place");
+  const inactiveFacilitator = await Facilitator.find({
+    isVerified: false,
+  }).populate("state city place");
 
   return res.status(200).json(
     new ApiResponse(200, {
       state,
       city,
       place,
-    })
+      inactivePlace,
+      activeFacilitator,
+      inactiveFacilitator,
+    }),
   );
 });
 
