@@ -110,6 +110,8 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
         {success && <p className="text-green-600 text-sm mb-3">{success}</p>}
 
         <div className="grid grid-cols-2 gap-5">
+          <InputBox LabelName="Your Name" Name="uploaderName" required />
+          <InputBox LabelName="Your Contact" Name="uploaderContact" required />
           <InputBox LabelName="Place Name" Name="name" required />
           <InputBox LabelName="Category" Name="category" />
 
