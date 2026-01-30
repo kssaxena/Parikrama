@@ -18,6 +18,8 @@ import FacilitatorAuth from "./pages/facilitator/FacilitatorAuth";
 import ScrollToTop from "./components/hooks/ScrollToTop";
 import FacilitatorDashboard from "./pages/facilitator/FacilitatorDashboard";
 import FacilitatorReview from "./components/ui/FacilitatorReview";
+import CurrentFacilitator from "./pages/facilitator/CurrentFacilitator";
+import GuestPlace from "./pages/place/guestPlace";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -100,6 +102,7 @@ function App() {
             path="/current/state-city/:stateId"
             element={<CurrentStateCity />}
           />
+          <Route path="/guest/register-new-place" element={<GuestPlace />} />
           <Route path="/admin/register-place" element={<AddNewPlace />} />
           <Route path="/admin/edit-place/:placeId" element={<EditPlace />} />
           <Route
@@ -107,6 +110,10 @@ function App() {
             element={<AddNewStateCity />}
           />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route
+            path="/current/facilitator/:facilitatorId"
+            element={<CurrentFacilitator />}
+          />
           <Route
             path="/facilitator/dashboard"
             element={<FacilitatorDashboard />}

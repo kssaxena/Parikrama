@@ -47,7 +47,11 @@ const Header = () => {
 
         <div className="flex justify-center items-center gap-5">
           <Button label={"Explore more"} />
-          <Button label={"Add your near by popular place"} />
+          <Button
+            className={"lg:block hidden"}
+            label={"Add your near by popular place"}
+            onClick={() => LinkNavigate("/guest/register-new-place")}
+          />
           <button onClick={() => setPopup(true)}>
             <CiMenuFries className="font-bold text-xl" />
           </button>
@@ -63,7 +67,7 @@ const Header = () => {
             className="fixed top-0 left-0 h-screen w-full flex justify-center items-end"
           >
             <div
-              className="bg-black/80 w-full h-full"
+              className="bg-black/80 w-[10%] md:w-full h-full"
               onClick={() => setPopup(false)}
             ></div>
             <div className="md:w-1/2 w-[90%] bg-white flex justify-between items-start flex-col h-full py-20 px-20">
@@ -84,12 +88,18 @@ const Header = () => {
               </div>
               <div className="flex flex-col justify-center items-center w-full gap-5">
                 <Button
+                  className={"w-full md:hidden block"}
+                  label={"Add your near by popular place"}
+                  onClick={() => LinkNavigate("/guest/register-new-place")}
+                />
+                <Button
+                  className={"w-full"}
                   label={"Facilitator Login"}
                   onClick={() => LinkNavigate("/login/facilitator")}
                 />
 
                 {/* Desktop Buttons */}
-                <div className="hidden md:flex items-center gap-4">
+                <div className="hidden md:flex items-center gap-4 w-full">
                   {user?.role === "Admin" ? (
                     <Link
                       to={`/admin/dashboard`}
@@ -101,6 +111,7 @@ const Header = () => {
                     </Link>
                   ) : (
                     <Button
+                      className={"w-full"}
                       label="Admin Login"
                       onClick={() => LinkNavigate("/login")}
                     />
