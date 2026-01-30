@@ -5,7 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../redux/slices/authSlice";
-import { City, Place, State } from "../../components/ui/TableUI";
+import {
+  Place,
+  City,
+  State,
+  Facilitator,
+  InactiveFacilitator,
+  InactivePlace,
+} from "../../components/ui/TableUI";
 import { RiImageAddFill } from "react-icons/ri";
 import { MdAdd, MdAddLocationAlt } from "react-icons/md";
 import { LuRefreshCw } from "react-icons/lu";
@@ -17,19 +24,26 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [placeData, setPlaceData] = useState([]);
   const [stateData, setStateData] = useState([]);
   const [cityData, setCityData] = useState([]);
+  const [facilitator, setFacilitator] = useState([]);
+  const [inactivePlaceData, setInactivePlaceData] = useState([]);
+  const [inactiveFacilitator, setInactiveFacilitator] = useState([]);
   const [popup, setPopup] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const formRef = useRef();
+
   const fetchDashboard = async () => {
     try {
       startLoading();
       const res = await FetchData("admin/dashboard/data", "get");
-      setPlaceData(res.data.data.place);
-      setCityData(res.data.data.city);
-      setStateData(res.data.data.state);
+      setPlaceData(res.data.data.place); // done
+      setCityData(res.data.data.city); // done
+      setStateData(res.data.data.state); // done
+      setFacilitator(res.data.data.activeFacilitator); //done
+      setInactivePlaceData(res.data.data.inactivePlace); // done
+      setInactiveFacilitator(res.data.data.inactiveFacilitator); //done
     } catch (err) {
       // console.log(err);
     } finally {
@@ -134,6 +148,8 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     }
   };
 
+  console.log(facilitator);
+
   return user ? (
     <div className="p-6 px-20">
       <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
@@ -145,6 +161,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
             </h1>
           ))}
         </div>
+        {/* BUTTONS  */}
         <div className="grid grid-cols-2 gap-2">
           {/* <div className="flex justify-center items-start gap-5"> */}
           <Button
@@ -189,6 +206,17 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
       <Place TableData={placeData} Text="Listed Places" />
       <City TableData={cityData} Text="Listed Cities" />
       <State TableData={stateData} Text="Listed States" />
+      <Facilitator TableData={facilitator} Text="Active Facilitator" />
+      <InactivePlace
+        TableData={inactivePlaceData}
+        Text="Places under review"
+        user={user?._id}
+      />
+      <InactiveFacilitator
+        TableData={inactiveFacilitator}
+        Text="Facilitator under review"
+        user={user?._id}
+      />
 
       <AnimatePresence>
         {popup && (

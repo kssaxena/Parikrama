@@ -21,7 +21,6 @@ const NewCity = ({ startLoading, stopLoading }) => {
       try {
         startLoading();
         const res = await FetchData("states", "get");
-        console.log(res);
         setStates(res?.data?.data || []);
       } catch (err) {
         console.error(err);
