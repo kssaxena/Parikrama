@@ -7,6 +7,7 @@ import { FetchData } from "../../utils/FetchFromApi";
 import LoadingUI from "../LoadingUI";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const NewCity = ({ startLoading, stopLoading }) => {
   const { user } = useSelector((state) => state.auth);
@@ -15,6 +16,7 @@ const NewCity = ({ startLoading, stopLoading }) => {
   const [states, setStates] = useState([]);
   const [selectedState, setSelectedState] = useState("");
   const formRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStates = async () => {
@@ -38,7 +40,7 @@ const NewCity = ({ startLoading, stopLoading }) => {
       const response = await FetchData(
         `cities/register-city/${user?._id}`,
         "post",
-        formData
+        formData,
       );
       setSuccess(response.data.data.message);
       formRef.current.reset();

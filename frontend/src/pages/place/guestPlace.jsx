@@ -19,6 +19,9 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
   const [selectedState, setSelectedState] = useState("");
   const [imagePreviews, setImagePreviews] = useState([]);
 
+  const [selectedCity, setSelectedCity] = useState("");
+  const [showOtherCityInput, setShowOtherCityInput] = useState(false);
+
   /* ---------------- FETCH STATES ---------------- */
   useEffect(() => {
     const fetchStates = async () => {
@@ -86,8 +89,10 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
       setImagePreviews([]);
       setCities([]);
       setSelectedState("");
-      alert("Place added successfully");
-      navigate("/admin/dashboard");
+      alert(
+        "Place added successfully we will reach you out for verifying the place details !",
+      );
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError("Failed to add place. Please check details.");
@@ -140,6 +145,28 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
               name="cityId"
               required
               className="w-full border rounded-md px-3 py-2"
+              value={selectedCity}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedCity(value);
+                setShowOtherCityInput(value === "undefined");
+              }}
+            >
+              <option value="">Select City</option>
+
+              {cities.map((city) => (
+                <option key={city._id} value={city._id}>
+                  {city.name}
+                </option>
+              ))}
+
+              <option value="undefined">Others</option>
+            </select>
+
+            {/* <select
+              name="cityId"
+              required
+              className="w-full border rounded-md px-3 py-2"
             >
               <option value="">Select City</option>
               {cities.map((city) => (
@@ -147,8 +174,16 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
                   {city.name}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
+          {showOtherCityInput && (
+            <InputBox
+              LabelName="Enter City Name"
+              Name="customCity"
+              required
+              Placeholder="Type your city name"
+            />
+          )}
 
           <InputBox LabelName="Latitude" Name="lat" required />
           <InputBox LabelName="Longitude" Name="lng" required />

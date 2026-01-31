@@ -148,8 +148,6 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     }
   };
 
-  console.log(facilitator);
-
   return user ? (
     <div className="p-6 px-20">
       <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
