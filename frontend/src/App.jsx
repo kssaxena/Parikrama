@@ -21,6 +21,7 @@ import FacilitatorReview from "./components/ui/FacilitatorReview";
 import CurrentFacilitator from "./pages/facilitator/CurrentFacilitator";
 import GuestPlace from "./pages/place/guestPlace";
 import UnderReviewPlace from "./pages/place/underReviewPlace";
+import Explore from "./pages/explore/explore";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -92,6 +93,7 @@ function App() {
         <Routes>
           {/* ================= PUBLIC ================= */}
           <Route path="/" element={<Hero />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/facilitator" element={<FacilitatorAuth />} />
           <Route
@@ -99,7 +101,10 @@ function App() {
             element={<AdminRegistrationForm />}
           />
           <Route path="/current/place/:placeId" element={<CurrentPlace />} />
-          <Route path="/review/current/place/:placeId" element={<UnderReviewPlace />} />
+          <Route
+            path="/review/current/place/:placeId"
+            element={<UnderReviewPlace />}
+          />
           <Route
             path="/current/state-city/:stateId"
             element={<CurrentStateCity />}

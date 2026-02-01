@@ -46,7 +46,10 @@ const Header = () => {
         </Link>
 
         <div className="flex justify-center items-center gap-5">
-          <Button label={"Explore more"} />
+          <Button
+            label={"Explore more"}
+            onClick={() => LinkNavigate("/explore")}
+          />
           <Button
             className={"lg:block hidden"}
             label={"Add your near by popular place"}
