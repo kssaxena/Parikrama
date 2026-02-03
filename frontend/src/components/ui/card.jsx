@@ -22,21 +22,24 @@ const Card = ({
   return (
     <Link
       to={`/current/place/${placeId}`}
-      className="bg-neutral-100 w-full px-10 py-2 flex justify-between items-center rounded-xl hover:shadow-xl duration-300 ease-in-out"
+      className="bg-neutral-100 w-full md:px-10 py-2 flex justify-between items-center rounded-xl hover:shadow-xl duration-300 ease-in-out"
     >
       <div className="h-full flex flex-col items-start gap-2">
-        <h1 className="text-xl tracking-wide uppercase">{name}</h1>
-        <h1 className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]">
-          {/* <strong>Category: </strong> */}
-          {category}
+        <h1 className="md:text-xl text-base md:tracking-wide uppercase">
+          {name}
         </h1>
         <h2 className="text-xs">
           <span>{city}</span>,<span>{state}</span>
         </h2>
-        <h1 className="text-xs">{truncateString(description, 50)}</h1>
+        <h1 className="inline-block w-fit text-xs px-2 py-1 rounded-full bg-[#FFC20E]">
+          {category}
+        </h1>
+        <h1 className="text-xs hidden md:block">
+          {truncateString(description, 50)}
+        </h1>
       </div>
-      <div className="flex justify-center items-center flex-col gap-3 w-40">
-        <div className="h-32 w-40 bg-neutral-200 flex justify-center items-center rounded-xl overflow-hidden">
+      <div className="flex justify-center items-center flex-col gap-3">
+        <div className="h-28 w-32 bg-neutral-200 flex justify-center items-center rounded-xl overflow-hidden">
           <img
             src={image}
             alt="No image found"
@@ -49,11 +52,7 @@ const Card = ({
         >
           <span>Directions</span>
 
-          <BiSolidNavigation
-            className="transition duration-150 ease-in-out text-neutral-500 
-               group-hover:text-[#FFC20E] 
-               group-hover:rotate-45"
-          />
+          <BiSolidNavigation className="transition duration-150 ease-in-out text-neutral-500 group-hover:text-[#FFC20E] group-hover:rotate-45" />
         </button>
       </div>
     </Link>

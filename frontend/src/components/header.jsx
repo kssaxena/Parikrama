@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/Logo1.png";
-import logo2 from "../assets/Logo2.png";
+import logo2 from "../assets/Logo3.png";
 import { CiMenuFries } from "react-icons/ci";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -21,7 +21,7 @@ const Header = () => {
 
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
-      {window.location.pathname === "/" ? (
+      {/* {window.location.pathname === "/" ? (
         <button
           onClick={() => LinkNavigate("/login/facilitator")}
           className="w-full h-fit bg-[#FFC20E] text-xs md:text-sm px-5 flex justify-between items-center py-1"
@@ -36,7 +36,7 @@ const Header = () => {
         </button>
       ) : (
         ""
-      )}
+      )} */}
 
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo Section */}
