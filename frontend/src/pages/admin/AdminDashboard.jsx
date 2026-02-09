@@ -12,6 +12,7 @@ import {
   Facilitator,
   InactiveFacilitator,
   InactivePlace,
+  Promotions,
 } from "../../components/ui/TableUI";
 import { RiImageAddFill } from "react-icons/ri";
 import { MdAdd, MdAddLocationAlt } from "react-icons/md";
@@ -32,6 +33,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [facilitator, setFacilitator] = useState([]);
   const [inactivePlaceData, setInactivePlaceData] = useState([]);
   const [inactiveFacilitator, setInactiveFacilitator] = useState([]);
+  const [promotionData, setPromotionData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -49,12 +51,14 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const res = await FetchData("admin/dashboard/data", "get");
+      console.log(res);
       setPlaceData(res.data.data.place); // done
       setCityData(res.data.data.city); // done
       setStateData(res.data.data.state); // done
       setFacilitator(res.data.data.activeFacilitator); //done
       setInactivePlaceData(res.data.data.inactivePlace); // done
       setInactiveFacilitator(res.data.data.inactiveFacilitator); //done
+      setPromotionData(res.data.data.promotions); //done
     } catch (err) {
       // console.log(err);
     } finally {
@@ -132,9 +136,9 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   ];
 
   const priority = [
-    { label: "Top (size(w * h): 300*150 px)", value: "Max" },
-    { label: "Left (size(w * h): 384*384 px)", value: "Mid" },
-    { label: "Right (size(w * h): 384*384 px)", value: "Min" },
+    { label: "Top (size(w * h): 1920*300 px)", value: "Max" },
+    { label: "Right (size(w * h): 400*400 px)", value: "Mid" },
+    { label: "Left (size(w * h): 400*400 px)", value: "Min" },
   ];
 
   const SubmitPromotion = async (e) => {
@@ -163,6 +167,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
 
   const sections = [
     "Overview",
+    "Promotions",
     "Active Places",
     "Cities",
     "States",
@@ -300,6 +305,13 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
               <StatesDonutChart states={stateData} />
               <CitiesByStateBarChart cities={cityData} />
             </div>
+          )}
+          {activeSection === "Promotions" && (
+            <Promotions
+              TableData={promotionData}
+              Text="Promotions"
+              user={user?._id}
+            />
           )}
           {activeSection === "Active Places" && (
             <Place TableData={placeData} Text="Listed Places" />

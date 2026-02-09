@@ -2,9 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
-const RandomImageSlider = ({ images = [], className = "", speed = 5000 }) => {
+const RandomImageSlider = ({
+  images = [],
+  className = "",
+  speed = 5000,
+  linkBanner = false,
+  placeId,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [linkTrue, setLinkTrue] = useState(linkBanner);
   const intervalRef = useRef(null);
 
   const hasMultipleImages = images.length > 1;
@@ -77,16 +84,31 @@ const RandomImageSlider = ({ images = [], className = "", speed = 5000 }) => {
       }}
     >
       <AnimatePresence mode="wait">
-        <motion.img
-          key={images[currentIndex]}
-          src={images[currentIndex]}
-          alt="Slide"
-          className="w-full h-full object-cover absolute top-0 left-0 rounded-xl bg-neutral-700"
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.8 }}
-        />
+        {linkTrue === true ? (
+          <Link to={`/current/place/${placeId}`}>
+            <motion.img
+              key={images[currentIndex]}
+              src={images[currentIndex]}
+              alt="Slide"
+              className="w-full h-full object-cover absolute top-0 left-0 rounded-xl bg-neutral-700"
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.8 }}
+            />
+          </Link>
+        ) : (
+          <motion.img
+            key={images[currentIndex]}
+            src={images[currentIndex]}
+            alt="Slide"
+            className="w-full h-full object-cover absolute top-0 left-0 rounded-xl bg-neutral-700"
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.8 }}
+          />
+        )}
       </AnimatePresence>
 
       {isHovered && hasMultipleImages && (

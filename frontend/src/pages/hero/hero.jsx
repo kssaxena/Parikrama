@@ -21,9 +21,7 @@ const Hero = ({ stopLoading, startLoading }) => {
   const top = topBanner?.map((banner) => [banner?.images?.url]);
   const right = rightBanner?.map((banner) => [banner?.images?.url]);
   const left = leftBanner?.map((banner) => [banner?.images?.url]);
-
   /* ---------------- FETCH BANNERS ---------------- */
-  console.log(topBanner);
 
   const banner = async () => {
     try {

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import InputBox from "../../components/InputBox";
 import { FetchData } from "../../utils/FetchFromApi";
 import { truncateString } from "../../utils/Utility-functions";
+import Button from "../Button";
 
 /* ----------------------- PLACE TABLE ----------------------- */
 
@@ -599,4 +600,121 @@ const InactiveFacilitator = ({ Text = "", TableData = [], user }) => {
   );
 };
 
-export { City, State, Place, InactivePlace, Facilitator, InactiveFacilitator };
+/* ----------------------- Promotions TABLE ----------------------- */
+
+const Promotions = ({ Text = "", TableData = [], user }) => {
+  const [search, setSearch] = useState("");
+  console.log(TableData);
+
+  const TableHeaders = [
+    "Promotion name",
+    "Place name",
+    "Position",
+    "Preview",
+    "Action",
+  ];
+
+  const filteredData = useMemo(() => {
+    if (!search.trim()) return TableData;
+
+    const q = search.toLowerCase();
+
+    return TableData.filter((c) =>
+      `
+        ${c?.name}
+        ${c?.place?.name}
+      `
+        .toLowerCase()
+        .includes(q),
+    );
+  }, [search, TableData]);
+
+  const deletePromotion = async ({ promotionId }) => {
+    try {
+      const response = await FetchData(
+        `promotions/delete-promotion/${user}/${promotionId}`,
+        "delete",
+      );
+      console.log(response);
+      alert(response.data.message);
+      alert("Kindly reload the dashboard");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className="">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-bold">
+          {Text} (<span className="text-sm">{filteredData.length}</span>)
+        </h2>
+
+        <div className="w-96">
+          <InputBox
+            Type="text"
+            Placeholder="Search promotion..."
+            Value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-white"
+          />
+        </div>
+      </div>
+
+      <div className="w-full mt-1 h-[500px] overflow-scroll">
+        <table className="w-full text-sm text-left bg-white rounded-xl shadow-sm overflow-hidden">
+          <thead className="bg-gray-100 text-gray-600">
+            <tr>
+              {TableHeaders.map((header, index) => (
+                <th key={index} className="px-5 py-3 font-medium">
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((data) => (
+                <tr key={data._id} className="hover:bg-gray-50 border-b">
+                  <td className="px-5 py-3">{data?.name}</td>
+                  <td className="px-5 py-3">{data?.place?.name}</td>
+                  <td className="px-5 py-3">
+                    {data?.priority === "Max" ? "Top" : ""}
+                    {data?.priority === "Mid" ? "Right" : ""}
+                    {data?.priority === "Min" ? "Left" : ""}
+                  </td>
+                  <td className="px-5 py-3">
+                    <img src={data?.images?.url} className="w-40 h-20" />
+                  </td>
+                  <td className="px-5 py-3">
+                    <Button
+                      label={"Delete"}
+                      onClick={() => deletePromotion({ promotionId: data._id })}
+                    />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center py-6 text-gray-500">
+                  No Data found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export {
+  City,
+  State,
+  Place,
+  InactivePlace,
+  Facilitator,
+  InactiveFacilitator,
+  Promotions,
+};
