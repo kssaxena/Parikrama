@@ -4,7 +4,7 @@ import { Promotion } from "../models/promotions.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { UploadImages } from "../utils/imageKit.io.js";
+import { DeleteBulkImage, UploadImages } from "../utils/imageKit.io.js";
 
 const makePromotion = asyncHandler(async (req, res) => {
   const { name, priority, placeId } = req.body;
@@ -60,7 +60,9 @@ const makePromotion = asyncHandler(async (req, res) => {
 });
 
 const deletePromotion = asyncHandler(async (req, res) => {
-  const { promotionId } = req.params;
+  const { adminId, promotionId } = req.params;
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new ApiError(400, "Admin not found");
 
   if (!promotionId) {
     throw new ApiError(400, "Promotion ID is required");
@@ -73,7 +75,7 @@ const deletePromotion = asyncHandler(async (req, res) => {
   }
 
   // Collect image fileIds
-  const fileIds = promotion.images.map((img) => img.fileId);
+  const fileIds = [promotion?.images?.fileId];
 
   // Delete images from ImageKit
   if (fileIds.length) {
