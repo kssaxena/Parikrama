@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import http from "http";
 
-const allowedOrigins = [process.env.ORIGIN_1];
+const allowedOrigins = [process.env.ORIGIN_1, process.env.ORIGIN_2];
 
 const app = express();
 

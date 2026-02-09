@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Admin } from "../models/admin.models.js";
 import { Place } from "../models/place.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { UploadImages } from "../utils/imageKit.io.js";
+import { UploadImages, DeleteBulkImage } from "../utils/imageKit.io.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Facilitator } from "../models/facilitator.models.js";
 
@@ -224,7 +224,7 @@ const updatePlace = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Place not found");
   }
 
-  /* ---------- TEXT FIELD UPDATES ---------- */
+  /* ================= TEXT FIELD UPDATES ================= */
   const allowedFields = [
     "name",
     "category",
@@ -239,7 +239,27 @@ const updatePlace = asyncHandler(async (req, res) => {
     }
   });
 
-  /* ---------- IMAGE UPLOAD HANDLING ---------- */
+  /* ================= IMAGE DELETION ================= */
+
+  let removedImageIds = [];
+
+  if (req.body.removedImages) {
+    // Handle single or array
+    removedImageIds = Array.isArray(req.body.removedImages)
+      ? req.body.removedImages
+      : [req.body.removedImages];
+
+    // Delete from ImageKit
+    await DeleteBulkImage(removedImageIds);
+
+    // Remove from DB
+    place.images = place.images.filter(
+      (img) => !removedImageIds.includes(img.fileId),
+    );
+  }
+
+  /* ================= IMAGE UPLOAD ================= */
+
   if (req.files && req.files.length > 0) {
     const remainingSlots = 5 - place.images.length;
 

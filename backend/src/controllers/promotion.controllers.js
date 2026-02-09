@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { UploadImages } from "../utils/imageKit.io.js";
 
-export const makePromotion = asyncHandler(async (req, res) => {
+const makePromotion = asyncHandler(async (req, res) => {
   const { name, priority, placeId } = req.body;
   const { adminId } = req.params;
   if (!adminId) return ApiError(400, "Not a valid admin");
@@ -19,7 +19,6 @@ export const makePromotion = asyncHandler(async (req, res) => {
   }
 
   const image = req.file;
-  console.log(image);
 
   if (!image) {
     throw new ApiError(400, "At least one image is required");
@@ -50,7 +49,7 @@ export const makePromotion = asyncHandler(async (req, res) => {
 
   const promotion = await Promotion.create({
     name: name.trim(),
-    images: uploadedImages,
+    images: uploadedImages[0],
     priority: priority,
     place: placeId,
   });
@@ -60,7 +59,7 @@ export const makePromotion = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, promotion, "Promotion created successfully"));
 });
 
-export const deletePromotion = asyncHandler(async (req, res) => {
+const deletePromotion = asyncHandler(async (req, res) => {
   const { promotionId } = req.params;
 
   if (!promotionId) {
@@ -89,7 +88,7 @@ export const deletePromotion = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "Promotion deleted successfully"));
 });
 
-export const updatePromotionImages = asyncHandler(async (req, res) => {
+const updatePromotionImages = asyncHandler(async (req, res) => {
   const { promotionId } = req.params;
 
   if (!promotionId) {
@@ -142,14 +141,20 @@ export const updatePromotionImages = asyncHandler(async (req, res) => {
     );
 });
 
-export const getAllPromotions = asyncHandler(async (req, res) => {
-  const promotionsMin = await Promotion.find({ priority: "Min" });
+const getAllPromotions = asyncHandler(async (req, res) => {
+  const promotionsMin = await Promotion.find({ priority: "Min" }).select(
+    "images.url place",
+  );
   if (!promotionsMin) throw new ApiError(404, "No promotions found");
 
-  const promotionsMid = await Promotion.find({ priority: "Mid" });
+  const promotionsMid = await Promotion.find({ priority: "Mid" }).select(
+    "images.url place",
+  );
   if (!promotionsMid) throw new ApiError(404, "No promotions found");
 
-  const promotionsMax = await Promotion.find({ priority: "Max" });
+  const promotionsMax = await Promotion.find({ priority: "Max" }).select(
+    "images.url place",
+  );
   if (!promotionsMax) throw new ApiError(404, "No promotions found");
 
   res
@@ -162,3 +167,10 @@ export const getAllPromotions = asyncHandler(async (req, res) => {
       ),
     );
 });
+
+export {
+  makePromotion,
+  deletePromotion,
+  updatePromotionImages,
+  getAllPromotions,
+};
