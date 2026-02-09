@@ -29,7 +29,7 @@ const Card = ({
           {name}
         </h1>
         <h2 className="text-xs">
-          <span>{city}</span>,<span>{state}</span>
+          <span>{city}</span>, <span>{state}</span>
         </h2>
         <h1 className="inline-block w-fit text-xs px-2 py-1 rounded-full bg-[#FFC20E]">
           {category}

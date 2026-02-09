@@ -15,6 +15,7 @@ const EditPlace = ({ stopLoading, startLoading }) => {
   const [place, setPlace] = useState(null);
   const [formData, setFormData] = useState(null);
   const [newImages, setNewImages] = useState([]);
+  const [removedImages, setRemovedImages] = useState([]);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -28,6 +29,7 @@ const EditPlace = ({ stopLoading, startLoading }) => {
       const p = res.data.data.place;
 
       setPlace(p);
+      setRemovedImages([]);
 
       setFormData({
         name: p.name,
@@ -36,53 +38,65 @@ const EditPlace = ({ stopLoading, startLoading }) => {
         averageTimeSpent: p.averageTimeSpent,
         entryFee: p.entryFee,
       });
-    } catch (err) {
+    } catch {
       setError("Failed to load place");
     } finally {
       stopLoading();
     }
   };
-  useEffect(() => {
-    // if (!user) return;
 
+  useEffect(() => {
     loadPlace();
   }, [user, placeId]);
 
   /* ================= INPUT CHANGE ================= */
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
+    setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
+  };
+
+  /* ================= IMAGE REMOVE ================= */
+
+  const handleRemoveImage = (fileId) => {
+    setRemovedImages((prev) => [...prev, fileId]);
+
+    setPlace((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      images: prev.images.filter((img) => img.fileId !== fileId),
     }));
   };
 
-  /* ================= IMAGE CHANGE ================= */
+  /* ================= IMAGE ADD ================= */
 
   const handleImageChange = (e) => {
+    setError(
+      " If uploaded image is not getting displayed proceed the process we are facing some technical issue for it.",
+    );
     const files = Array.from(e.target.files);
-    const remaining = MAX_IMAGES - (place?.images?.length || 0);
 
-    if (files.length > remaining) {
-      alert(`Only ${remaining} more images allowed`);
+    const currentCount = (place?.images?.length || 0) + newImages.length;
+
+    if (currentCount + files.length > MAX_IMAGES) {
+      alert(`Maximum ${MAX_IMAGES} images allowed`);
       return;
     }
 
-    setNewImages(files);
+    setNewImages((prev) => [...prev, ...files]);
   };
 
   /* ================= SUBMIT ================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
     const payload = new FormData();
 
-    Object.entries(formData).forEach(([key, value]) => {
-      payload.append(key, value);
-    });
+    Object.entries(formData).forEach(([k, v]) => payload.append(k, v));
 
     newImages.forEach((img) => payload.append("images", img));
+    removedImages.forEach((id) => payload.append("removedImages[]", id));
 
     try {
       startLoading();
@@ -95,18 +109,23 @@ const EditPlace = ({ stopLoading, startLoading }) => {
 
       if (res.data.success) {
         setSuccess("Place updated successfully");
+        alert("Place updated successfully");
+        setNewImages([]);
+        loadPlace();
       }
     } catch (err) {
-      setError("Update failed");
+      setError(err?.response?.data?.message || "Update failed");
     } finally {
       stopLoading();
     }
   };
 
-  /* ================= LOADING GUARDS ================= */
+  /* ================= GUARDS ================= */
 
   if (!user) return <div>Restricted Access</div>;
   if (!formData) return <div>Loading...</div>;
+
+  const remainingSlots = MAX_IMAGES - (place.images.length + newImages.length);
 
   /* ================= UI ================= */
 
@@ -119,18 +138,36 @@ const EditPlace = ({ stopLoading, startLoading }) => {
 
       {/* EXISTING IMAGES */}
       <div className="grid grid-cols-5 gap-3">
-        {place?.images?.map((img) => (
-          <img
-            key={img.fileId}
-            src={img.url}
-            className="h-24 w-full object-cover rounded"
-          />
+        {place.images.map((img) => (
+          <div key={img.fileId} className="relative">
+            <img
+              src={img.url}
+              className="h-32 w-full object-cover rounded bg-neutral-300"
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(img.fileId)}
+              className="absolute top-1 right-1 bg-black text-white rounded-full w-6 h-6 text-xs"
+            >
+              ✕
+            </button>
+          </div>
         ))}
       </div>
 
       {/* ADD IMAGES */}
-      {place?.images?.length < MAX_IMAGES && (
-        <input type="file" multiple onChange={handleImageChange} />
+      {remainingSlots > 0 && (
+        <div>
+          <label className="block text-sm mb-1">
+            Add Images (up to {remainingSlots})
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+          />
+        </div>
       )}
 
       {/* FORM */}

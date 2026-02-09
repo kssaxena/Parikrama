@@ -132,9 +132,9 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   ];
 
   const priority = [
-    { label: "Top", value: "Max" },
-    { label: "Left", value: "Mid" },
-    { label: "Right", value: "Min" },
+    { label: "Top (size(w * h): 300*150 px)", value: "Max" },
+    { label: "Left (size(w * h): 384*384 px)", value: "Mid" },
+    { label: "Right (size(w * h): 384*384 px)", value: "Min" },
   ];
 
   const SubmitPromotion = async (e) => {

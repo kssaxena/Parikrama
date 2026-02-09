@@ -14,20 +14,45 @@ import { motion, AnimatePresence } from "framer-motion";
 const Hero = ({ stopLoading, startLoading }) => {
   const [data, setData] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [topBanner, setTopBanner] = useState([]);
+  const [rightBanner, setRightBanner] = useState();
+  const [leftBanner, setLeftBanner] = useState();
+
+  const top = topBanner?.map((banner) => [banner?.images?.url]);
+  const right = rightBanner?.map((banner) => [banner?.images?.url]);
+  const left = leftBanner?.map((banner) => [banner?.images?.url]);
+
+  /* ---------------- FETCH BANNERS ---------------- */
+  console.log(topBanner);
+
+  const banner = async () => {
+    try {
+      startLoading();
+      const response = await FetchData("promotions/get/all/promotions", "get");
+      setTopBanner(response.data.data.promotionsMax);
+      setRightBanner(response.data.data.promotionsMid);
+      setLeftBanner(response.data.data.promotionsMin);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      stopLoading();
+    }
+  };
 
   /* ---------------- FETCH ALL PLACES ---------------- */
+  const getData = async () => {
+    try {
+      startLoading();
+      const response = await FetchData("admin/places", "get");
+      setData(response?.data?.data || []);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      stopLoading();
+    }
+  };
   useEffect(() => {
-    const getData = async () => {
-      try {
-        startLoading();
-        const response = await FetchData("admin/places", "get");
-        setData(response?.data?.data || []);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        stopLoading();
-      }
-    };
+    banner();
     getData();
   }, []);
 
@@ -117,17 +142,14 @@ const Hero = ({ stopLoading, startLoading }) => {
     <div className="flex justify-center items-center flex-col">
       {/* TOP BANNER */}
       <div className="md:w-[99%] w-full">
-        <RandomImageSlider
-          images={galleryBannerImages}
-          className="md:h-[300px] h-[200px]"
-        />
+        <RandomImageSlider images={top} className="md:h-[300px] h-[200px]" />
       </div>
 
       {/* CONTENT */}
       <div className="flex justify-center py-5 px-2 w-full gap-6">
         {/* LEFT SLIDER */}
-        <div className="w-96 h-96 bg-neutral-500 rounded-xl overflow-hidden lg:block hidden">
-          <RandomImageSlider images={galleryBannerImages} />
+        <div className="w-96 h-96 bg-neutral-500 rounded-xl overflow-hidden md:block hidden">
+          <RandomImageSlider images={left} />
         </div>
 
         {/* SEARCH + RESULTS */}
@@ -207,7 +229,7 @@ const Hero = ({ stopLoading, startLoading }) => {
 
         {/* RIGHT SLIDER */}
         <div className="w-96 h-96 bg-neutral-500 rounded-xl overflow-hidden lg:block hidden">
-          <RandomImageSlider images={galleryBannerImages2} />
+          <RandomImageSlider images={right} />
         </div>
       </div>
     </div>
