@@ -10,7 +10,7 @@ connectDB()
       console.log("ERROR", err);
     });
     // i have added 0.0.0.0 in a string for connecting the backend to all devices which are connected with the same network
-    app.listen(process.env.PORT || 8000, "0.0.0.0", () => {
+    app.listen(process.env.PORT || 8000, () => {
       console.log("Server port:" + process.env.PORT);
     });
   })
