@@ -22,6 +22,7 @@ app.use(express.text({ type: "text/*", limit: "32kb" })); // For plain text form
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
+app.use(trackVisitor);
 
 //print function to ensure every step is executed
 app.use((req, res, next) => {
@@ -39,6 +40,8 @@ import routeRoutes from "./routes/route.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import facilitatorRoutes from "./routes/facilitator.routes.js";
 import promotionRoutes from "./routes/promotion.routes.js";
+import { trackVisitor } from "./middlewares/trackVisitor.middleware.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
 
 app.use("/api/v1/states", stateRoutes);
 app.use("/api/v1/cities", cityRoutes);
@@ -47,5 +50,6 @@ app.use("/api/v1/routes", routeRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/facilitator", facilitatorRoutes);
 app.use("/api/v1/promotions", promotionRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
 
 export { app };
