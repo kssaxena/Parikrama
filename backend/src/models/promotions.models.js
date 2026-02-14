@@ -8,6 +8,7 @@ const promotionSchema = new mongoose.Schema(
       enum: ["Min", "Mid", "Max"],
       default: "Min",
     },
+    isMobile: { type: Boolean, default: false },
 
     images: {
       fileId: { type: String, required: true },

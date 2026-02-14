@@ -7,7 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { DeleteBulkImage, UploadImages } from "../utils/imageKit.io.js";
 
 const makePromotion = asyncHandler(async (req, res) => {
-  const { name, priority, placeId } = req.body;
+  const { name, priority, placeId, isMobile } = req.body;
   const { adminId } = req.params;
   if (!adminId) return ApiError(400, "Not a valid admin");
 
@@ -52,6 +52,7 @@ const makePromotion = asyncHandler(async (req, res) => {
     images: uploadedImages[0],
     priority: priority,
     place: placeId,
+    isMobile: isMobile || false,
   });
 
   res
@@ -154,9 +155,14 @@ const getAllPromotions = asyncHandler(async (req, res) => {
   );
   if (!promotionsMid) throw new ApiError(404, "No promotions found");
 
-  const promotionsMax = await Promotion.find({ priority: "Max" }).select(
-    "images.url place",
-  );
+  const promotionsMax = await Promotion.find({
+    priority: "Max",
+    isMobile: false,
+  }).select("images.url place");
+  const promotionsMaxMobile = await Promotion.find({
+    priority: "Max",
+    isMobile: true,
+  }).select("images.url place");
   if (!promotionsMax) throw new ApiError(404, "No promotions found");
 
   res
@@ -164,7 +170,7 @@ const getAllPromotions = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         201,
-        { promotionsMin, promotionsMid, promotionsMax },
+        { promotionsMin, promotionsMid, promotionsMax, promotionsMaxMobile },
         "Promotions fetched successfully",
       ),
     );
