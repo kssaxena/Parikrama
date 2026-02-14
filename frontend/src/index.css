@@ -6,3 +6,24 @@
   font-family: "Montserrat", cursive;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  padding: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #565555;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FFC20D;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a47d08;
+}

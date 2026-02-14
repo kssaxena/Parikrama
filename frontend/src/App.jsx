@@ -22,6 +22,7 @@ import CurrentFacilitator from "./pages/facilitator/CurrentFacilitator";
 import GuestPlace from "./pages/place/guestPlace";
 import UnderReviewPlace from "./pages/place/underReviewPlace";
 import Explore from "./pages/explore/explore";
+import Footer from "./components/Footer";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -134,6 +135,7 @@ function App() {
           <Route path="/testing" element={<SearchResult />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 }

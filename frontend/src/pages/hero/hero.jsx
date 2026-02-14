@@ -148,8 +148,13 @@ const Hero = ({ stopLoading, startLoading }) => {
       {/* CONTENT */}
       <div className="flex justify-center py-5 px-2 w-full gap-6">
         {/* LEFT SLIDER */}
-        <div className="w-96 h-96 bg-neutral-500 rounded-xl overflow-hidden md:block hidden">
-          <RandomImageSlider images={left} />
+        <div className="w-fit h-fit flex flex-col gap-10">
+          <div className="w-96 h-96 bg-neutral-500 rounded-xl md:flex hidden justify-center items-center flex-col">
+            <RandomImageSlider images={left} />
+          </div>
+          {/* <div className="w-96 h-96 bg-gray-300 sticky top-24 left-0 flex justify-center items-center">
+            <h1>Flight Booking</h1>
+          </div> */}
         </div>
 
         {/* SEARCH + RESULTS */}
@@ -228,7 +233,7 @@ const Hero = ({ stopLoading, startLoading }) => {
         </div>
 
         {/* RIGHT SLIDER */}
-        <div className="w-96 h-96 bg-neutral-500 rounded-xl overflow-hidden lg:block hidden">
+        <div className="w-96 h-96 bg-neutral-500 rounded-xl overflow-hidden lg:block hidden sticky top-24 left-0">
           <RandomImageSlider images={right} />
         </div>
       </div>
