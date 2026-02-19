@@ -49,7 +49,14 @@ const Header = () => {
           <Button
             label={"Explore more"}
             onClick={() => LinkNavigate("/explore")}
+            className={"md:block hidden"}
           />
+          <button
+            onClick={() => LinkNavigate("/explore")}
+            className="bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out md:hidden block text-xs"
+          >
+            Explore More
+          </button>
           <Button
             className={"lg:block hidden"}
             label={"Add your near by popular place"}
@@ -73,21 +80,14 @@ const Header = () => {
               className="bg-black/80 w-[10%] md:w-full h-full"
               onClick={() => setPopup(false)}
             ></div>
-            <div className="md:w-1/2 w-[90%] bg-white flex justify-between items-start flex-col h-full py-20 px-20">
+            <div className="md:w-1/2 w-[90%] bg-white flex md:justify-between justify-evenly items-start flex-col h-full py-5 px-5">
               <div className="flex justify-center items-center gap-5 p-5">
-                <Button
-                  label={
-                    <h1 className="flex justify-center items-center">
-                      <IoMdClose /> Close
-                    </h1>
-                  }
-                  onClick={() => setPopup(false)}
-                />
+                <Button label={<IoMdClose />} onClick={() => setPopup(false)} />
               </div>
               {/* logo  */}
               <div className="flex items-center justify-center flex-col w-full">
-                <img src={logo} className="w-40" />
-                <img src={logo2} className="w-40" />
+                <img src={logo} className="w-20 md:w-40" />
+                <img src={logo2} className="w-20 md:w-40" />
               </div>
               <div className="flex flex-col justify-center items-center w-full gap-5">
                 <Button

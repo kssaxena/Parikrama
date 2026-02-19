@@ -146,7 +146,7 @@ const Hero = ({ stopLoading, startLoading }) => {
       </div>
 
       {/* CONTENT */}
-      <div className="flex justify-center py-5 px-2 w-full gap-6">
+      <div className="flex justify-center w-full py-10 md:px-0 px-2">
         {/* LEFT SLIDER */}
         <div className="w-fit h-fit flex flex-col gap-10">
           <div className="w-96 h-96 bg-neutral-500 rounded-xl md:flex hidden justify-center items-center flex-col">
