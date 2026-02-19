@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/Logo1.png";
-import logo2 from "../assets/Logo3.png";
+import logo2 from "../assets/Logo2.png";
 import { FaFacebook, FaYoutube } from "react-icons/fa";
 
 const links = [
@@ -35,7 +35,7 @@ const social_links = [
 
 const Footer = () => {
   return (
-    <div className="bg-[#F7F7F7] p-10 flex md:flex-row flex-col justify-between items-start">
+    <div className="bg-[#F7F7F7] p-10 flex md:flex-row flex-col-reverse md:justify-between md:items-start justify-center items-start gap-10">
       <div className="flex flex-col justify-center items-center">
         <Link to={"/"} className="flex items-center">
           <img src={logo} className="w-40" />
