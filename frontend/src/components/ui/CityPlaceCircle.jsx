@@ -3,11 +3,8 @@ import { FaHeart, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { getDistanceKm } from "../../utils/DistanceCalculator";
 
-/* ================= MARKER ================= */
-
 const MobileMarker = ({ place, x, y, cityLat, cityLong }) => {
   const [show, setShow] = useState(false);
-
   const placeLat = place?.location?.coordinates?.[1];
   const placeLong = place?.location?.coordinates?.[0];
 
@@ -18,22 +15,19 @@ const MobileMarker = ({ place, x, y, cityLat, cityLong }) => {
 
   return (
     <div
-      className="absolute group"
-      style={{
-        transform: `translate(${x}px, ${y}px)`,
-        zIndex: show ? 999 : 1, // ⭐ FIX: tooltip always above center
-      }}
+      className={`absolute group hover:z-50 ${show ? "z-50" : "z-30"}`}
+      style={{ transform: `translate(${x}px, ${y}px)` }}
     >
       {/* DASHED LINE */}
       <div
-        className="absolute top-1/2 right-1/2 origin-right border-t border-dashed border-gray-900"
+        className={`absolute top-1/2 right-1/2 origin-right border-t group-hover:border-none border-gray-900 group-hover:z-0 ${show ? "border-none" : "border-dashed"}`}
         style={{
           width: Math.sqrt(x * x + y * y),
           transform: `rotate(${Math.atan2(y, x)}rad)`,
         }}
       />
 
-      {/* PIN */}
+      {/* ICON */}
       <Link
         to={`/current/place/${place?._id}`}
         onClick={(e) => {
@@ -43,7 +37,7 @@ const MobileMarker = ({ place, x, y, cityLat, cityLong }) => {
             setTimeout(() => setShow(false), 2500);
           }
         }}
-        className="relative text-2xl cursor-pointer "
+        className="relative z-1 text-2xl cursor-pointer"
       >
         <FaMapMarkerAlt />
       </Link>
@@ -51,25 +45,30 @@ const MobileMarker = ({ place, x, y, cityLat, cityLong }) => {
       {/* TOOLTIP */}
       <div
         className={`
-          absolute left-1/2 -translate-x-1/2 bottom-7
-          bg-black text-white px-3 py-2 rounded
-          whitespace-nowrap transition hover:z-[1000]
-          ${show ? "opacity-100" : "opacity-0"}
-          group-hover:opacity-100
-        `}
-        style={{ zIndex: 99999 }} // ⭐ force on top
+    absolute 
+    left-1/2 
+    -translate-x-1/2 
+    bottom-5
+    bg-black 
+    text-white 
+    px-3 
+    py-1 
+    rounded 
+    whitespace-nowrap
+    z-[9999]   /* 👈 CHANGE ONLY THIS */
+    pointer-events-none
+    transition
+    ${show ? "opacity-100 z-9999 absolute" : "opacity-0"}
+    group-hover:opacity-100
+  `}
       >
-        {place?.images?.[0]?.url && (
-          <div className="w-24 h-24 mb-1">
-            <img
-              src={place.images[0].url}
-              className="w-full h-full object-cover rounded"
-            />
-          </div>
-        )}
-
+        <div className="w-24 h-24  bg-red-400">
+          <img
+            src={place?.images[0]?.url}
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="text-sm font-medium">{place.name}</div>
-
         {distance && (
           <div className="text-xs text-gray-300">{distance} km away</div>
         )}
@@ -78,98 +77,71 @@ const MobileMarker = ({ place, x, y, cityLat, cityLong }) => {
   );
 };
 
-/* ================= MAIN COMPONENT ================= */
-
 const CityPlacesCircle = ({ cityName, places = [], cityLong, cityLat }) => {
-  const radius = 150;
+  const radius = 150; // distance from center
   const centerSize = 130;
 
-  const [expanded, setExpanded] = useState(false);
-
-  /* ---------- limit to 24 ---------- */
-  const visiblePlaces = places.slice(0, 24);
-  const extraPlaces = places.slice(24);
-
   return (
-    <div className="w-full">
-      {/* CIRCLE */}
-      <div className="relative md:w-[400px] w-full h-[400px] md:mx-auto flex items-center justify-center bg-gray-200 rounded-xl shadow overflow-visible">
-        {/* CENTER CIRCLE */}
-        <div
-          className="absolute flex items-center justify-center rounded-full bg-[#FFC20E] font-semibold shadow-lg flex-col z-10 group"
-          style={{ width: centerSize, height: centerSize }}
-        >
-          {/* HEART + TOOLTIP */}
-          <div className="relative flex items-center gap-2">
-            <p>I</p>
-            <FaHeart className="text-red-500" />
+    <div className="relative md:w-[400px] w-full h-[400px] md:mx-auto flex items-center justify-center bg-gray-200 rounded-xl shadow">
+      {/* CENTER CIRCLE */}
+      <div
+        // className="absolute flex items-center justify-center rounded-full bg-[#FFC20E] font-semibold text-lg shadow-lg z-50 flex-col"
+        className={`relative flex items-center justify-center rounded-full bg-[#FFC20E] font-semibold text-lg shadow-lg z-40 flex-col `}
+        style={{ width: centerSize, height: centerSize }}
+      >
+        <div className="relative group flex justify-center items-center gap-2">
+          <span>I</span>
 
-            <div className="absolute top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">
-              We are displaying distance from the heart of city
-            </div>
-          </div>
+          <FaHeart className="text-red-500 cursor-pointer" />
 
-          {/* CITY NAME */}
-          <span
-            className={`text-center px-2 leading-tight ${
-              cityName?.length > 18
-                ? "text-[11px]"
-                : cityName?.length > 12
-                  ? "text-xs"
-                  : "text-sm md:text-base"
-            }`}
+          {/* TOOLTIP */}
+          <div
+            className="
+      absolute 
+      bottom-full 
+      mb-2
+      left-1/2 
+      -translate-x-1/2
+      bg-black 
+      text-white 
+      text-xs
+      px-3 
+      py-1 
+      rounded
+      whitespace-nowrap
+      opacity-0
+      group-hover:opacity-100
+      transition
+      z-[9999]
+    "
           >
-            {cityName}
-          </span>
+            We are showing the distance from the heart of the city
+          </div>
         </div>
-
-        {/* MARKERS */}
-        {visiblePlaces.map((place, index) => {
-          const angle = (2 * Math.PI * index) / visiblePlaces.length;
-          const x = radius * Math.cos(angle);
-          const y = radius * Math.sin(angle);
-
-          return (
-            <MobileMarker
-              key={place._id || index}
-              place={place}
-              x={x}
-              y={y}
-              cityLat={cityLat}
-              cityLong={cityLong}
-            />
-          );
-        })}
+        <span
+          className={`${cityName?.length > 18 ? "text-[11px]" : cityName?.length > 12 ? "text-xs" : "text-sm md:text-base"}`}
+        >
+          {cityName}
+        </span>
       </div>
 
-      {/* ---------- SHOW MORE BUTTON ---------- */}
-      {extraPlaces.length > 0 && (
-        <div className="mt-4 text-center">
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="px-4 py-2 bg-[#FFC20E] rounded shadow hover:scale-105 transition"
-          >
-            {expanded
-              ? "Hide other places"
-              : `Show ${extraPlaces.length} more places`}
-          </button>
-        </div>
-      )}
+      {/* PLACES AROUND CIRCLE */}
+      {places.map((place, index) => {
+        const angle = (2 * Math.PI * index) / places.length;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
 
-      {/* ---------- ACCORDION ---------- */}
-      {expanded && (
-        <div className="mt-4 p-4 bg-gray-100 rounded-xl shadow space-y-2">
-          {extraPlaces.map((place) => (
-            <Link
-              key={place._id}
-              to={`/current/place/${place._id}`}
-              className="block p-2 hover:bg-gray-200 rounded"
-            >
-              {place.name}
-            </Link>
-          ))}
-        </div>
-      )}
+        return (
+          <MobileMarker
+            key={place._id || index}
+            place={place}
+            x={x}
+            y={y}
+            cityLat={cityLat}
+            cityLong={cityLong}
+          />
+        );
+      })}
     </div>
   );
 };
