@@ -8,19 +8,20 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 3px;
   padding: 1px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #565555;
+  background: #56555500;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #FFC20D;
-  border-radius: 5px;
+  background: #ffc20d;
+  border-radius: 10px;
 }
 
 /* Handle on hover */
@@ -44,4 +45,8 @@
       /* Firefox */
     }
   }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
