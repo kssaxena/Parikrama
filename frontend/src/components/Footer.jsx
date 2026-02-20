@@ -5,11 +5,11 @@ import logo2 from "../assets/Logo2.png";
 import { FaFacebook, FaYoutube } from "react-icons/fa";
 
 const links = [
-  { label: "Terms of service", path: "/" },
-  { label: "Privacy Policy", path: "/" },
+  { label: "Terms of service", path: "/terms-of-service" },
+  { label: "Privacy Policy", path: "/privacy-policy" },
   { label: "Contact us", path: "/" },
   { label: "About us", path: "/" },
-  { label: "How this site works", path: "/" },
+  { label: "How this site works", path: "/how-this-site-works" },
 ];
 
 const social_links = [

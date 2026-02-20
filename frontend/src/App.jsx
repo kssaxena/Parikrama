@@ -23,6 +23,9 @@ import GuestPlace from "./pages/place/guestPlace";
 import UnderReviewPlace from "./pages/place/underReviewPlace";
 import Explore from "./pages/explore/explore";
 import Footer from "./components/Footer";
+import TermsOfService from "./pages/cms/termsOfService";
+import PrivacyPolicy from "./pages/cms/privacyPolicy";
+import HowThisSiteWorks from "./pages/cms/howThisSiteWorks";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -133,6 +136,9 @@ function App() {
             element={<FacilitatorReview />}
           />
 
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/how-this-site-works" element={<HowThisSiteWorks />} />
           {/* ================= FALLBACK ================= */}
           <Route path="/testing" element={<SearchResult />} />
         </Routes>

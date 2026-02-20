@@ -25,6 +25,7 @@ import CategoryPieChart from "../../components/ui/CategoryPieChart";
 import StatesDonutChart from "../../components/ui/StatesDonutChart";
 import CitiesByStateBarChart from "../../components/ui/CitiesByStateBarChart";
 import AdminRegistrationForm from "./AdminRegistrationForm";
+import AdminCMS from "./AdminCMS";
 
 const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [placeData, setPlaceData] = useState([]);
@@ -36,6 +37,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [promotionData, setPromotionData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
+  const [popup3, setPopup3] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -62,7 +64,6 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const res = await FetchData("admin/dashboard/data", "get");
-      console.log(res);
       setPlaceData(res.data.data.place); // done
       setCityData(res.data.data.city); // done
       setStateData(res.data.data.state); // done
@@ -165,9 +166,9 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
         formData.set("priority", "Max");
       }
 
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-      }
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0] + ": " + pair[1]);
+      // }
 
       const response = await FetchData(
         `promotions/make/promotions/${user?._id}`,
@@ -179,7 +180,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
       cancelPopup();
       alert(response.data.message);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     } finally {
       stopLoading();
     }
@@ -276,6 +277,16 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
                         onClick={() => navigate(item.path)}
                       />
                     ))}
+                    <Button
+                      label={
+                        <h1 className="flex justify-center items-center gap-2">
+                          <IoMdLogOut />
+                          C.M.S.
+                        </h1>
+                      }
+                      className={"w-full"}
+                      onClick={() => setPopup3(true)}
+                    />
                     <Button
                       label={
                         <h1 className="flex justify-center items-center gap-2">
@@ -378,6 +389,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
           )}
         </main>
       </div>
+
       <AnimatePresence>
         {popup && (
           <motion.div
@@ -536,6 +548,17 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
             className="fixed top-0 left-0 h-screen w-full flex justify-center items-center flex-col z-50 bg-black/80 overflow-scroll"
           >
             <AdminRegistrationForm onCancel={() => setPopup2(false)} />
+          </motion.div>
+        )}
+        {popup3 && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-start items-start flex-col z-50 bg-black/90 overflow-scroll"
+          >
+            <AdminCMS adminId={user?._id} onCancel={() => setPopup3(false)} />
           </motion.div>
         )}
       </AnimatePresence>
