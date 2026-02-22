@@ -8,6 +8,7 @@ import LoadingUI from "../../components/LoadingUI";
 import CityPlacesCircle from "../../components/ui/CityPlaceCircle";
 import Button from "../../components/Button";
 import { motion, AnimatePresence } from "framer-motion";
+import ParikramaCircle from "../../components/ui/ParikramaCircle";
 
 const CurrentPlace = ({ startLoading, stopLoading }) => {
   const { placeId } = useParams();
@@ -70,6 +71,7 @@ const CurrentPlace = ({ startLoading, stopLoading }) => {
               cityName={data?.city?.name}
               places={recommendations}
             />
+            <ParikramaCircle />
           </div>
           {/* <Button
             label={"View itinerary"}
@@ -103,13 +105,14 @@ const CurrentPlace = ({ startLoading, stopLoading }) => {
         </div>
 
         {/* RIGHT STICKY */}
-        <div className="sticky top-20 self-start lg:block hidden w-fit">
+        <div className="sticky top-20 self-start lg:flex flex-col justify-center items-center hidden w-fit gap-5">
           <CityPlacesCircle
             cityLong={data?.city?.location?.coordinates[0]}
             cityLat={data?.city?.location?.coordinates[1]}
             cityName={data?.city?.name}
             places={recommendations}
           />
+          <ParikramaCircle />
         </div>
       </div>
       <AnimatePresence>

@@ -15,7 +15,7 @@ import {
   Promotions,
 } from "../../components/ui/TableUI";
 import { RiImageAddFill } from "react-icons/ri";
-import { MdAdd, MdAddLocationAlt } from "react-icons/md";
+import { MdAdd, MdAddLocationAlt, MdOutlineRule } from "react-icons/md";
 import { LuRefreshCw } from "react-icons/lu";
 import { IoMdLogOut } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
@@ -280,7 +280,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
                     <Button
                       label={
                         <h1 className="flex justify-center items-center gap-2">
-                          <IoMdLogOut />
+                          <MdOutlineRule />
                           C.M.S.
                         </h1>
                       }
