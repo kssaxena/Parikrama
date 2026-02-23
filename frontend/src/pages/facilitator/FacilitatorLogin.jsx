@@ -46,11 +46,11 @@ const FacilitatorLogin = ({ startLoading, stopLoading }) => {
   };
 
   return (
-    <div className="flex justify-center items-center ">
+    <div className="flex justify-center items-center w-full">
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-xl w-full max-w-md"
+        className="bg-white p-8 rounded-xl w-full"
       >
         <h2 className="text-2xl font-bold mb-6">Facilitator Login</h2>
 

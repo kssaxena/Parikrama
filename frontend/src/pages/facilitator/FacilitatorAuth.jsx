@@ -9,8 +9,8 @@ const FacilitatorAuth = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <div className="flex justify-center items-center px-4">
-      <div className="shadow-xl rounded-2xl md:w-1/2 p-6">
+    <div className={`flex justify-center items-center px-4 w-full`}>
+      <div className={`shadow-xl rounded-2xl md:w-[80vw] p-6 `}>
         {/* Toggle Buttons */}
         <div className="flex mb-6 rounded-xl overflow-hidden">
           <button
@@ -39,7 +39,7 @@ const FacilitatorAuth = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="w-full"
+            className="w-full flex justify-center items-center"
           >
             {loginComp ? <FacilitatorLogin /> : <FacilitatorRegister />}
           </motion.div>

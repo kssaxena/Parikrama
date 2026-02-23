@@ -159,13 +159,13 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
   /* ==================================================== */
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex justify-start items-start md:w-[90vw]">
       <form
         ref={formRef}
         onSubmit={step === "REGISTER" ? handleRegister : handleVerifyOtp}
-        className="bg-white p-8 rounded-xl w-full"
+        className="bg-white md:p-8 rounded-xl w-fit"
       >
-        <h2 className="text-2xl font-bold mb-6">
+        <h2 className="md:text-2xl  font-bold mb-6 text-wrap leading-[1.1]">
           Facilitator Registration{" "}
           <span className="text-xs md:text-sm font-normal">
             You can register yourself as a Facilitator (Pandit, Temple Guide,
@@ -202,7 +202,7 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
         {/* ================= REGISTER STEP ================= */}
 
         {step === "REGISTER" && (
-          <div className="grid-cols-2 md:grid gap-3">
+          <div className="grid grid-cols-1 gap-1">
             <InputBox LabelName="Full Name" Name="name" required />
             <InputBox LabelName="Phone" Name="phone" required />
             <InputBox LabelName="Email" Name="email" required />
@@ -215,7 +215,7 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
 
             <InputBox LabelName="Role" Name="role" required />
             <InputBox
-              LabelName="Document Number"
+              LabelName="Pan / Aadhar Number"
               Name="documentNumber"
               required
             />
@@ -268,7 +268,7 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
             </div>
 
             {/* BIO */}
-            <div className="flex justify-center items-center w-full col-span-2">
+            <div className="flex justify-center items-center w-full md:col-span-2">
               <div className="py-4 w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Description
@@ -283,7 +283,7 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
             </div>
 
             {/* PROFILE IMAGE */}
-            <div className="col-span-2 bg-gray-200 py-5 px-2 rounded-xl">
+            <div className="md:col-span-2 bg-gray-200 py-5 px-2 rounded-xl overflow-hidden">
               <label className="block text-sm font-medium mb-1">
                 Profile Image
               </label>
@@ -301,7 +301,7 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
             </div>
 
             {/* DOCUMENT IMAGES */}
-            <div className="col-span-2 bg-gray-200 py-5 px-2 rounded-xl">
+            <div className="md:col-span-2 bg-gray-200 py-5 px-2 rounded-xl overflow-hidden">
               <label className="block text-sm font-medium mb-1">
                 Document Images
               </label>
@@ -334,7 +334,7 @@ const FacilitatorRegister = ({ startLoading, stopLoading }) => {
             <Button
               label="Register"
               type="submit"
-              className="w-full col-span-2 mt-4"
+              className="w-full md:col-span-2 mt-4"
             />
           </div>
         )}
