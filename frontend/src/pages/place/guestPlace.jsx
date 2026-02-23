@@ -103,7 +103,7 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
 
   /* ---------------- RENDER ---------------- */
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center w-full overflow-hidden">
       <form
         ref={formRef}
         onSubmit={handleSubmit}
