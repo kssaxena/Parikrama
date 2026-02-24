@@ -8,7 +8,8 @@ const ParikramaCircle = () => {
   const items = [
     "Book a Facilitator",
     "Explore Places",
-    "Book Flight or Bus tickets",
+    "Book Flight tickets",
+    "Book Bus tickets",
     "Be a Facilitator",
     "Plan Your Journey",
   ];
@@ -20,7 +21,7 @@ const ParikramaCircle = () => {
         className="absolute flex items-center justify-center flex-col rounded-full bg-[#FFC20E] font-semibold shadow-lg z-20 text-center px-4"
         style={{ width: centerSize, height: centerSize }}
       >
-        <img src={logo} className="w-10 h-10"/>
+        <img src={logo} className="w-10 h-10" />
         Parikrama
       </div>
 
