@@ -158,11 +158,19 @@ const createPlace = asyncHandler(async (req, res) => {
 });
 
 const getAllPlaces = asyncHandler(async (req, res) => {
-  const places = await Place.find({ isActive: true })
-    .populate("city state")
-    .sort({ popularityScore: -1 });
+  const LIMIT = 20; // ← change this anytime
 
-  res.status(200).json(new ApiResponse(200, places));
+  const places = await Place.aggregate([
+    { $match: { isActive: true } }, // only active places
+    { $sample: { size: LIMIT } }, // random documents
+  ]);
+
+  // populate after aggregation
+  await Place.populate(places, [{ path: "city" }, { path: "state" }]);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, places, "Random places fetched successfully"));
 });
 
 const getPlacesByCity = asyncHandler(async (req, res) => {
