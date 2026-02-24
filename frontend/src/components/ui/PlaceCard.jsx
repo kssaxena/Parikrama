@@ -79,6 +79,7 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
   const lat = place?.location?.coordinates[1];
   const long = place?.location?.coordinates[0];
   const navigate = useNavigate();
+  const [DesCriptionLimit, setDesCriptionLimit] = useState(300);
 
   const images = useMemo(() => {
     return place?.images?.length ? place.images.map((img) => img.url) : [];
@@ -158,8 +159,27 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
             </p>
 
             {/* Description */}
-            <p className="text-sm text-gray-600 whitespace-pre-line text-justify">
-              {place?.description}
+            <p className="text-sm text-gray-600 whitespace-pre-line text-justify flex flex-col justify-start items-start">
+              {truncateString(place?.description, DesCriptionLimit)}
+              {DesCriptionLimit ? (
+                <Button
+                  onClick={() => setDesCriptionLimit()}
+                  label={"Read More"}
+                  className={"text-xs text-black"}
+                />
+              ) : (
+                <Button
+                  onClick={() => setDesCriptionLimit(300)}
+                  label={"Read less"}
+                  className={"text-xs text-black"}
+                />
+              )}
+              {/* <button
+                className="text-blue-500 hover:underline cursor-pointer"
+                onClick={() => setDesCriptionLimit()}
+              >
+                Read More
+              </button> */}
             </p>
           </motion.div>
 

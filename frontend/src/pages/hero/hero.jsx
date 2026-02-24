@@ -6,6 +6,8 @@ import LoadingUI from "../../components/LoadingUI";
 import RandomImageSlider from "../../components/ui/RandomImageSlider";
 import Card from "../../components/ui/card";
 import { motion } from "framer-motion";
+import Button from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 
 const Hero = ({ stopLoading, startLoading }) => {
   const [data, setData] = useState([]);
@@ -14,6 +16,8 @@ const Hero = ({ stopLoading, startLoading }) => {
   const [topBannerMobile, setTopBannerMobile] = useState([]);
   const [rightBanner, setRightBanner] = useState([]);
   const [leftBanner, setLeftBanner] = useState([]);
+  const [count, setCount] = useState(8);
+  const navigate = useNavigate();
 
   const top = topBanner?.map((banner) => [banner?.images?.url]);
   const topMobile = topBannerMobile?.map((banner) => [banner?.images?.url]);
@@ -40,7 +44,7 @@ const Hero = ({ stopLoading, startLoading }) => {
   const getData = async () => {
     try {
       startLoading();
-      const response = await FetchData("admin/places", "get");
+      const response = await FetchData("places/", "get");
       setData(response?.data?.data || []);
     } catch (err) {
       console.log(err);
@@ -61,7 +65,7 @@ const Hero = ({ stopLoading, startLoading }) => {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return shuffled.slice(0, 8);
+    return shuffled;
   }, [data]);
 
   /* ---------------- SEARCH LOGIC ---------------- */
@@ -203,31 +207,45 @@ const Hero = ({ stopLoading, startLoading }) => {
                 <div className="text-gray-500">No results found…</div>
               )
             ) : (
-              featuredPlaces.map((place) => (
-                <motion.div
-                  whileInView={{ opacity: 1, x: 0 }}
-                  initial={{ opacity: 0, x: -100 }}
-                  exit={{ opacity: 0, x: 100 }}
-                  transition={{
-                    type: "spring",
-                    duration: 0.5,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <Card
-                    key={place._id}
-                    placeId={place._id}
-                    name={place.name}
-                    city={place?.city?.name}
-                    state={place?.state?.name}
-                    category={place?.category}
-                    description={place?.description}
-                    lat={place?.location?.coordinates?.[1]}
-                    long={place?.location?.coordinates?.[0]}
-                    image={place?.images?.[0]?.url}
+              <div className="flex flex-col justify-center items-center gap-5 w-full">
+                {featuredPlaces.slice(0, count).map((place) => (
+                  <motion.div
+                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, x: -100 }}
+                    exit={{ opacity: 0, x: 100 }}
+                    transition={{
+                      type: "spring",
+                      duration: 0.5,
+                      ease: "easeInOut",
+                    }}
+                    className="w-full"
+                  >
+                    <Card
+                      key={place._id}
+                      placeId={place._id}
+                      name={place.name}
+                      city={place?.city?.name}
+                      state={place?.state?.name}
+                      category={place?.category}
+                      description={place?.description}
+                      lat={place?.location?.coordinates?.[1]}
+                      long={place?.location?.coordinates?.[0]}
+                      image={place?.images?.[0]?.url}
+                    />
+                  </motion.div>
+                ))}
+                {count >= data?.length ? (
+                  <Button
+                    label={"Explore More"}
+                    onClick={() => navigate("/explore")}
                   />
-                </motion.div>
-              ))
+                ) : (
+                  <Button
+                    label={"Show More"}
+                    onClick={() => setCount((count) => count + 4)}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>
