@@ -12,7 +12,7 @@ const ParikramaCircle = () => {
     { title: "Explore Places", url: "/explore" },
     { title: "Book Flight Tickets", url: "/flights-busses" },
     { title: "Book Bus Tickets", url: "/flights-busses" },
-    { title: "Plan Your Journey", url: "/" },
+    { title: "Travel package", url: "/travel-packages" },
   ];
 
   return (
