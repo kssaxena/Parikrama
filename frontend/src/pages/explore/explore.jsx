@@ -10,7 +10,6 @@ import { useMemo } from "react";
 const Explore = ({ startLoading, stopLoading }) => {
   const [popularData, setPopularData] = useState([]);
   const [enrichedPlaces, setEnrichedPlaces] = useState([]);
-  console.log(enrichedPlaces);
 
   useEffect(() => {
     const getData = async () => {
@@ -20,7 +19,7 @@ const Explore = ({ startLoading, stopLoading }) => {
         setPopularData(response?.data?.data?.places || []);
         setEnrichedPlaces(response?.data?.data?.enrichedPlaces || []);
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       } finally {
         stopLoading();
       }
@@ -121,8 +120,6 @@ const Explore = ({ startLoading, stopLoading }) => {
       ""
     );
   };
-
-  console.log(risingPlaces);
 
   return (
     <div>
