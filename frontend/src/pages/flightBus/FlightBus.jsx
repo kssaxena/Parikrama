@@ -36,30 +36,52 @@ const FlightBus = ({ stopLoading, startLoading }) => {
   };
 
   return (
-    <div className="flex justify-between items-center w-full md:px-20 px-20 h-full flex-col md:flex-row gap-5">
-      <div className="md:w-96 w-[90vw] h-96 rounded-xl overflow-hidden flex justify-center items-center flex-col gap-5">
-        <h1 className="font-semibold text-xl">Book Flight, Bus or Hotels</h1>
-        <RandomImageSlider images={right} />
+    <div className="flex justify-center items-center w-full h-full flex-col">
+      <h1 className="text-3xl font-semibold py-40">
+        Parikrama welcomes you to travel and explore places together
+      </h1>
+      <div className="flex justify-between items-start w-full md:px-20 flex-col md:flex-row">
+        <div className="md:w-96 w-[90vw] h-96 rounded-xl overflow-hidden flex justify-center items-center flex-col gap-5 sticky top-24 left-0">
+          <h1 className="font-semibold text-xl">Book Flight, Bus or Hotels</h1>
+          <RandomImageSlider images={right} />
+        </div>
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="md:w-[50vw] w-[90vw] shadow p-10 rounded-md"
+        >
+          <h1 className="text-xl font-semibold">
+            Kindly fill this form so we can contact you for your requirements..
+          </h1>
+          <InputBox Placeholder="Name" Type="text" LabelName="Name" />
+          <InputBox
+            Placeholder="Contact number"
+            Type="text"
+            LabelName="Contact number"
+          />
+          <InputBox Placeholder="Email" Type="text" LabelName="Email" />
+          <InputBox
+            Name="fromCity"
+            Placeholder="From which city"
+            Type="text"
+            LabelName="From"
+          />
+          <InputBox
+            Name="toCity"
+            Placeholder="To which city"
+            Type="text"
+            LabelName="To"
+          />
+          <InputBox Name="fromDate" Type="date" LabelName="From date" />
+          <InputBox Name="toDate" Type="date" LabelName="To date" />
+          <InputBox
+            Placeholder="Comments if any"
+            Type="text"
+            LabelName="Comments"
+          />
+          <Button label={"Submit"} />
+        </form>
       </div>
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="md:w-[50vw] w-[90vw] shadow p-10 rounded-md"
-      >
-        <InputBox Placeholder="Name" Type="text" LabelName="Name" />
-        <InputBox
-          Placeholder="Contact number"
-          Type="text"
-          LabelName="Contact number"
-        />
-        <InputBox Placeholder="Email" Type="text" LabelName="Email" />
-        <InputBox
-          Placeholder="Comments if any"
-          Type="text"
-          LabelName="Comments"
-        />
-        <Button label={"Submit"} />
-      </form>
     </div>
   );
 };

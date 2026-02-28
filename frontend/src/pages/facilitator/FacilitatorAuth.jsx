@@ -19,7 +19,7 @@ const FacilitatorAuth = () => {
               loginComp ? "bg-[#FFC20E]" : "bg-gray-100 text-gray-700"
             }`}
           >
-            Facilitator Login
+            Facilitator Register
           </button>
           <button
             onClick={() => setLoginComp(false)}
@@ -27,7 +27,7 @@ const FacilitatorAuth = () => {
               !loginComp ? "bg-[#FFC20E]" : "bg-gray-100 text-gray-700"
             }`}
           >
-            Facilitator Register
+            Facilitator Login
           </button>
         </div>
 
@@ -41,7 +41,8 @@ const FacilitatorAuth = () => {
             transition={{ duration: 0.35, ease: "easeInOut" }}
             className="w-full flex justify-center items-center"
           >
-            {loginComp ? <FacilitatorLogin /> : <FacilitatorRegister />}
+            {loginComp ? <FacilitatorRegister /> : <FacilitatorLogin />}
+            {/* {loginComp ? <FacilitatorLogin /> : <FacilitatorRegister />} */}
           </motion.div>
         </AnimatePresence>
       </div>
