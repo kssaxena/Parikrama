@@ -8,6 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { BiArrowFromLeft } from "react-icons/bi";
+import { LiaHotelSolid } from "react-icons/lia";
+import {
+  MdLocalOffer,
+  MdOutlineExplore,
+  MdOutlineFlight,
+} from "react-icons/md";
+import { FaBusSimple, FaUserTie } from "react-icons/fa6";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,6 +25,64 @@ const Header = () => {
     navigate(link);
     setPopup(false);
   };
+
+  const buttons = [
+    {
+      className: "w-full md:hidden block",
+      label: "Add your near by popular place",
+      url: "/guest/register-new-place",
+    },
+    {
+      className: "w-full",
+      label: (
+        <h1 className="flex justify-center items-center gap-2">
+          <MdLocalOffer className="text-2xl" />
+          Packages
+        </h1>
+      ),
+      url: "/travel-packages",
+    },
+    {
+      className: "w-full",
+      label: (
+        <h1 className="flex justify-center items-center gap-2">
+          <LiaHotelSolid className="text-2xl" />
+          Book Hotels
+        </h1>
+      ),
+      url: "/flights-busses",
+    },
+    {
+      className: "w-full",
+      label: (
+        <h1 className="flex justify-center items-center gap-2">
+          <MdOutlineFlight className="text-2xl" />
+          Book Flights
+        </h1>
+      ),
+      url: "/flights-busses",
+    },
+    {
+      className: "w-full",
+      label: (
+        <h1 className="flex justify-center items-center gap-2">
+          <FaBusSimple className="text-2xl" />
+          Book Busses
+        </h1>
+      ),
+      url: "/flights-busses",
+    },
+    {
+      className: "w-full",
+      label: (
+        <h1 className="flex justify-center items-center gap-2">
+          <FaUserTie className="text-2xl" />
+          Facilitator Login
+        </h1>
+      ),
+      url: "/login/facilitator",
+    },
+  ];
 
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
@@ -47,14 +112,20 @@ const Header = () => {
 
         <div className="flex justify-center items-center gap-5">
           <Button
-            label={"Explore more"}
+            label={
+              <h1 className="flex justify-center items-center gap-2">
+                <MdOutlineExplore className="text-xl" />
+                Explore More
+              </h1>
+            }
             onClick={() => LinkNavigate("/explore")}
             className={"md:block hidden"}
           />
           <button
             onClick={() => LinkNavigate("/explore")}
-            className="bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out md:hidden block text-xs"
+            className="bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out md:hidden text-xs flex justify-center items-center gap-1"
           >
+            <MdOutlineExplore />
             Explore More
           </button>
           <Button
@@ -81,45 +152,42 @@ const Header = () => {
               onClick={() => setPopup(false)}
             ></div>
             <div className="md:w-1/2 w-[90%] bg-white flex md:justify-between justify-evenly items-start flex-col h-full py-5 px-5">
-              <div className="flex justify-center items-center gap-5 p-5">
+              <div className="flex justify-between items-center gap-5 p-5 w-full">
                 <Button label={<IoMdClose />} onClick={() => setPopup(false)} />
+                <div className="hidden md:flex items-center gap-4">
+                  {user?.role === "Admin" ? (
+                    <Link
+                      onClick={() => setPopup(false)}
+                      to={`/admin/dashboard`}
+                      className="bg-gray-400 px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-center"
+                    >
+                      {window.location.pathname === "/"
+                        ? "Go to Dashboard"
+                        : `Welcome admin ${user.name}`}
+                    </Link>
+                  ) : (
+                    <Button
+                      className={"w-full bg-gray-400 text-white"}
+                      label="Admin Login"
+                      onClick={() => LinkNavigate("/login")}
+                    />
+                  )}
+                </div>
               </div>
               {/* logo  */}
               <div className="flex items-center justify-center flex-col w-full">
                 <img src={logo} className="w-20 md:w-40" />
                 <img src={logo2} className="w-20 md:w-40" />
               </div>
-              <div className="flex flex-col justify-center items-center w-full gap-5">
-                <Button
-                  className={"w-full md:hidden block"}
-                  label={"Add your near by popular place"}
-                  onClick={() => LinkNavigate("/guest/register-new-place")}
-                />
-                <Button
-                  className={"w-full"}
-                  label={"Facilitator Login"}
-                  onClick={() => LinkNavigate("/login/facilitator")}
-                />
-
+              <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
+                {buttons.map((b) => (
+                  <Button
+                    className={b.className}
+                    onClick={() => LinkNavigate(b.url)}
+                    label={b.label}
+                  />
+                ))}
                 {/* Desktop Buttons */}
-                <div className="hidden md:flex items-center gap-4 w-full">
-                  {user?.role === "Admin" ? (
-                    <Link
-                      to={`/admin/dashboard`}
-                      className="bg-[#FFC20E] px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out "
-                    >
-                      {window.location.pathname === "/"
-                        ? "Go to Dashboard"
-                        : `Welcome ${user.name}`}
-                    </Link>
-                  ) : (
-                    <Button
-                      className={"w-full"}
-                      label="Admin Login"
-                      onClick={() => LinkNavigate("/login")}
-                    />
-                  )}
-                </div>
               </div>
             </div>
           </motion.div>
