@@ -43,6 +43,7 @@ import promotionRoutes from "./routes/promotion.routes.js";
 import { trackVisitor } from "./middlewares/trackVisitor.middleware.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import cmsRoutes from "./routes/cms.routes.js";
+import packageRoutes from "./routes/package.routes.js";
 
 app.use("/api/v1/states", stateRoutes);
 app.use("/api/v1/cities", cityRoutes);
@@ -53,5 +54,6 @@ app.use("/api/v1/facilitator", facilitatorRoutes);
 app.use("/api/v1/promotions", promotionRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/cms", cmsRoutes);
+app.use("/api/v1/packages", packageRoutes);
 
 export { app };
