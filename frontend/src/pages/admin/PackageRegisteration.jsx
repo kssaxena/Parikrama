@@ -59,6 +59,7 @@ const RegisterTravelPackage = ({ startLoading, stopLoading, onCancel }) => {
         alert("Package Created Successfully");
 
         formRef.current.reset();
+        offPopup
         setTags("");
       }
     } catch (err) {
