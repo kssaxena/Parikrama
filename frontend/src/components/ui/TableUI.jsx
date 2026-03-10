@@ -723,7 +723,7 @@ const TravelPackages = ({ Text = "", TableData = [], user }) => {
     return TableData.filter((c) =>
       `
         ${c?.name}
-        ${c?.priority === "Max" ? "Top" : c?.priority === "Mid" ? "Right" : "Left"}
+        ${c?.priority === "exclusiveDeals" ? "Exclusive Deals" : c?.priority === "trendingDeals" ? "Trending Deals" : "Hot Deals"}
         ${c?.place?.name}
       `
         .toLowerCase()
@@ -731,10 +731,10 @@ const TravelPackages = ({ Text = "", TableData = [], user }) => {
     );
   }, [search, TableData]);
 
-  const deletePackage = async ({ promotionId }) => {
+  const deletePackage = async ({ packageId }) => {
     try {
       const response = await FetchData(
-        `promotions/delete-promotion/${user}/${promotionId}`,
+        `promotions/delete-promotion/${user}/${packageId}`,
         "delete",
       );
       alert(response.data.message);
@@ -785,7 +785,12 @@ const TravelPackages = ({ Text = "", TableData = [], user }) => {
                     {data?.priority === "trendingDeals" ? "Trending Deals" : ""}
                     {data?.priority === "hotDeals" ? "Hot Deals" : ""}
                   </td>
-                  <td className="px-5 py-3">Delete</td>
+                  <td className="px-5 py-3">
+                    <Button
+                      label={"Delete"}
+                      onClick={() => deletePackage({ packageId: data._id })}
+                    />
+                  </td>
                 </tr>
               ))
             ) : (
