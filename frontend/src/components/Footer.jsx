@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/Logo1.png";
 import logo2 from "../assets/Logo2.png";
-import { FaFacebook, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaLinkedin, FaYoutube } from "react-icons/fa";
+import { IoMdMail } from "react-icons/io";
 
 const links = [
   { label: "Terms of service", path: "/terms-of-service" },
@@ -30,6 +31,24 @@ const social_links = [
       </h1>
     ),
     path: "https://www.youtube.com/@Parikrama-e3b",
+  },
+  {
+    label: (
+      <h1 className="flex justify-center items-center gap-4 ">
+        <FaLinkedin />
+        LinkedIn
+      </h1>
+    ),
+    path: "https://www.linkedin.com/company/112715748",
+  },
+  {
+    label: (
+      <h1 className="flex justify-center items-center gap-4 ">
+        <IoMdMail />
+        Gmail
+      </h1>
+    ),
+    path: "https://mail.google.com/mail/?view=cm&fs=1&to=connect@parikramaglobal.com",
   },
 ];
 
