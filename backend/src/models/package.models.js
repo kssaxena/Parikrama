@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 const travelPackageSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    place: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Place",
-      required: true,
-    },
+    state: { type: String },
+    city: { type: String },
+    // place: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Place",
+    //   required: true,
+    // },
     description: String,
     durationNight: Number,
     durationDay: Number,

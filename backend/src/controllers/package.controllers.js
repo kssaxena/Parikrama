@@ -11,7 +11,9 @@ import { TravelPackages } from "../models/package.models.js";
 const createTravelPackage = asyncHandler(async (req, res) => {
   const {
     name,
-    place,
+    // place,
+    city,
+    state,
     description,
     durationNight,
     durationDay,
@@ -41,7 +43,9 @@ const createTravelPackage = asyncHandler(async (req, res) => {
 
   const travelPackage = await TravelPackages.create({
     name,
-    place,
+    // place,
+    city,
+    state,
     description,
     durationNight,
     durationDay,
@@ -58,7 +62,7 @@ const createTravelPackage = asyncHandler(async (req, res) => {
 
 const getAllTravelPackages = asyncHandler(async (req, res) => {
   const packages = await TravelPackages.find()
-    .populate("place")
+    // .populate("place")
     .sort({ createdAt: -1 });
 
   return res
@@ -69,7 +73,8 @@ const getAllTravelPackages = asyncHandler(async (req, res) => {
 const getTravelPackageById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const travelPackage = await TravelPackages.findById(id).populate("place");
+  const travelPackage = await TravelPackages.findById(id)
+  // const travelPackage = await TravelPackages.findById(id).populate("place");
 
   if (!travelPackage) {
     throw new ApiError(404, "Package not found");
@@ -91,7 +96,9 @@ const updateTravelPackage = asyncHandler(async (req, res) => {
 
   const {
     name,
-    place,
+    // place,
+    city,
+    state,
     description,
     durationNight,
     durationDay,
@@ -116,7 +123,9 @@ const updateTravelPackage = asyncHandler(async (req, res) => {
   }
 
   travelPackage.name = name ?? travelPackage.name;
-  travelPackage.place = place ?? travelPackage.place;
+  // travelPackage.place = place ?? travelPackage.place;
+  travelPackage.state = place ?? travelPackage.state;
+  travelPackage.city = place ?? travelPackage.city;
   travelPackage.description = description ?? travelPackage.description;
   travelPackage.durationNight = durationNight ?? travelPackage.durationNight;
   travelPackage.durationDay = durationDay ?? travelPackage.durationDay;
