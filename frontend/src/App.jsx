@@ -29,6 +29,7 @@ import HowThisSiteWorks from "./pages/cms/howThisSiteWorks";
 import FlightBus from "./pages/flightBus/FlightBus";
 import TravelPackagesForm from "./pages/travelPackagesForm/TravelPackagesForm";
 import PackagesListing from "./pages/travelPackagesForm/PackageListing";
+import LiveTelecast from "./pages/liveTelecast/LiveTelecast";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -103,6 +104,7 @@ function App() {
           {/* ================= PUBLIC ================= */}
           <Route path="/" element={<Hero />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/live-telecasts" element={<LiveTelecast />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/facilitator" element={<FacilitatorAuth />} />
           <Route
