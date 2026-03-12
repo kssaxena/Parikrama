@@ -15,7 +15,7 @@ const FacilitatorRegister = ({
 }) => {
   const formRef = useRef();
   const navigate = useNavigate();
-  console.log(facilitatorId);
+  // console.log(facilitatorId);
 
   /* ---------------- STEP CONTROL ---------------- */
   const [step, setStep] = useState("REGISTER"); // REGISTER | VERIFY
@@ -134,6 +134,33 @@ const FacilitatorRegister = ({
     }
   };
 
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const formData = new FormData(formRef.current);
+
+    try {
+      startLoading();
+
+      const res = await FetchData(
+        `facilitator/facilitator/profile/update/${facilitatorId}`,
+        "post",
+        formData,
+        true,
+      );
+
+      onCancel();
+      // setOtp(res.data.data.otp);
+      // setFacilitator(res.data.data.facilitator);
+      // setStep("VERIFY");
+    } catch (err) {
+      setError(parseErrorMessage(err?.response?.data));
+    } finally {
+      stopLoading();
+    }
+  };
+
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setError("");
@@ -159,7 +186,13 @@ const FacilitatorRegister = ({
     <div className="flex justify-start items-start md:w-[90vw]">
       <form
         ref={formRef}
-        onSubmit={step === "REGISTER" ? handleRegister : handleVerifyOtp}
+        onSubmit={
+          completeProfile === false
+            ? step === "REGISTER"
+              ? handleRegister
+              : handleVerifyOtp
+            : handleProfileUpdate
+        }
         className={`bg-white md:p-8 rounded-xl  ${completeProfile === true ? "md:w-full w-[95vw] px-5 py-5" : "w-fit"}`}
       >
         {completeProfile === false ? (
@@ -365,6 +398,7 @@ const FacilitatorRegister = ({
 
                 <Button
                   label="Update profile"
+                  type={"submit"}
                   className="w-full md:col-span-2 mt-4"
                 />
                 <Button
