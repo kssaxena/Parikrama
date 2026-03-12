@@ -12,6 +12,7 @@ const InputBox = ({
   keyPress,
   Disabled = false,
   LabelClassname = "",
+  PasswordIndication = false,
 }) => {
   return (
     <div className="flex justify-center items-center w-full">
@@ -24,7 +25,6 @@ const InputBox = ({
             {LabelName}
           </label>
         )}
-
         <input
           disabled={Disabled}
           id={Name}
@@ -43,6 +43,22 @@ const InputBox = ({
             }
           }}
         />
+        {PasswordIndication === true ? (
+          <span className="text-xs text-red-600">
+            Password should be min 8 & max 20 characters, should contain 1
+            uppercase, 1 lowercase, 1 digit, and 1 special character
+          </span>
+        ) : (
+          ""
+        )}
+        {/* {Type === "password" ? (
+          <span className="text-xs text-red-600">
+            Password should be min 8 & max 20 characters, should contain 1
+            uppercase, 1 lowercase, 1 digit, and 1 special character
+          </span>
+        ) : (
+          ""
+        )} */}
       </div>
     </div>
   );
