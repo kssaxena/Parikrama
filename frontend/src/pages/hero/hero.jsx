@@ -265,13 +265,6 @@ const Hero = ({ stopLoading, startLoading }) => {
           <div className="h-96">
             <RandomImageSlider images={right} />
           </div>
-          {/* <div className="bg-neutral-200 p-5 rounded-md shadow flex justify-center items-center flex-col gap-5 my-10">
-            Click Here for Live Darshan{" "}
-            <Button
-              label={"Live Darshan"}
-              onClick={() => navigate("/live-telecasts")}
-            />
-          </div> */}
         </div>
       </div>
       <div className="sticky md:bottom-10 bottom-5 w-full flex justify-end items-end px-10">
