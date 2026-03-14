@@ -37,8 +37,8 @@ const FlightBus = ({ stopLoading, startLoading }) => {
 
   return (
     <div className="flex justify-center items-center w-full h-full flex-col">
-      <h1 className="text-xl md:text-3xl font-semibold md:py-40 py-10 text-center">
-        Parikrama welcomes you to travel and explore places together
+      <h1 className="text-xl md:text-3xl font-semibold md:py-40 py-6 text-center">
+        Parikrama <br /> Welcomes you to Travel and Explore places together
       </h1>
       <div className="flex justify-center md:justify-between items-center md:items-start w-full md:px-20 flex-col md:flex-row">
         <div className="md:w-96 w-[90vw] h-96 rounded-xl overflow-hidden flex justify-center items-center flex-col gap-5 lg:sticky top-24 left-0">
@@ -51,7 +51,8 @@ const FlightBus = ({ stopLoading, startLoading }) => {
           className="md:w-[50vw] w-[90vw] md:shadow md:p-10 rounded-md py-10"
         >
           <h1 className="text-xl font-semibold">
-            Kindly fill this form so we can contact you for your requirements..
+            Please fill out this form so we can get in touch with you and
+            provide the best solution for your requirements..
           </h1>
           <InputBox Placeholder="Name" Type="text" LabelName="Name" />
           <InputBox
