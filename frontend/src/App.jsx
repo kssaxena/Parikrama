@@ -142,7 +142,7 @@ function App() {
           />
 
           <Route path="/flights-busses" element={<FlightBus />} />
-          <Route path="/travel-packages" element={<PackagesListing />} />
+          {/* <Route path="/travel-packages" element={<PackagesListing />} /> */}
           {/*<Route
             path="/travel-packages/form"
             element={<TravelPackagesForm />}
