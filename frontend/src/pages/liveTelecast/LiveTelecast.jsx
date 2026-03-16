@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import LoadingUI from "../../components/LoadingUI";
 import { FetchData } from "../../utils/FetchFromApi";
-import { Link } from "react-router-dom";
 import { truncateString } from "../../utils/Utility-functions";
 import { TbLivePhotoFilled } from "react-icons/tb";
 import Button from "../../components/Button";
+import { motion, AnimatePresence } from "framer-motion";
+import YoutubePlayer from "../../utils/YoutubePlayer";
 
 const Card = ({
   name,
@@ -12,20 +13,19 @@ const Card = ({
   state,
   category,
   description,
-  lat,
-  long,
   placeId,
   image,
   telecastLink,
 }) => {
-  const openMaps = () => {
-    // const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${long}`;
+  const [model, openModel] = useState(false);
+  const openTelecast = () => {
     const url = telecastLink;
     window.open(url, "_blank");
   };
+
   return (
-    <Link
-      to={`/current/place/${placeId}`}
+    <div
+      // to={`/current/place/${placeId}`}
       className="bg-neutral-100 w-full md:px-10 px-1 py-2 flex justify-between items-center rounded-xl hover:shadow-xl duration-300 ease-in-out"
     >
       <div className="h-full flex flex-col items-start gap-2">
@@ -51,7 +51,7 @@ const Card = ({
           />
         </div>
         <Button
-          onClick={openMaps}
+          onClick={() => openModel(true)}
           label={
             <h1 className="flex justify-center items-center md:gap-5 text-xs md:text-base">
               Live Telecast
@@ -61,16 +61,41 @@ const Card = ({
             </h1>
           }
         />
-        {/* <button
-          onClick={openMaps}
-          className="group flex justify-center items-center gap-2 bg-transparent rounded-2xl drop-shadow-xl hover:drop-shadow-2xl"
-        >
-          <span>Live Telecast</span>
-
-          <BiSolidNavigation className="transition duration-150 ease-in-out text-neutral-500 group-hover:text-[#FFC20E] group-hover:rotate-45" />
-        </button> */}
       </div>
-    </Link>
+      <AnimatePresence>
+        {model && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
+          >
+            <div className="w-full md:w-[80vw] h-full md:h-[80vh] bg-black/50 rounded-xl flex justify-center items-center flex-col md:p-10 gap-5">
+              <YoutubePlayer url={telecastLink} />
+              <div className="flex justify-center items-center w-full gap-10">
+                <Button
+                  label={"Close"}
+                  onClick={() => openModel(false)}
+                  className={"text-xs md:text-base"}
+                />
+                <Button
+                  onClick={openTelecast}
+                  label={
+                    <h1 className="flex justify-center items-center md:gap-5 text-xs md:text-base">
+                      Live Telecast
+                      <span>
+                        <TbLivePhotoFilled className="text-red-700" />
+                      </span>
+                    </h1>
+                  }
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
@@ -105,8 +130,6 @@ const LiveTelecast = ({ stopLoading, startLoading }) => {
               state={place?.state?.name}
               category={place?.category}
               description={place?.description}
-              lat={place?.location?.coordinates?.[1]}
-              long={place?.location?.coordinates?.[0]}
               image={place?.images?.[0]?.url}
               telecastLink={place?.telecastLink}
             />
