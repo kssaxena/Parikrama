@@ -27,8 +27,8 @@ import TermsOfService from "./pages/cms/termsOfService";
 import PrivacyPolicy from "./pages/cms/privacyPolicy";
 import HowThisSiteWorks from "./pages/cms/howThisSiteWorks";
 import FlightBus from "./pages/flightBus/FlightBus";
-import TravelPackagesForm from "./pages/travelPackagesForm/TravelPackagesForm";
-import PackagesListing from "./pages/travelPackagesForm/PackageListing";
+// import TravelPackagesForm from "./pages/travelPackagesForm/TravelPackagesForm";
+// import PackagesListing from "./pages/travelPackagesForm/PackageListing";
 import LiveTelecast from "./pages/liveTelecast/LiveTelecast";
 
 function App() {
@@ -143,10 +143,10 @@ function App() {
 
           <Route path="/flights-busses" element={<FlightBus />} />
           <Route path="/travel-packages" element={<PackagesListing />} />
-          <Route
+          {/*<Route
             path="/travel-packages/form"
             element={<TravelPackagesForm />}
-          />
+          />*/}
 
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
