@@ -6,6 +6,7 @@ import { TbLivePhotoFilled } from "react-icons/tb";
 import Button from "../../components/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import YoutubePlayer from "../../utils/YoutubePlayer";
+import { useNavigate } from "react-router-dom";
 
 const Card = ({
   name,
@@ -22,6 +23,7 @@ const Card = ({
     const url = telecastLink;
     window.open(url, "_blank");
   };
+  const navigate = useNavigate();
 
   return (
     <div
@@ -39,10 +41,15 @@ const Card = ({
           {category}
         </h1>
         <h1 className="text-xs hidden md:block">
-          {truncateString(description, 50)}
+          {truncateString(description, 200)}
         </h1>
+        <Button
+          label={"Visit Place"}
+          className={"text-xs"}
+          onClick={() => navigate(`/current/place/${placeId}`)}
+        />
       </div>
-      <div className="flex justify-center items-center flex-col gap-3">
+      <div className="flex justify-center items-end flex-col gap-3 md:w-96">
         <div className="h-28 w-32 bg-neutral-200 flex justify-center items-center rounded-xl overflow-hidden">
           <img
             src={image}
