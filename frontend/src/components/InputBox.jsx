@@ -23,6 +23,7 @@ const InputBox = ({
             className={`block text-sm font-medium text-gray-700 mb-2 ${LabelClassname}`}
           >
             {LabelName}
+            {Required === true ? "*" : ""}
           </label>
         )}
         <input
@@ -44,21 +45,13 @@ const InputBox = ({
           }}
         />
         {PasswordIndication === true ? (
-          <span className="text-xs text-red-600">
+          <span className="text-[11px] text-red-600 line-clamp-5">
             Password should be min 8 & max 20 characters, should contain 1
             uppercase, 1 lowercase, 1 digit, and 1 special character
           </span>
         ) : (
           ""
         )}
-        {/* {Type === "password" ? (
-          <span className="text-xs text-red-600">
-            Password should be min 8 & max 20 characters, should contain 1
-            uppercase, 1 lowercase, 1 digit, and 1 special character
-          </span>
-        ) : (
-          ""
-        )} */}
       </div>
     </div>
   );
