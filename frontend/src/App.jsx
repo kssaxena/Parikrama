@@ -31,6 +31,7 @@ import FlightBus from "./pages/flightBus/FlightBus";
 // import PackagesListing from "./pages/travelPackagesForm/PackageListing";
 import LiveTelecast from "./pages/liveTelecast/LiveTelecast";
 import CommunityRegForm from "./pages/community/communityRegForm";
+import PackagesListing from "./pages/travelPackagesForm/PackageListing";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -143,7 +144,7 @@ function App() {
           />
 
           <Route path="/flights-busses" element={<FlightBus />} />
-          {/* <Route path="/travel-packages" element={<PackagesListing />} /> */}
+          <Route path="/travel-packages" element={<PackagesListing />} />
           <Route path="/community/form" element={<CommunityRegForm />} />
 
           <Route path="/terms-of-service" element={<TermsOfService />} />
