@@ -51,8 +51,11 @@ const communitySchema = new mongoose.Schema(
 );
 
 communitySchema.pre("save", async function () {
-  if (!this.isModified("password")) return;
-  this.password = await bcrypt.hash(this.password, 10);
+  if (!this.isModified("personalDetails.password")) return;
+  this.personalDetails.password = await bcrypt.hash(
+    this.personalDetails.password,
+    10,
+  );
 });
 
 communitySchema.methods.comparePassword = function (password) {
