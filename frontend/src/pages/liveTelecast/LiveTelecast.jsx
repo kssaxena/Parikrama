@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LoadingUI from "../../components/LoadingUI";
 import { FetchData } from "../../utils/FetchFromApi";
 import { truncateString } from "../../utils/Utility-functions";
@@ -7,6 +7,8 @@ import Button from "../../components/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import YoutubePlayer from "../../utils/YoutubePlayer";
 import { useNavigate } from "react-router-dom";
+import InputBox from "../../components/InputBox";
+import { formatProdErrorMessage } from "@reduxjs/toolkit";
 
 const Card = ({
   name,
@@ -18,12 +20,39 @@ const Card = ({
   image,
   telecastLink,
 }) => {
-  const [model, openModel] = useState(false);
+  const formRef = useRef();
+  const [modelTelecast, openModelTelecast] = useState(false);
+  const [modelOTP, openModelOTP] = useState(false);
+  const [otp, setOtp] = useState();
   const openTelecast = () => {
     const url = telecastLink;
     window.open(url, "_blank");
   };
   const navigate = useNavigate();
+
+  const handleUser = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(formRef.current);
+      const response = await FetchData("", "post", formData);
+      console.log(response);
+      setOtp(response.data.otp);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleOtp = async (e) => {
+    try {
+      e.preventDefault();
+      const formData = new FormData(formRef.current);
+      const response = await FetchData("", "post", formData);
+      console.log(response);
+      openModelTelecast(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div
@@ -58,7 +87,7 @@ const Card = ({
           />
         </div>
         <Button
-          onClick={() => openModel(true)}
+          onClick={() => openModelOTP(true)}
           label={
             <h1 className="flex justify-center items-center md:gap-5 text-xs md:text-base">
               Live Telecast
@@ -70,7 +99,36 @@ const Card = ({
         />
       </div>
       <AnimatePresence>
-        {model && (
+        {modelOTP && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
+          >
+            <div className="bg-white rounded-xl flex justify-center items-center flex-col md:p-10 gap-5">
+              <h1>Login first for viewing the live telecast</h1>
+              <form ref={formRef} onSubmit={handleUser}>
+                <InputBox
+                  LabelName="Enter your mobile number"
+                  Name="contactNumber"
+                  Placeholder="Enter contact number"
+                  Type="number"
+                />
+                {otp ? (
+                  <div>
+                    <InputBox LabelName="Enter OTP" />
+                    <Button label={"Confirm"} onClick={() => handleOtp()} />
+                  </div>
+                ) : (
+                  <Button label={"Submit"} />
+                )}
+              </form>
+            </div>
+          </motion.div>
+        )}
+        {modelTelecast && (
           <motion.div
             whileInView={{ opacity: 1, x: 0 }}
             initial={{ opacity: 0, x: -100 }}
