@@ -38,7 +38,12 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const formData = new FormData(formRef.current);
-      const response = await FetchData(``, "post", formData, true);
+      const response = await FetchData(
+        `communities/community/auth/register`,
+        "post",
+        formData,
+        true,
+      );
       console.log(response);
     } catch (err) {
       console.log(err);
