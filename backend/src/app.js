@@ -45,6 +45,7 @@ import analyticsRoutes from "./routes/analytics.routes.js";
 import cmsRoutes from "./routes/cms.routes.js";
 import packageRoutes from "./routes/package.routes.js";
 import communityRoutes from "./routes/community.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 app.use("/api/v1/states", stateRoutes);
 app.use("/api/v1/cities", cityRoutes);
@@ -57,5 +58,6 @@ app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/cms", cmsRoutes);
 app.use("/api/v1/packages", packageRoutes);
 app.use("/api/v1/communities", communityRoutes);
+app.use("/api/v1/users", userRoutes);
 
 export { app };
