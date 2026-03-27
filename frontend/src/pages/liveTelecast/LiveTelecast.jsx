@@ -154,7 +154,12 @@ const Card = ({
           >
             <div className="bg-white rounded-xl flex justify-center items-center flex-col md:p-10 gap-5 lg:w-1/2 w-full p-5">
               <h1 className="text-lg font-semibold">
-                Register with us first for viewing live telecasts {otp}
+                Register with us first for viewing live telecasts{" "}
+                {otp ? (
+                  <p className="text-red-600 underline">Paste this OTP {otp}</p>
+                ) : (
+                  ""
+                )}
               </h1>
               <form ref={formRef} className="w-full">
                 <InputBox

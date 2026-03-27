@@ -134,7 +134,7 @@ const UserRegisterLogin = () => {
             Login
           </button>
         </div>
-        {otp}
+        {otp ? <p>Paste this OTP {otp}</p> : ""}
 
         {/* Animated Form */}
         <AnimatePresence mode="wait">
