@@ -203,7 +203,7 @@ const Header = () => {
                     label={b.label}
                   />
                 ))}
-                <div className="hidden md:flex items-center gap-4">
+                {/* <div className="hidden md:flex items-center gap-4">
                   {user?.role === "Admin" ? (
                     <Link
                       onClick={() => setPopup(false)}
@@ -226,7 +226,7 @@ const Header = () => {
                       onClick={() => LinkNavigate("/login")}
                     />
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </motion.div>
