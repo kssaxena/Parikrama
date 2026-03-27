@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { FetchData } from "../../utils/FetchFromApi";
 import { truncateString } from "../../utils/Utility-functions";
+import { Helmet } from "react-helmet-async";
 
 const PlaceCard = ({ place }) => {
   return (
@@ -70,6 +71,7 @@ const PlaceCard = ({ place }) => {
     </Link>
   );
 };
+
 const ExpandedPlaceCard = ({ place, facilitator }) => {
   const { user } = useSelector((state) => state.auth);
   const [popup, setPopup] = useState(false);
@@ -80,6 +82,24 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
   const long = place?.location?.coordinates[0];
   const navigate = useNavigate();
   const [DesCriptionLimit, setDesCriptionLimit] = useState(300);
+
+  // this below configuration is for sharing the place with a thumbnail image
+  // if the copy function is not working then remove the below helmet tag
+  <Helmet>
+    <title>{place?.name}</title>
+
+    <meta property="og:title" content={place?.name} />
+    {/* <meta property="og:description" content={place?.description} /> */}
+    <meta property="og:image" content={place?.images?.[0]?.url} />
+    <meta property="og:url" content={window.location.href} />
+
+    {/* for whatsapp and twitter  */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="IMAGE_URL" />
+
+    {/* Optional but useful */}
+    <meta property="og:type" content="website" />
+  </Helmet>;
 
   const images = useMemo(() => {
     return place?.images?.length ? place.images.map((img) => img.url) : [];
@@ -109,6 +129,9 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
 
     const copyUrl = async () => {
       await navigator.clipboard.writeText(window.location.href);
+      //  await navigator.clipboard.writeText(
+      //    window.location.href && place?.images[0]?.url,
+      //  );
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };

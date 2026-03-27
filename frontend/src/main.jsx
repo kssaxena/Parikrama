@@ -6,13 +6,16 @@ import { BrowserRouter as Router } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { HelmetProvider } from "react-helmet-async";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <Router>
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </Router>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );
