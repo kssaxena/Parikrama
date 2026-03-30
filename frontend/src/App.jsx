@@ -37,7 +37,7 @@ import UserRegisterLogin from "./pages/user/RegisterLogin";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
-  console.log(user);
+  // console.log(user);
   const dispatch = useDispatch();
   const location = useLocation();
   const isHome = location.pathname === "/";
@@ -51,53 +51,96 @@ function App() {
       return;
     }
 
+    // const reLogin = async () => {
+    //   try {
+    //     if (localStorage?.role === "Admin") {
+    //       const res = await FetchData(
+    //         "admin/auth/refresh-tokens", // ✅ SINGLE endpoint
+    //         "post",
+    //         { refreshToken },
+    //       );
+    //       const { user, tokens } = res.data.data;
+    //       console.log(user);
+    //       // Store new tokens
+    //       localStorage.setItem("AccessToken", tokens.AccessToken);
+    //       localStorage.setItem("RefreshToken", tokens.RefreshToken);
+
+    //       // Update redux
+    //       dispatch(addUser(user));
+    //     }
+    //     if (localStorage?.role === "User") {
+    //       const res = await FetchData("users/auth/refresh-tokens", "post", {
+    //         refreshToken,
+    //       });
+    //       const { user, tokens } = res.data.data;
+
+    //       localStorage.setItem("AccessToken", tokens.AccessToken);
+    //       localStorage.setItem("RefreshToken", tokens.RefreshToken);
+
+    //       // Update redux
+    //       dispatch(addUser(user));
+    //     }
+    //     if (localStorage?.role === "Facilitator") {
+    //       const res = await FetchData(
+    //         "facilitator/auth/refresh-token", // ✅ SINGLE endpoint
+    //         "post",
+    //         { refreshToken },
+    //       );
+    //       // console.log(res);
+
+    //       const { user, tokens } = res.data.data;
+
+    //       // Store new tokens
+    //       localStorage.setItem("AccessToken", tokens.AccessToken);
+    //       localStorage.setItem("RefreshToken", tokens.RefreshToken);
+
+    //       // Update redux
+    //       dispatch(addUser(user));
+    //     }
+    //   } catch (error) {
+    //     // console.log(error);
+    //     localStorage.clear();
+    //     dispatch(clearUser());
+    //   } finally {
+    //     dispatch(stopAuthLoading());
+    //   }
+    // };
     const reLogin = async () => {
       try {
-        if (localStorage?.role === "Admin") {
-          const res = await FetchData(
-            "admin/auth/refresh-tokens", // ✅ SINGLE endpoint
-            "post",
-            { refreshToken },
-          );
-          const { user, tokens } = res.data.data;
+        const role = localStorage.getItem("role");
+        const refreshToken = localStorage.getItem("RefreshToken");
 
-          // Store new tokens
-          localStorage.setItem("AccessToken", tokens.AccessToken);
-          localStorage.setItem("RefreshToken", tokens.RefreshToken);
-
-          // Update redux
-          dispatch(addUser(user));
+        if (!role || !refreshToken) {
+          throw new Error("Missing auth data");
         }
-        if (localStorage?.role === "User") {
-          const res = await FetchData("users/auth/refresh-tokens", "post", {
-            refreshToken,
-          });
-          const { user, tokens } = res.data.data;
 
-          localStorage.setItem("AccessToken", tokens.AccessToken);
-          localStorage.setItem("RefreshToken", tokens.RefreshToken);
+        // ✅ Centralized endpoint mapping
+        const endpointMap = {
+          Admin: "admin/auth/refresh-tokens",
+          User: "users/auth/refresh-tokens",
+          Facilitator: "facilitator/auth/refresh-token",
+          Community: "community/auth/refresh-token", // future ready
+        };
 
-          // Update redux
-          dispatch(addUser(user));
-        } else {
-          const res = await FetchData(
-            "facilitator/auth/refresh-token", // ✅ SINGLE endpoint
-            "post",
-            { refreshToken },
-          );
-          // console.log(res);
+        const endpoint = endpointMap[role];
 
-          const { user, tokens } = res.data.data;
-
-          // Store new tokens
-          localStorage.setItem("AccessToken", tokens.AccessToken);
-          localStorage.setItem("RefreshToken", tokens.RefreshToken);
-
-          // Update redux
-          dispatch(addUser(user));
+        if (!endpoint) {
+          throw new Error("Invalid role");
         }
+
+        const res = await FetchData(endpoint, "post", { refreshToken });
+
+        const { user, tokens } = res.data.data;
+
+        // ✅ Store tokens
+        localStorage.setItem("AccessToken", tokens.AccessToken);
+        localStorage.setItem("RefreshToken", tokens.RefreshToken);
+
+        // ✅ Update redux
+        dispatch(addUser(user));
       } catch (error) {
-        // console.log(error);
+        console.log("Re-login failed:", error?.message);
+
         localStorage.clear();
         dispatch(clearUser());
       } finally {
@@ -121,7 +164,7 @@ function App() {
           <Route path="/" element={<Hero />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/live-telecasts" element={<LiveTelecast />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login/admin" element={<Login />} />
           <Route path="/login/facilitator" element={<FacilitatorAuth />} />
           <Route
             path="/admin/register-admin"
@@ -157,10 +200,7 @@ function App() {
             element={<FacilitatorReview />}
           />
 
-          <Route
-            path="/login-register/user"
-            element={<UserRegisterLogin />}
-          />
+          <Route path="/login-register/user" element={<UserRegisterLogin />} />
           <Route path="/user/dashboard" element={<UserDashboard />} />
 
           <Route path="/flights-busses" element={<FlightBus />} />

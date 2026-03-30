@@ -78,8 +78,9 @@ const Footer = () => {
         <p className="text-xs">© 2026 Parikrama Global All rights reserved.</p>
       </div>
       <div className="flex flex-col justify-start items-start gap-2">
-        {links.map((f) => (
+        {links.map((f, index) => (
           <Link
+            key={index}
             to={f.path}
             className="text-sm text-gray-500 hover:text-black hover:font-semibold hover:underline duration-200 ease-in-out"
           >
@@ -88,9 +89,10 @@ const Footer = () => {
         ))}
       </div>
       <div className="flex flex-col justify-start items-start">
-        {social_links.map((s) => (
+        {social_links.map((s, index) => (
           <Link
             to={s.path}
+            key={index}
             target="blank"
             className="text-sm text-gray-500 hover:text-black hover:font-semibold hover:underline duration-200 ease-in-out"
           >
@@ -98,7 +100,7 @@ const Footer = () => {
           </Link>
         ))}
       </div>
-      <div className="hidden md:flex items-center gap-4">
+      {/* <div className="hidden md:flex items-center gap-4">
         {user?.role === "Admin" ? (
           <Link
             to={`/admin/dashboard`}
@@ -117,10 +119,10 @@ const Footer = () => {
                 Admin Login
               </h1>
             }
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/login/admin")}
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

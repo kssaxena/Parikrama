@@ -186,8 +186,9 @@ const Header = () => {
               </div>
               {/* parikrama facility buttons  */}
               <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-                {facilityButtons.map((b) => (
+                {facilityButtons.map((b, index) => (
                   <Button
+                    key={index}
                     className={b.className}
                     onClick={() => LinkNavigate(b.url)}
                     label={b.label}
@@ -196,8 +197,9 @@ const Header = () => {
               </div>
               {/* parikrama logins buttons  */}
               <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-                {buttons.map((b) => (
+                {buttons.map((b,index) => (
                   <Button
+                    key={index}
                     className={b.className}
                     onClick={() => LinkNavigate(b.url)}
                     label={b.label}
