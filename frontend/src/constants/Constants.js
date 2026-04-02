@@ -301,7 +301,6 @@ export const personalInputs = [
     placeHolder: "Enter your email",
     name: "email",
     type: "email",
-    required: false,
   },
   {
     label: "Contact Number",
@@ -427,5 +426,51 @@ export const userFormInputs = [
     placeHolder: "Corresponding address",
     name: "address",
     type: "text",
+  },
+];
+
+export const foodKiosksFormInputs = [
+  {
+    label: "Name",
+    placeHolder: "Enter place name",
+    name: "name",
+    type: "text",
+  },
+  {
+    label: "Email",
+    placeHolder: "Enter email",
+    name: "email",
+    type: "email",
+  },
+  {
+    label: "Contact number",
+    placeHolder: "Enter contact number",
+    name: "contactNumber",
+    type: "text",
+  },
+  {
+    label: "Special food",
+    placeHolder: "Enter special food of this place",
+    name: "specialFood",
+    type: "text",
+  },
+  {
+    label: "Longitude",
+    placeHolder: "Longitude of the place",
+    name: "lng",
+    type: "text",
+  },
+  {
+    label: "Latitude",
+    placeHolder: "Latitude of the place",
+    name: "lat",
+    type: "text",
+  },
+  {
+    label: "Establishment",
+    placeHolder: "Place establishment year",
+    name: "establishment",
+    type: "text",
+    required: false,
   },
 ];
