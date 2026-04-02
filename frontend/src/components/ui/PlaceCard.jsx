@@ -77,6 +77,7 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
   const [popup3, setPopup3] = useState(false);
+  const [popup4, setPopup4] = useState(false);
   const [facilitatorData, setFacilitatorData] = useState(false);
   const lat = place?.location?.coordinates[1];
   const long = place?.location?.coordinates[0];
@@ -177,9 +178,17 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
             </p>
 
             {/* Category */}
-            <p className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]">
-              {place?.category}
-            </p>
+            <div className="flex flex-col justify-start items-start gap-2">
+              <p className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]">
+                {place?.category}
+              </p>
+              <button
+                onClick={() => setPopup4(true)}
+                className="inline-block w-fit text-xs px-3 py-1 rounded-full bg-[#FFC20E]"
+              >
+                Checkout famous foods of {place?.name}
+              </button>
+            </div>
 
             {/* Description */}
             <p className="text-sm text-gray-600 whitespace-pre-line text-justify flex flex-col justify-start items-start">
@@ -285,6 +294,7 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
           ""
         )}
         <AnimatePresence>
+          {/* admin delete place popup  */}
           {popup && (
             <motion.div
               whileInView={{ opacity: 1, x: 0 }}
@@ -300,6 +310,7 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
               </div>
             </motion.div>
           )}
+          {/* facilitator of the current place  */}
           {popup2 && (
             <motion.div
               whileInView={{ opacity: 1, x: 0 }}
@@ -401,6 +412,7 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
               {/* <h1>Are you sure you want to delete this Place ?</h1> */}
             </motion.div>
           )}
+          {/* sharing the current place popup */}
           {popup3 && (
             <motion.div
               whileInView={{ opacity: 1, x: 0 }}
@@ -421,6 +433,24 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
               </div>
             </motion.div>
           )}
+          {/* food courts of current place */}
+          {popup4 && (
+            <motion.div
+              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: -100 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+              className="fixed top-0 left-0 h-screen w-full flex justify-center items-center z-50 "
+            >
+              <div className="bg-white md:w-3/4 w-full h-full flex flex-col justify-start items-center py-10 overflow-scroll">
+                {/* place.map  */}
+              </div>
+              <div
+                onClick={() => setPopup4(false)}
+                className="w-1/4 md:w-1/2 h-full bg-black/80"
+              ></div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
       <Link
@@ -429,8 +459,7 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
         className="w-full h-fit bg-[#FFC20E] text-xs md:text-sm px-5 flex justify-between items-center py-1 rounded-b-xl shadow-sm"
       >
         <h1>
-          You can register yourself as a Facilitator (Pandit, Temple Guide, Tour
-          Guide, Photographer etc.)
+          You can register yourself as a Facilitator (Travel Guide, Photographer, Pandit, Temple Guide, Tour Operator etc.)
         </h1>
         <span className="flex justify-center items-center gap-2 ">
           Register / Login <BiArrowFromLeft />

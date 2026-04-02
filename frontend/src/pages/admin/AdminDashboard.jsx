@@ -14,6 +14,7 @@ import {
   InactivePlace,
   Promotions,
   TravelPackages,
+  FoodKiosks,
 } from "../../components/ui/TableUI";
 import { RiImageAddFill } from "react-icons/ri";
 import { MdAdd, MdAddLocationAlt, MdOutlineRule } from "react-icons/md";
@@ -28,6 +29,7 @@ import CitiesByStateBarChart from "../../components/ui/CitiesByStateBarChart";
 import AdminRegistrationForm from "./AdminRegistrationForm";
 import AdminCMS from "./AdminCMS";
 import PackageRegisteration from "./PackageRegisteration";
+import FoodKiosk from "../kiosks/FoodKiosk";
 
 const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [placeData, setPlaceData] = useState([]);
@@ -38,10 +40,12 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [inactiveFacilitator, setInactiveFacilitator] = useState([]);
   const [promotionData, setPromotionData] = useState([]);
   const [packageData, setPackageData] = useState([]);
+  const [foodKioskData, setFoodKioskData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
   const [popup3, setPopup3] = useState(false);
   const [popup4, setPopup4] = useState(false);
+  const [popup5, setPopup5] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -76,6 +80,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
       setInactiveFacilitator(res.data.data.inactiveFacilitator); //done
       setPromotionData(res.data.data.promotions); //done
       setPackageData(res.data.data.packages); //done
+      setFoodKioskData(res.data.data.foodCourts); //done
     } catch (err) {
       // console.log(err);
     } finally {
@@ -201,6 +206,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     "Inactive Places",
     "Verified Facilitator",
     "Non-Verified Facilitator",
+    "Food Place",
   ];
 
   return user ? (
@@ -335,15 +341,16 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
             <ul className="flex gap-5 items-start flex-col">
               {sections.map((section, idx) => (
                 <li
-                  key={section}
+                  key={idx}
                   className={`cursor-pointer transition-all duration-300 rounded-xl shadow-2xl w-full p-4 ${
                     activeSection === section
                       ? "bg-[#FFC20E] underline"
                       : "bg-white text-black"
                   }`}
                   onClick={() => {
+                    localStorage.setItem("activeSection", section);
                     setActiveSection(section);
-                    setMenuOpen(false); // close menu on click (mobile)
+                    // setMenuOpen(false); // close menu on click (mobile)
                   }}
                 >
                   {section}
@@ -421,6 +428,19 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
               Text="Facilitator under review"
               user={user?._id}
             />
+          )}
+          {activeSection === "Food Place" && (
+            <div className="w-full h-full flex flex-col justify-start items-start">
+              <Button
+                label={"List new Food Place"}
+                onClick={() => setPopup5(true)}
+              />
+              <FoodKiosks
+                TableData={foodKioskData}
+                Text="Food kiosks"
+                user={user?._id}
+              />
+            </div>
           )}
         </main>
       </div>
@@ -605,6 +625,17 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
             className="fixed top-0 left-0 h-screen w-full flex justify-start items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
           >
             <PackageRegisteration onCancel={() => setPopup4(false)} />
+          </motion.div>
+        )}
+        {popup5 && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-start items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
+          >
+            <FoodKiosk onCancel={() => setPopup5(false)} user={user?._id} />
           </motion.div>
         )}
       </AnimatePresence>
