@@ -6,13 +6,17 @@ import { UploadImages } from "../utils/imageKit.io.js";
 import Jwt from "jsonwebtoken";
 import { generateAccessAndRefreshTokens } from "../utils/TokenGenerator.js";
 import { Admin } from "../models/admin.models.js";
+import SendMail from "../utils/NodeMailer.js";
+import { emailQueue } from "../queues/email.queue.js";
 
 const registerFacilitator = asyncHandler(async (req, res) => {
+  console.log("console from req", req.body);
   const {
     name,
     phone,
     password,
     role,
+    email,
     // place,
     // city,
     // state,
@@ -22,16 +26,11 @@ const registerFacilitator = asyncHandler(async (req, res) => {
     // documentNumber,
   } = req.body;
 
-  console.log(
-    name,
-    phone,
-    password,
-    role,
-  );
+  console.log("console", name, phone, password, role);
   // if (!name || !phone || !password || !role || !place || !city || !state) {
   //   throw new ApiError(400, "Required fields missing");
   // }
-  if (!name || !phone || !password) {
+  if (!name || !phone || !password || !email) {
     throw new ApiError(400, "Required fields missing");
   }
 
@@ -94,7 +93,7 @@ const registerFacilitator = asyncHandler(async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const facilitator = await Facilitator.create({
     name,
-    // email,
+    email,
     phone,
     password,
     role,
@@ -111,6 +110,30 @@ const registerFacilitator = asyncHandler(async (req, res) => {
     //   documents: documents,
     // },
     otp,
+  });
+
+  await emailQueue.add("sendMailJob", {
+    type: "WELCOME_EMAIL",
+    data: {
+      receivers: email,
+      subject: "Welcome to Parikrama 🎉",
+      html_templateName: "welcome.html",
+      replacements: {
+        name: "Parikrama Team",
+      },
+    },
+  });
+
+  await emailQueue.add("sendMailJob", {
+    type: "OTP_EMAIL",
+    data: {
+      receivers: email,
+      subject: "Your OTP Code",
+      html_templateName: "otp.html",
+      replacements: {
+        otp: otp,
+      },
+    },
   });
 
   res.status(201).json(
@@ -152,7 +175,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
   }
 
   // OTP MATCHED
-  facilitator.isVerified = true;
+  // facilitator.isVerified = true;
   facilitator.otp = undefined; // remove otp
   facilitator.otpExpiresAt = undefined;
 
@@ -164,7 +187,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         facilitator,
-        "OTP verified successfully. Registration completed.",
+        "OTP verified successfully. Registration completed. You may now login",
       ),
     );
 });
@@ -290,6 +313,19 @@ const completeFacilitatorProfileByHimself = asyncHandler(async (req, res) => {
     verification: {
       documentNumber,
       documents: documents,
+    },
+  });
+
+  await emailQueue.add("sendMailJob", {
+    type: "SEND_EMAIL",
+    data: {
+      receivers: email,
+      subject: "Welcome to Parikrama",
+      text: "Welcome!",
+      html_templateName: "welcome.html",
+      replacements: {
+        name: "Parikrama Team",
+      },
     },
   });
 

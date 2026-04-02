@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { UploadImages, DeleteImage } from "../utils/imageKit.io.js";
 import { generateAccessAndRefreshTokens } from "../utils/TokenGenerator.js";
+import Jwt from "jsonwebtoken";
 
 const registerCommunity = asyncHandler(async (req, res) => {
   const {
@@ -152,8 +153,7 @@ const loginCommunity = asyncHandler(async (req, res) => {
       200,
       {
         community,
-        AccessToken,
-        RefreshToken,
+        tokens: { AccessToken, RefreshToken },
       },
       "Login successful",
     ),
@@ -169,9 +169,8 @@ const getAllCommunities = asyncHandler(async (req, res) => {
 });
 
 const getCommunityById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  const community = await Community.findById(id);
+  const { communityId } = req.params;
+  const community = await Community.findById(communityId);
 
   if (!community) {
     throw new ApiError(404, "Community not found");
@@ -287,6 +286,26 @@ const toggleCommunityStatus = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, community, "Community status updated"));
 });
 
+const refreshCommunityToken = asyncHandler(async (req, res) => {
+  const token = req.body.refreshToken;
+  if (!token) throw new ApiError(401, "Unauthorized request");
+  const decoded = Jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  const community = await Community.findById(decoded._id);
+  if (!community) throw new ApiError(401, "Invalid refresh token");
+
+  const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
+    community._id,
+    "Community",
+  );
+
+  return res.status(201).json(
+    new ApiResponse(201, {
+      user: community,
+      tokens: { AccessToken, RefreshToken },
+    }),
+  );
+});
+
 export {
   registerCommunity,
   loginCommunity,
@@ -296,4 +315,5 @@ export {
   deleteCommunity,
   verifyCommunity,
   toggleCommunityStatus,
+  refreshCommunityToken,
 };
