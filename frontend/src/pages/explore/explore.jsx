@@ -86,12 +86,12 @@ const Explore = ({ startLoading, stopLoading, userProfile = false }) => {
         <h1 className="py-10 text-3xl uppercase tracking-wider font-bold">
           {text}
         </h1>
-        <div className="md:w-fit w-full h-fit grid lg:grid-cols-4 md:grid-cols-3 p-1 gap-4">
+        <div className="w-full h-fit flex flex-wrap p-1 gap-4 justify-center items-center">
           {data?.slice(0, count).map((p) => (
             <Link
               key={p?._id}
               to={`/current/place/${p?._id}`}
-              className="bg-gray-300 rounded-md shadow p-2 flex flex-col gap-2 justify-center items-center object-contain md:w-72 h-60"
+              className="bg-gray-300 rounded-md shadow p-2 flex flex-col gap-2 justify-center items-center object-contain md:w-72 w-full h-60"
             >
               <div className="h-40 lg:h-60 md:h-60 w-full bg-gray-200 flex items-center justify-center overflow-hidden object-contain rounded-xl">
                 {p?.images[0]?.length === 0 ? (

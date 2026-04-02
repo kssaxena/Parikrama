@@ -79,8 +79,8 @@ const CurrentPlace = ({ startLoading, stopLoading }) => {
             className={"block lg:hidden"}
           /> */}
           <h1 className="text-left">
-            As you are interested in touring {data?.city?.name}, here are some
-            more suggestions
+            Heading to <span className="font-semibold">{data?.city?.name}</span>
+            ? Here's what else you shouldn't miss.
           </h1>
 
           {recommendations?.slice(0, count).map((place) => (

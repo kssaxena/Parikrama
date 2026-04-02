@@ -259,7 +259,7 @@ const FacilitatorRegister = ({
                   LabelName="Role"
                   Name="role"
                   required
-                  Placeholder="Photographer, Pandit, Guide, Pujari, Cab Driver many more.."
+                  Placeholder="Travel Guide, Photographer, Pandit, Temple Guide, Tour Operator and many more.."
                 />
                 <InputBox
                   LabelName="Password"

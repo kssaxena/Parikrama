@@ -6,11 +6,15 @@ import LoadingUI from "../../components/LoadingUI";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import RandomImageSlider from "../../components/ui/RandomImageSlider";
+import { formatProdErrorMessage } from "@reduxjs/toolkit";
 
 const CommunityRegForm = ({ startLoading, stopLoading }) => {
   const [rightBanner, setRightBanner] = useState([]);
   const right = rightBanner?.map((banner) => [banner?.images?.url]);
   const formRef = useRef();
+  const navigate = useNavigate();
+  const [profilePreview, setProfilePreview] = useState([]);
+  const [logoPreview, setLogoPreview] = useState([]);
 
   const banner = async () => {
     try {
@@ -26,7 +30,6 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
   useEffect(() => {
     banner();
   }, []);
-  const navigate = useNavigate();
 
   const handleHome = () => {
     navigate("/");
@@ -38,6 +41,9 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const formData = new FormData(formRef.current);
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
       const response = await FetchData(
         `communities/community/auth/register`,
         "post",
@@ -45,6 +51,9 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
         true,
       );
       console.log(response);
+      alert(response.data.message);
+      formRef.current.reset();
+      navigate("/login/community");
     } catch (err) {
       console.log(err);
     } finally {
@@ -52,11 +61,39 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
     }
   };
 
+  const handleProfileImage = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length > 1) {
+      alert("Only 1 profile image allowed");
+      e.target.value = "";
+      return;
+    }
+
+    setProfilePreview(files.map((f) => URL.createObjectURL(f)));
+  };
+
+  const handleLogoImage = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length > 1) {
+      alert("Maximum 1 image allowed");
+      e.target.value = "";
+      return;
+    }
+
+    setLogoPreview(files.map((f) => URL.createObjectURL(f)));
+  };
+
   return (
     <div className="flex flex-row justify-between items-start gap-10">
       <div className="md:w-1/2 w-[90vw] h-96 rounded-xl overflow-hidden hidden lg:flex justify-center items-center flex-col gap-5 lg:sticky top-24 left-0">
         <h1 className="font-semibold text-xl">Book Flight, Bus or Hotels</h1>
         <RandomImageSlider images={right} />
+        <Button
+          label={"Already registered login to your profile"}
+          onClick={() => navigate("/login/community")}
+        />
       </div>
       <form
         ref={formRef}
@@ -64,6 +101,12 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
         className="w-full flex justify-center items-center py-20"
       >
         <div className="flex flex-col justify-center items-center gap-2 px-5">
+          <h1>
+            Influencer, Blogger, Solo-Traveler, Group Travelers, Motor-Cycle
+            Club, Cycling Club, Data Feeder etc. can collaborate with us and
+            grow more together.
+          </h1>
+          {/* personal details  */}
           <div className="w-full flex-col justify-start items-start">
             <h1 className="text-xl font-semibold w-full border-b px-10 ">
               Personal Details
@@ -81,13 +124,30 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
                 />
               ))}
             </div>
+            <div className="md:col-span-2 bg-gray-200 py-5 px-2 rounded-xl overflow-hidden">
+              <label className="block text-sm font-medium mb-1">
+                Profile Image*
+              </label>
+              <input
+                type="file"
+                name="profileImage"
+                accept="image/*"
+                onChange={handleProfileImage}
+                className="bg-gray-300 w-fit py-2 px-5 rounded-xl"
+              />
+
+              {profilePreview.length > 0 && (
+                <img src={profilePreview[0]} className="w-32 mt-2 rounded" />
+              )}
+            </div>
           </div>
+          {/* community details  */}
           <div className="w-full flex-col justify-start items-start">
             <h1 className="text-xl font-semibold w-full border-b px-10 ">
               Community Details
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {communityInputs.map((i,index) => (
+              {communityInputs.map((i, index) => (
                 <InputBox
                   key={index}
                   LabelName={i.label}
@@ -110,6 +170,22 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
                     className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:ring-[#FFC20E] focus:border-[#FFC20E] outline-none transition duration-200 ease-in-out hover:shadow-md"
                   />
                 </div>
+              </div>
+              <div className="md:col-span-2 bg-gray-200 py-5 px-2 rounded-xl overflow-hidden">
+                <label className="block text-sm font-medium mb-1">
+                  Company Logo*
+                </label>
+                <input
+                  type="file"
+                  name="companyLogo"
+                  accept="image/*"
+                  onChange={handleLogoImage}
+                  className="bg-gray-300 w-fit py-2 px-5 rounded-xl"
+                />
+
+                {logoPreview.length > 0 && (
+                  <img src={logoPreview[0]} className="w-32 mt-2 rounded" />
+                )}
               </div>
             </div>
           </div>
