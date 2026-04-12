@@ -11,6 +11,7 @@ import {
   makePlaceActive,
   uploaderPlace,
   explorePlaces,
+  getPlaceMetaTags,
 } from "../controllers/place.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 
@@ -19,6 +20,7 @@ const router = Router();
 /* Public routes */
 router.route("/").get(getAllPlaces);
 router.route("/:id").get(getPlaceById);
+router.route("/share/:placeId").get(getPlaceMetaTags);
 router.route("/inactive/:placeId").get(getInactivePlaceById);
 router.route("/city/:cityId").get(getPlacesByCity);
 router.route("/related-places/:query").get(getPlacesByCity);
