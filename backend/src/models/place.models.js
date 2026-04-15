@@ -60,6 +60,15 @@ const placeSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+placeSchema.index({
+  name: "text",
+  description: "text",
+  tags: "text",
+  cityName: "text",
+  stateName: "text",
+});
+
 placeSchema.index({ location: "2dsphere" });
 
-export const Place = mongoose.model("Place", placeSchema);
+// export const Place = mongoose.model("Place", placeSchema);
+export const Place = mongoose.model("Place", placeSchema, "places");

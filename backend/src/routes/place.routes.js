@@ -11,6 +11,8 @@ import {
   makePlaceActive,
   uploaderPlace,
   explorePlaces,
+  searchPlaces,
+  getHeroPlaces,
 } from "../controllers/place.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 
@@ -18,7 +20,9 @@ const router = Router();
 
 /* Public routes */
 router.route("/").get(getAllPlaces);
-router.route("/:id").get(getPlaceById);
+router.route("/get-hero-places").get(getHeroPlaces);
+router.route("/search-feed").get(searchPlaces);
+router.route("/current-place/:id").get(getPlaceById);
 router.route("/inactive/:placeId").get(getInactivePlaceById);
 router.route("/city/:cityId").get(getPlacesByCity);
 router.route("/related-places/:query").get(getPlacesByCity);

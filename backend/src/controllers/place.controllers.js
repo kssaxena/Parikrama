@@ -7,6 +7,16 @@ import { UploadImages, DeleteBulkImage } from "../utils/imageKit.io.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Facilitator } from "../models/facilitator.models.js";
 import { generateMetaTagsHTML } from "../utils/metaTagGenerator.js";
+import {
+  applyGeoBoost,
+  getDirectMatches,
+  getExpandedMatches,
+  getExpansionTags,
+  getFuzzyMatches,
+  getTrendingPlaces,
+  rankResults,
+  sendResponse,
+} from "../utils/searchFeedHelpers.js";
 
 const createPlace = asyncHandler(async (req, res) => {
   const { adminId } = req.params;
@@ -158,21 +168,21 @@ const createPlace = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, place, "Place created successfully"));
 });
 
-// const getAllPlaces = asyncHandler(async (req, res) => {
-//   const LIMIT = 20; // ← change this anytime
+const getHeroPlaces = asyncHandler(async (req, res) => {
+  const LIMIT = 16; // ← change this anytime
 
-//   const places = await Place.aggregate([
-//     { $match: { isActive: true } }, // only active places
-//     { $sample: { size: LIMIT } }, // random documents
-//   ]);
+  const places = await Place.aggregate([
+    { $match: { isActive: true } }, // only active places
+    { $sample: { size: LIMIT } }, // random documents
+  ]);
 
-//   // populate after aggregation
-//   await Place.populate(places, [{ path: "city" }, { path: "state" }]);
+  // populate after aggregation
+  await Place.populate(places, [{ path: "city" }, { path: "state" }]);
 
-//   res
-//     .status(200)
-//     .json(new ApiResponse(200, places, "Random places fetched successfully"));
-// });
+  res
+    .status(200)
+    .json(new ApiResponse(200, places, "Random places fetched successfully"));
+});
 
 const getAllPlaces = asyncHandler(async (req, res) => {
   const places = await Place.find({ isActive: true })
@@ -181,6 +191,14 @@ const getAllPlaces = asyncHandler(async (req, res) => {
 
   res.status(200).json(new ApiResponse(200, places));
 });
+
+// const getHeroPlaces = asyncHandler(async (req, res) => {
+//   const places = await Place.find({ isActive: true })
+//     .populate("city state")
+//     .sort({ popularityScore: -1 });
+
+//   res.status(200).json(new ApiResponse(200, places));
+// });
 
 const getPlacesByCity = asyncHandler(async (req, res) => {
   const { query } = req.params;
@@ -210,17 +228,18 @@ const getPlacesByCity = asyncHandler(async (req, res) => {
 });
 
 const getPlaceById = asyncHandler(async (req, res) => {
-  const placeId = req.params.id;
+  const { id } = req.params;
+  console.log("console in getplaceId", id);
 
   /* -------- PLACE -------- */
-  const place = await Place.findById(placeId).populate("city state");
+  const place = await Place.findById(id).populate("city state");
   if (!place || !place.isActive) {
     throw new ApiError(404, "Place not found");
   }
 
   /* -------- FACILITATORS FOR THIS PLACE -------- */
   const facilitators = await Facilitator.find({
-    place: placeId,
+    place: id,
     isActive: true,
     isVerified: true,
   }).populate("city state");
@@ -618,9 +637,90 @@ const getPlaceMetaTags = asyncHandler(async (req, res) => {
   res.send(htmlContent);
 });
 
+const searchPlaces = async (req, res) => {
+  try {
+    const { query, page = 1, limit = 20, lat, lng } = req.query;
+    console.log("Query:", query);
+
+    // const skip = (page - 1) * limit;
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+
+    const skip = (pageNum - 1) * limitNum;
+
+    // 🔹 1. Empty query → Trending / Popular
+    if (!query || query.trim() === "") {
+      const trending = await getTrendingPlaces(limit);
+      return sendResponse(
+        res,
+        trending,
+        pageNum,
+        trending.length,
+        limitNum,
+        "trending",
+      );
+    }
+
+    // 🔹 2. Exact + Text Search
+    const directMatches = await getDirectMatches(query);
+
+    const foundIds = directMatches.map((p) => p._id);
+
+    // 🔹 3. Fuzzy Search (Typo tolerance)
+    const fuzzyMatches = await getFuzzyMatches(query, foundIds);
+
+    // 🔹 4. Semantic Expansion
+    const expansionTags = await getExpansionTags(foundIds);
+    const expandedMatches = await getExpandedMatches({
+      excludeIds: [...foundIds, ...fuzzyMatches.map((p) => p._id)],
+      tags: expansionTags,
+      limit: limit,
+    });
+
+    // 🔹 Combine
+    let allResults = [...directMatches, ...fuzzyMatches, ...expandedMatches];
+
+    // 🔹 5. Geo Boost (if location available)
+    if (lat && lng) {
+      allResults = applyGeoBoost(allResults, lat, lng);
+    }
+
+    // 🔹 6. Ranking
+    allResults = rankResults(allResults, query);
+
+    // 🔹 Pagination
+    const paginated = allResults.slice(skip, skip + limit);
+
+    // const formattedResults = paginated.map((place) => ({
+    //   id: place._id,
+    //   name: place.name,
+    //   location: `${place.city.name}, ${place.stateName}`,
+    //   images: place.images,
+    //   slug: place.slug,
+    // }));
+
+    return sendResponse(
+      res,
+      // formattedResults,
+      paginated,
+      pageNum,
+      allResults.length,
+      limitNum,
+      "search",
+    );
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({
+      message: "Search failed",
+      error: error.message,
+    });
+  }
+};
+
 export {
   createPlace,
   getAllPlaces,
+  getHeroPlaces,
   getPlaceById,
   getPlacesByCity,
   updatePlace,
@@ -630,4 +730,5 @@ export {
   uploaderPlace,
   explorePlaces,
   getPlaceMetaTags,
+  searchPlaces,
 };
