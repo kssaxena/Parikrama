@@ -100,7 +100,7 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
   };
 
   const SectionTitle = ({ title }) => (
-    <h3 className="text-lg font-semibold text-gray-900 mt-8 mb-4 pb-2 border-b-2 border-blue-500">
+    <h3 className="text-lg font-semibold text-gray-900 mt-8 mb-4 pb-2 border-b-2 border-[#FFC20D]">
       {title}
     </h3>
   );
@@ -134,8 +134,8 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
           <InputBox
             type="text"
             name="clubName"
-            label="Club Name *"
-            placeholder="Enter club name"
+            LabelName="Club Name"
+            Placeholder="Enter club name"
             required
           />
           <div>
@@ -173,8 +173,8 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
           <InputBox
             type="number"
             name="foundedYear"
-            label="Founded Year"
-            placeholder="e.g., 2020"
+            LabelName="Founded Year"
+            Placeholder="e.g., 2020"
           />
         </div>
 
@@ -184,23 +184,23 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
           <InputBox
             type="text"
             name="address"
-            label="Address *"
-            placeholder="Enter full address"
+            LabelName="Address "
+            Placeholder="Enter full address"
             required
           />
           <InputBox
             type="number"
             name="lat"
-            label="Latitude *"
-            placeholder="Latitude"
+            LabelName="Latitude "
+            Placeholder="Latitude"
             step="0.000001"
             required
           />
           <InputBox
             type="number"
             name="lng"
-            label="Longitude *"
-            placeholder="Longitude"
+            LabelName="Longitude"
+            Placeholder="Longitude"
             step="0.000001"
             required
           />
@@ -212,20 +212,20 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
           <InputBox
             type="email"
             name="email"
-            label="Email"
-            placeholder="club@example.com"
+            LabelName="Email"
+            Placeholder="club@example.com"
           />
           <InputBox
             type="tel"
             name="phone"
-            label="Phone"
-            placeholder="Enter contact number"
+            LabelName="Phone"
+            Placeholder="Enter contact number"
           />
           <InputBox
             type="url"
             name="website"
-            label="Website"
-            placeholder="https://example.com"
+            LabelName="Website"
+            Placeholder="https://example.com"
           />
         </div>
 
@@ -241,7 +241,7 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
               name="logo"
               accept="image/*"
               onChange={(e) => handleImageChange(e, "logo")}
-              className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition"
+              className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#FFC20D] transition"
             />
             {imagePreviews.logo && (
               <div className="mt-3 relative inline-block">
@@ -250,7 +250,7 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
                   alt="Logo preview"
                   className="h-24 w-24 rounded-lg object-cover border-2 border-gray-200"
                 />
-                <span className="absolute -top-2 -right-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                <span className="absolute -top-2 -right-2 bg-[#FFC20D] text-white px-2 py-1 rounded-full text-xs font-semibold">
                   Logo
                 </span>
               </div>
@@ -266,7 +266,7 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
               name="coverImage"
               accept="image/*"
               onChange={(e) => handleImageChange(e, "coverImage")}
-              className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition"
+              className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#FFC20D] transition"
             />
             {imagePreviews.coverImage && (
               <img
@@ -288,7 +288,7 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
             multiple
             accept="image/*"
             onChange={(e) => handleImageChange(e, "gallery")}
-            className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition"
+            className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#FFC20D] transition"
           />
           {imagePreviews.gallery.length > 0 && (
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
