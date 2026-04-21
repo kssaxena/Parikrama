@@ -22,10 +22,12 @@ const Header = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [popup, setPopup] = useState(false);
+  const [popup2, setPopup2] = useState(false);
 
   const LinkNavigate = (link) => {
     navigate(link);
     setPopup(false);
+    setPopup2(false);
   };
 
   const buttons = [
@@ -165,8 +167,9 @@ const Header = () => {
           </button>
           <Button
             className={"lg:block hidden"}
-            label={"Add your near by popular place"}
-            onClick={() => LinkNavigate("/guest/register-new-place")}
+            label={"Add your near by place"}
+            onClick={() => setPopup2(true)}
+            // onClick={() => LinkNavigate("/guest/register-new-place")}
           />
           <button onClick={() => setPopup(true)}>
             <CiMenuFries className="font-bold text-xl" />
@@ -240,6 +243,59 @@ const Header = () => {
                     />
                   )}
                 </div> */}
+              </div>
+            </div>
+          </motion.div>
+        )}
+        {popup2 && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70"
+          >
+            <div className="bg-white p-5 rounded-xl flex flex-col md:flex-row justify-center items-start gap-5 md:gap-10  w-full md:w-fit">
+              <Button label={"Close"} onClick={() => setPopup2(false)} />
+              <div className="w-full lg:w-[30vw] flex flex-col justify-center items-center gap-10 bg-neutral-300 p-5 rounded-xl overflow-hidden">
+                <h2 className="uppercase font-semibold text-xl">
+                  Add tourist place
+                </h2>
+                <div className="lg:w-96 w-40 h-40 lg:h-96 overflow-hidden object-center rounded-xl shadow-2xl hidden md:block">
+                  <img
+                    src={
+                      "https://ik.imagekit.io/parikrama/ChatGPT%20Image%20Apr%2021,%202026,%2001_13_42%20PM.png"
+                    }
+                  />
+                </div>
+                <p className="text-center">
+                  Click the button below to list a popular TOURIST PLACE.
+                </p>
+                <Button
+                  label={"Add Tourist Place"}
+                  onClick={() => LinkNavigate("/guest/register-new-place")}
+                />
+              </div>
+              {/* add food place  */}
+              <div className="w-full lg:w-[30vw] flex flex-col justify-center items-center gap-10 bg-neutral-300 p-5 rounded-xl overflow-hidden">
+                <h2 className="uppercase font-semibold text-xl">
+                  Add food place
+                </h2>
+                <div className="lg:w-96 w-40 h-40 lg:h-96 overflow-hidden object-center rounded-xl shadow-2xl hidden md:block">
+                  <img
+                    src={
+                      "https://ik.imagekit.io/parikrama/Ardor-2.1s-United-Indian-Thali-1-1.jpg"
+                    }
+                  />
+                </div>
+                <p className="text-center">
+                  Click the button below to list a popular FOOD PLACE located
+                  near tourist attraction.
+                </p>
+                <Button
+                  label={"Add Food Spot"}
+                  onClick={() => LinkNavigate("/guest/register-new-food-place")}
+                />
               </div>
             </div>
           </motion.div>
