@@ -17,6 +17,7 @@ import { FetchData } from "../../utils/FetchFromApi";
 import { truncateString } from "../../utils/Utility-functions";
 import { Helmet } from "react-helmet-async";
 import { MdFoodBank } from "react-icons/md";
+import FoodCard from "./FoodCard";
 
 const PlaceCard = ({ place }) => {
   return (
@@ -73,7 +74,7 @@ const PlaceCard = ({ place }) => {
   );
 };
 
-const ExpandedPlaceCard = ({ place, facilitator }) => {
+const ExpandedPlaceCard = ({ place, facilitator, foodStore }) => {
   const { user } = useSelector((state) => state.auth);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
@@ -103,11 +104,10 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
         `places/delete-place/${user?._id}/${place?._id}`,
         "delete",
       );
-      console.log(response);
       alert(response.data.message);
       navigate("/admin/dashboard");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -456,8 +456,11 @@ const ExpandedPlaceCard = ({ place, facilitator }) => {
               className="fixed top-0 left-0 h-screen w-full flex justify-center items-center z-50 "
             >
               <div className="bg-white md:w-3/4 w-full h-full flex flex-col justify-start items-center py-10 overflow-scroll">
-                {/* place.map  */}
-                No data available
+                {foodStore.length > 0 ? (
+                  <FoodCard f={foodStore} />
+                ) : (
+                  "No data available"
+                )}
               </div>
               <div
                 onClick={() => setPopup4(false)}

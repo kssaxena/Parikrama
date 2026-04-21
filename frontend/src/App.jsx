@@ -42,6 +42,7 @@ import CurrentHotel from "./pages/hotel/CurrentHotel";
 import ClubListing from "./pages/club/ClubListing";
 import CurrentClub from "./pages/club/CurrentClub";
 import AddNewClub from "./pages/admin/AddNewClub";
+import FoodKiosk from "./pages/kiosks/FoodKiosk";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -189,6 +190,10 @@ function App() {
             element={<CurrentStateCity />}
           />
           <Route path="/guest/register-new-place" element={<GuestPlace />} />
+          <Route
+            path="/guest/register-new-food-place"
+            element={<FoodKiosk />}
+          />
           <Route path="/admin/register-place" element={<AddNewPlace />} />
           <Route path="/admin/edit-place/:placeId" element={<EditPlace />} />
           <Route
