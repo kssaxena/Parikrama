@@ -10,7 +10,14 @@ const limiter = rateLimit({
   max: 100,
 });
 
-const allowedOrigins = [process.env.ORIGIN_1, process.env.ORIGIN_2];
+const allowedOrigins = [
+  process.env.ORIGIN_1,
+  process.env.ORIGIN_2,
+  process.env.ORIGIN_3,
+  process.env.ORIGIN_4,
+  process.env.ORIGIN_5,
+  process.env.ORIGIN_6,
+];
 
 const app = express();
 
