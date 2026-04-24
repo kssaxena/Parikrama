@@ -8,7 +8,6 @@ const PlaceSearch = ({ query, startLoading, stopLoading }) => {
   const [results, setResults] = useState([]);
   const [trendingResult, setTrendingResult] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const debounceRef = useRef(null);
   const controllerRef = useRef(null);
 
@@ -114,7 +113,11 @@ const PlaceSearch = ({ query, startLoading, stopLoading }) => {
               name={place?.name}
               city={place?.city?.name}
               state={place?.state?.name}
-              image={place?.images[0]?.url || place?.image[0]?.url}
+              image={
+                place?.images.length > 0
+                  ? place?.images[0]?.url || place?.image[0]?.url
+                  : ""
+              }
             />
           ))}
         </div>
