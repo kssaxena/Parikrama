@@ -60,7 +60,7 @@ app.use(express.static("public"));
 app.use(cookieParser());
 app.use(trackVisitor);
 app.use(compression());
-app.use(limiter);
+// app.use(limiter);
 
 //print function to ensure every step is executed
 app.use((req, res, next) => {
