@@ -11,6 +11,7 @@ import { Facilitator } from "../models/facilitator.models.js";
 import { Promotion } from "../models/promotions.models.js";
 import { TravelPackages } from "../models/package.models.js";
 import { FoodCourt } from "../models/foodCourt.models.js";
+import { UserSchema } from "../models/user.models.js";
 // import { generateUniqueEmployeePin } from "../utils/UniquePinEmployee.js";
 
 const regenerateAdminRefreshToken = asyncHandler(async (req, res) => {
@@ -124,6 +125,7 @@ const dashboardData = asyncHandler(async (req, res) => {
   const promotions = await Promotion.find().populate("place");
   const packages = await TravelPackages.find();
   const foodCourts = await FoodCourt.find().populate("place");
+  const users = await UserSchema.find();
   // const packages = await TravelPackages.find().populate("place");
 
   return res.status(200).json(
@@ -137,6 +139,7 @@ const dashboardData = asyncHandler(async (req, res) => {
       promotions,
       packages,
       foodCourts,
+      users,
     }),
   );
 });

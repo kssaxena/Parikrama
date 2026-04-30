@@ -40,7 +40,7 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const contactNumber  = req.body;
+  const contactNumber = req.body;
 
   const user = await UserSchema.findOne(contactNumber);
   if (!user) throw new ApiError(404, "User not found");
@@ -68,7 +68,7 @@ const verifyUserOtp = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Invalid request please try again later !");
   }
 
-  const user = await UserSchema.findById(userId);
+  const user = await UserSchema.findById(userId).populate("city");
   if (!user) {
     throw new ApiError(404, "User not found please try again");
   }
@@ -124,4 +124,40 @@ const refreshUserToken = asyncHandler(async (req, res) => {
   );
 });
 
-export { createUser, verifyUserOtp, refreshUserToken, loginUser };
+const updateProfile = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const { name, email, address, city, state } = req.body;
+
+  if (!name || !email || !address || !city || !state || !userId)
+    throw new ApiError(400, "All fields are required");
+
+  const user = await UserSchema.findById(userId);
+  if (!user) throw new ApiError(400, "Invalid request please try again later!");
+
+  const updatedUser = await UserSchema.findByIdAndUpdate(userId, {
+    name,
+    email,
+    address,
+    city,
+    state,
+  });
+
+  // user.name = name;
+  // user.email = email;
+  // user.address = address;
+  // user.city = city;
+  // user.state = state;
+
+  // const updateUserProfile = await user.save();
+  return res
+    .status(201)
+    .json(new ApiResponse(201, {}, "Profile updated successfully !"));
+});
+
+export {
+  createUser,
+  verifyUserOtp,
+  refreshUserToken,
+  loginUser,
+  updateProfile,
+};
