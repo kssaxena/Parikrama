@@ -139,42 +139,44 @@ const Header = () => {
       ) : (
         ""
       )} */}
-
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo Section */}
         <Link to={"/"} className="flex items-center">
           <img src={logo} className="w-10" />
           <img src={logo2} className="w-28" />
         </Link>
-
-        <div className="flex justify-center items-center gap-5">
-          <Button
-            label={
-              <h1 className="flex justify-center items-center gap-2">
-                <MdOutlineExplore className="text-xl" />
-                Explore More
-              </h1>
-            }
-            onClick={() => LinkNavigate("/explore")}
-            className={"md:block hidden"}
-          />
-          <button
-            onClick={() => LinkNavigate("/explore")}
-            className="bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out md:hidden text-xs flex justify-center items-center gap-1"
-          >
-            <MdOutlineExplore />
-            Explore More
-          </button>
-          <Button
-            className={"lg:block hidden"}
-            label={"Add your near by place"}
-            onClick={() => setPopup2(true)}
-            // onClick={() => LinkNavigate("/guest/register-new-place")}
-          />
-          <button onClick={() => setPopup(true)}>
-            <CiMenuFries className="font-bold text-xl" />
-          </button>
-        </div>
+        {localStorage.role === "Admin" ? (
+          ""
+        ) : (
+          <div className="flex justify-center items-center gap-5">
+            <Button
+              label={
+                <h1 className="flex justify-center items-center gap-2">
+                  <MdOutlineExplore className="text-xl" />
+                  Explore More
+                </h1>
+              }
+              onClick={() => LinkNavigate("/explore")}
+              className={"md:block hidden"}
+            />
+            <button
+              onClick={() => LinkNavigate("/explore")}
+              className="bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out md:hidden text-xs flex justify-center items-center gap-1"
+            >
+              <MdOutlineExplore />
+              Explore More
+            </button>
+            <Button
+              className={"lg:block hidden"}
+              label={"Add your near by place"}
+              onClick={() => setPopup2(true)}
+              // onClick={() => LinkNavigate("/guest/register-new-place")}
+            />
+            <button onClick={() => setPopup(true)}>
+              <CiMenuFries className="font-bold text-xl" />
+            </button>
+          </div>
+        )}
       </div>
       <AnimatePresence>
         {popup && (
