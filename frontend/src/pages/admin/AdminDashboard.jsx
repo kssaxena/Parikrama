@@ -17,6 +17,7 @@ import {
   FoodKiosks,
   Hotels,
   Clubs,
+  Users,
 } from "../../components/ui/TableUI";
 import { RiImageAddFill } from "react-icons/ri";
 import { MdAdd, MdAddLocationAlt, MdOutlineRule } from "react-icons/md";
@@ -24,7 +25,12 @@ import { LuRefreshCw } from "react-icons/lu";
 import { IoMdLogOut } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import InputBox from "../../components/InputBox";
-import { FaChevronDown, FaChevronUp, FaUserPlus } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronRight,
+  FaChevronUp,
+  FaUserPlus,
+} from "react-icons/fa";
 import CategoryPieChart from "../../components/ui/CategoryPieChart";
 import StatesDonutChart from "../../components/ui/StatesDonutChart";
 import CitiesByStateBarChart from "../../components/ui/CitiesByStateBarChart";
@@ -47,6 +53,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [foodKioskData, setFoodKioskData] = useState([]);
   const [hotelData, setHotelData] = useState([]);
   const [clubData, setClubData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
   const [popup3, setPopup3] = useState(false);
@@ -80,6 +87,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const res = await FetchData("admin/dashboard/data", "get");
+      console.log(res);
       setPlaceData(res.data.data.place);
       setCityData(res.data.data.city);
       setStateData(res.data.data.state);
@@ -89,6 +97,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
       setPromotionData(res.data.data.promotions);
       setPackageData(res.data.data.packages);
       setFoodKioskData(res.data.data.foodCourts);
+      setUserData(res.data.data.users);
 
       // Fetch hotels separately
       const hotelRes = await FetchData("hotels", "get");
@@ -214,17 +223,18 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
 
   const sections = [
     "Overview",
-    "Promotions",
-    "Packages",
     "Hotels",
     "Clubs",
     "Active Places",
-    "Cities",
-    "States",
     "Inactive Places",
+    "Food Place",
+    "Users",
     "Verified Facilitator",
     "Non-Verified Facilitator",
-    "Food Place",
+    "Cities",
+    "States",
+    "Packages",
+    "Promotions",
   ];
 
   return user ? (
@@ -354,15 +364,15 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
 
       {/* Tables  */}
       <div className="flex w-full bg-neutral-200 px-5 py-5 rounded-xl h-full gap-5">
-        <aside className="static bottom-0 left-0 w-60 flex justify-start items-start h-full">
+        <aside className="static bottom-0 left-0 w-60 flex justify-start items-start h-[70vh] overflow-scroll no-scrollbar">
           <nav>
             <ul className="flex gap-5 items-start flex-col">
               {sections.map((section, idx) => (
                 <li
                   key={idx}
-                  className={`cursor-pointer transition-all duration-300 rounded-xl shadow-2xl w-full p-4 ${
+                  className={`cursor-pointer transition-all duration-300 rounded-xl w-full px-4 py-2 ${
                     activeSection === section
-                      ? "bg-[#FFC20E] underline"
+                      ? "bg-[#FFC20E]"
                       : "bg-white text-black"
                   }`}
                   onClick={() => {
@@ -371,7 +381,10 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
                     // setMenuOpen(false); // close menu on click (mobile)
                   }}
                 >
-                  {section}
+                  <p className="flex justify-between items-center">
+                    {section}
+                    {activeSection === section ? <FaChevronRight /> : ""}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -473,6 +486,11 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
                 Text="Food kiosks"
                 user={user?._id}
               />
+            </div>
+          )}
+          {activeSection === "Users" && (
+            <div className="w-full h-full flex flex-col justify-start items-start">
+              <Users TableData={userData} Text="User details" />
             </div>
           )}
         </main>
