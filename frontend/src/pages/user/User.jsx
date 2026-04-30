@@ -10,9 +10,11 @@ import { clearUser } from "../../redux/slices/authSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import InputBox from "../../components/InputBox";
 import { userFormInputs } from "../../constants/Constants";
+import { parseErrorMessage } from "../../utils/ErrorMessageParser";
 
 const UserDashboard = ({ startLoading, stopLoading }) => {
   const { user } = useSelector((state) => state.auth);
+  const userId = user?._id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const formRef = useRef();
@@ -24,6 +26,7 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
   const [selectedStateName, setSelectedStateName] = useState("");
   const [cities, setCities] = useState([]);
   const right = rightBanner?.map((banner) => [banner?.images?.url]);
+
   const banner = async () => {
     try {
       startLoading();
@@ -35,6 +38,7 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
       stopLoading();
     }
   };
+
   useEffect(() => {
     banner();
   }, []);
@@ -62,7 +66,7 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
     setSelectedState(city?.state?._id || "");
     setSelectedStateName(city?.state?.name || "");
 
-    const cityPlaces = places.filter((p) => p.city?._id === cityId);
+    const cityPlaces = city.filter((p) => p.city?._id === cityId);
 
     setFilteredPlaces(cityPlaces);
   };
@@ -79,9 +83,30 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
     { label: "Email", value: user?.email },
     { label: "Contact number", value: user?.contactNumber },
     { label: "Address", value: user?.address },
-    { label: "City", value: user?.city },
-    { label: "State", value: user?.state },
+    { label: "City", value: user?.city?.name },
+    // { label: "State", value: user?.state },
   ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(formRef.current);
+      const response = await FetchData(
+        `users/update-profile/${userId}`,
+        "post",
+        formData,
+      );
+      setModel(false);
+      formRef.current.reset();
+      setSelectedStateName("");
+      setSelectedState("");
+      setSelectedCity("");
+      alert(response.data.message);
+      window.location.reload();
+    } catch (err) {
+      alert(parseErrorMessage(err.response.data));
+    }
+  };
 
   return userRole === "User" ? (
     <div>
@@ -122,7 +147,7 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
               <h1 className="w-full text-center text-xl font-semibold">
                 Fill form to update your profile.
               </h1>
-              <form ref={formRef}>
+              <form ref={formRef} onSubmit={handleSubmit}>
                 {userFormInputs.map((i) => (
                   <InputBox
                     LabelName={i.label}
@@ -151,7 +176,7 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
                 </div>
                 <InputBox
                   LabelName="State"
-                  Name="state"
+                  // Name="state"
                   Value={selectedStateName}
                   required
                   // className="hidden"
@@ -165,17 +190,20 @@ const UserDashboard = ({ startLoading, stopLoading }) => {
                   className="hidden"
                   LabelClassname="hidden"
                 />
+                <div className="flex justify-center items-center gap-20">
+                  <Button
+                    label={"Cancel"}
+                    onClick={() => {
+                      setModel(false);
+                      formRef.current.reset();
+                      setSelectedStateName("");
+                      setSelectedState("");
+                      setSelectedCity("");
+                    }}
+                  />
+                  <Button label={"Submit"} type={"submit"} />
+                </div>
               </form>
-              <div className="flex justify-center items-center gap-20">
-                <Button
-                  label={"Cancel"}
-                  onClick={() => {
-                    setModel(false);
-                    formRef.current.reset();
-                  }}
-                />
-                <Button label={"Submit"} type={"submit"} />
-              </div>
             </div>
           </motion.div>
         )}

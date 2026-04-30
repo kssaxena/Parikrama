@@ -128,13 +128,17 @@ const FoodKiosk = ({ stopLoading, startLoading, onCancel, user }) => {
 
   return (
     <div>
-      <div className="w-full flex justify-end items-end md:px-10">
-        <Button
-          label={"Add Tourist Place"}
-          onClick={() => setPopup(true)}
-          className={"text-xs"}
-        />
-      </div>
+      {localStorage.role === "Admin" ? (
+        ""
+      ) : (
+        <div className="w-full flex justify-end items-end md:px-10">
+          <Button
+            label={"Add Tourist Place"}
+            onClick={() => setPopup(true)}
+            className={"text-xs"}
+          />
+        </div>
+      )}
       <form
         ref={formRef}
         onSubmit={handleSubmit}
