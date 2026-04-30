@@ -4,6 +4,7 @@ import InputBox from "../../components/InputBox";
 import { FetchData } from "../../utils/FetchFromApi";
 import { truncateString } from "../../utils/Utility-functions";
 import Button from "../Button";
+import { formatDateTimeString } from "../../utils/mongoDB_DateTime";
 
 const Place = ({ Text = "", TableData = [] }) => {
   const [search, setSearch] = useState("");
@@ -728,7 +729,7 @@ const TravelPackages = ({ Text = "", TableData = [], user }) => {
   };
 
   return (
-    <div className="">
+    <div className="w-full">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-bold">
           {Text} (<span className="text-sm">{filteredData.length}</span>)
@@ -942,7 +943,7 @@ const Hotels = ({ Text = "", TableData = [] }) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-bold text-nowrap">
           {Text} (<span className="text-sm">{filteredData.length}</span>)
@@ -1063,7 +1064,7 @@ const Clubs = ({ Text = "", TableData = [] }) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-bold text-nowrap">
           {Text} (<span className="text-sm">{filteredData.length}</span>)
@@ -1109,7 +1110,9 @@ const Clubs = ({ Text = "", TableData = [] }) => {
                   <td className="px-5 py-3">{data?.members?.length || 0}</td>
                   <td className="px-5 py-3">
                     {data?.adminVerified ? (
-                      <span className="text-green-600 font-semibold">✓ Yes</span>
+                      <span className="text-green-600 font-semibold">
+                        ✓ Yes
+                      </span>
                     ) : (
                       <span className="text-red-600">✗ No</span>
                     )}
@@ -1142,6 +1145,80 @@ const Clubs = ({ Text = "", TableData = [] }) => {
   );
 };
 
+const Users = ({ Text = "", TableData = [] }) => {
+  const [search, setSearch] = useState("");
+
+  const TableHeaders = [
+    "Name",
+    "Email",
+    "Contact number",
+    "Registration date(DDMMYY)",
+  ];
+
+  const filteredData = useMemo(() => {
+    if (!search.trim()) return TableData;
+
+    const q = search.toLowerCase();
+
+    return TableData.filter((s) => `${s?.number}`.toLowerCase().includes(q));
+  }, [search, TableData]);
+
+  return (
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-bold">
+          {Text} (<span className="text-sm">{filteredData.length}</span>)
+        </h2>
+
+        <div className="w-96">
+          <InputBox
+            Type="text"
+            Placeholder="Search user..."
+            Value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-white"
+          />
+        </div>
+      </div>
+
+      <div className="w-full mt-1 h-[500px] overflow-scroll">
+        <table className="w-full text-sm text-left bg-white rounded-xl shadow-sm">
+          <thead className="bg-gray-100 text-gray-600">
+            <tr>
+              {TableHeaders.map((header, index) => (
+                <th key={index} className="px-5 py-3 font-medium">
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((data) => (
+                <tr key={data._id} className="hover:bg-gray-50 border-b">
+                  <td className="px-5 py-3">{data?.name || "Na"}</td>
+                  <td className="px-5 py-3">{data?.email || "Na"}</td>
+                  <td className="px-5 py-3">{data?.contactNumber}</td>
+                  <td className="px-5 py-3">
+                    {formatDateTimeString(data?.createdAt)}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="text-center py-6 text-gray-500">
+                  No Data found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 export {
   City,
   State,
@@ -1154,4 +1231,5 @@ export {
   FoodKiosks,
   Hotels,
   Clubs,
+  Users,
 };
