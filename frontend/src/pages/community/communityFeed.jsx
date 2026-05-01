@@ -34,8 +34,8 @@ const CommunityFeed = ({ startLoading, stopLoading }) => {
           <span className="md:border-b-2 border-[#FFC20E] text-3xl">
             Let's collaborate!
           </span>
-          <br /> If you are an Influencer, Blogger, Solo-Traveler, Group
-          Travelers, Bikers Club, Cycling Club etc.
+          <br /> If you are an Influencer, Blogger, Solo-Traveller, Group
+          Travellers, Bikers, Cycling etc.
         </h1>
         <Button
           label={"Click here to make new Community"}

@@ -280,7 +280,7 @@ const ExpandedPlaceCard = ({ place, facilitator, foodStore }) => {
           ₹{place?.entryFee}
         </span> */}
         </div>
-        {user ? (
+        {localStorage.role === "Admin" ? (
           <div className="flex justify-center items-center gap-10">
             <Button
               onClick={() => navigate(`/admin/edit-place/${place?._id}`)}

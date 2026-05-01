@@ -124,8 +124,8 @@ const CommunityRegForm = ({ startLoading, stopLoading }) => {
             <span className="border-b-2 border-[#FFC20E] text-3xl">
               Let's collaborate! Fill out the form below to join us.
             </span>
-            <br /> If you are an Influencer, Blogger, Solo-Traveler, Group
-            Travelers, Bikers Club, Cycling Club etc.
+            <br /> If you are an Influencer, Blogger, Solo-Traveller, Group
+            Travellers, Bikers, Cycling etc.
           </h1>
           {/* personal details  */}
           <div className="w-full flex-col justify-start items-start">
