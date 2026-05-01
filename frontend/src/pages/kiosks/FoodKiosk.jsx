@@ -120,6 +120,7 @@ const FoodKiosk = ({ stopLoading, startLoading, onCancel, user }) => {
       setFoodImagePreview([]);
       alert(response.data.message);
     } catch (err) {
+      alert(parseErrorMessage(err.response.data));
       // console.log(err);
     } finally {
       stopLoading();
