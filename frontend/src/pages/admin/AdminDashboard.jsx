@@ -87,7 +87,6 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const res = await FetchData("admin/dashboard/data", "get");
-      console.log(res);
       setPlaceData(res.data.data.place);
       setCityData(res.data.data.city);
       setStateData(res.data.data.state);
@@ -237,7 +236,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     "Promotions",
   ];
 
-  return user ? (
+  return localStorage.role === "Admin" ? (
     <div className="flex flex-col h-fit gap-5 justify-between items-start">
       {/* <h2 className="text-2xl font-bold mb-2 px-20">Admin Dashboard</h2> */}
       {/* ADMIN DETAILS  */}

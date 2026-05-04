@@ -285,7 +285,7 @@ const Hero = ({ stopLoading, startLoading }) => {
             <span className="flex justify-center items-center md:flex-row-reverse ">
               Live <TbLivePhotoFilled className="text-red-600" />
             </span>
-            Darshan
+            Connect
           </h1>
         </button>
       </div>
