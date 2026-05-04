@@ -104,8 +104,9 @@ const Footer = () => {
           ))}
         </div>
       </div>
-      <div className="h-[40vh] overflow-hidden object-top grayscale-100">
-        <img className="w-full h-full object-cover"
+      <div className="h-[40vh] overflow-hidden object-top grayscale-100 hidden md:block">
+        <img
+          className="w-full h-full object-cover"
           src={
             "https://ik.imagekit.io/parikrama/vecteezy_travel-around-the-world-important-landmarks-poster_1128259.jpg"
           }

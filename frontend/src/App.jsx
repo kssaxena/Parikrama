@@ -44,6 +44,7 @@ import CurrentClub from "./pages/club/CurrentClub";
 import AddNewClub from "./pages/admin/AddNewClub";
 import FoodKiosk from "./pages/kiosks/FoodKiosk";
 import CommunityFeed from "./pages/community/communityFeed";
+import CurrentCommunity from "./pages/community/currentCommunity";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -236,7 +237,10 @@ function App() {
           <Route path="/community/form" element={<CommunityRegForm />} />
           <Route path="/login/community" element={<CommunityLogin />} />
           <Route path="/dashboard/community" element={<CommunityDashboard />} />
-          
+          <Route
+            path="/current/community/:communityId"
+            element={<CurrentCommunity />}
+          />
 
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
