@@ -297,7 +297,12 @@ const City = ({ Text = "", TableData = [] }) => {
 const State = ({ Text = "", TableData = [] }) => {
   const [search, setSearch] = useState("");
 
-  const TableHeaders = ["State name", "State Code"];
+  const TableHeaders = [
+    "State Name",
+    "State Code",
+    "Country Name",
+    "Country Code",
+  ];
 
   const filteredData = useMemo(() => {
     if (!search.trim()) return TableData;
@@ -305,7 +310,9 @@ const State = ({ Text = "", TableData = [] }) => {
     const q = search.toLowerCase();
 
     return TableData.filter((s) =>
-      `${s?.name} ${s?.code}`.toLowerCase().includes(q),
+      `${s?.name} ${s?.code} ${s?.country?.name} ${s?.country?.code}`
+        .toLowerCase()
+        .includes(q),
     );
   }, [search, TableData]);
 
@@ -352,6 +359,8 @@ const State = ({ Text = "", TableData = [] }) => {
                     </Link>
                   </td>
                   <td className="px-5 py-3">{data?.code}</td>
+                  <td className="px-5 py-3">{data?.country?.name}</td>
+                  <td className="px-5 py-3">{data?.country?.code}</td>
                 </tr>
               ))
             ) : (
@@ -1219,6 +1228,115 @@ const Users = ({ Text = "", TableData = [] }) => {
   );
 };
 
+const Enquiry = ({ Text = "", TableData = [], user }) => {
+  const [search, setSearch] = useState("");
+  const [request, setRequest] = useState();
+
+  const TableHeaders = [
+    "Enquiry Category",
+    "Name",
+    "Contact number",
+    "Enquired on (DDMMYY)",
+    "Action",
+  ];
+
+  const filteredData = useMemo(() => {
+    if (!search.trim()) return TableData;
+
+    const q = search.toLowerCase();
+
+    return TableData.filter((s) =>
+      `${s?.enquiryType}`.toLowerCase().includes(q),
+    );
+  }, [search, TableData]);
+
+  const getRequest = async ({ enquiryId }) => {
+    try {
+      const response = await FetchData(
+        `enquiry/admin/get/enquiry-by-id/${user}/${enquiryId}`,
+      );
+      console.log(response);
+      setRequest(response.data.data || []);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-bold">
+          {Text} (<span className="text-sm">{filteredData.length}</span>)
+        </h2>
+
+        <div className="w-96">
+          <InputBox
+            Type="text"
+            Placeholder="Search user..."
+            Value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-white"
+          />
+        </div>
+      </div>
+
+      <div className="w-full mt-1 h-[500px] overflow-scroll">
+        <table className="w-full text-sm text-left bg-white rounded-xl shadow-sm">
+          <thead className="bg-gray-100 text-gray-600">
+            <tr>
+              {TableHeaders.map((header, index) => (
+                <th key={index} className="px-5 py-3 font-medium">
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((data) => (
+                <tr key={data._id} className="hover:bg-gray-50 border-b">
+                  <td className="px-5 py-3">
+                    {data?.enquiryType === "ContactUsForm"
+                      ? "Contact Form"
+                      : ""}
+                    {data?.enquiryType === "flightBusHotel"
+                      ? "Flights Buses Hotels"
+                      : ""}
+                    {data?.enquiryType === "PackageEnquiryForm"
+                      ? "Travel Packages"
+                      : ""}
+                  </td>
+                  <td className="px-5 py-3">
+                    {data?.formDetails?.contactPersonName || "Na"}
+                  </td>
+                  <td className="px-5 py-3">
+                    {data?.formDetails?.contactPersonPhone}
+                  </td>
+                  <td className="px-5 py-3">
+                    {formatDateTimeString(data?.createdAt)}
+                  </td>
+                  <td>
+                    <button onClick={() => getRequest((enquiryId = data?._id))}>
+                      Open
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="text-center py-6 text-gray-500">
+                  No Data found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 export {
   City,
   State,
@@ -1232,4 +1350,5 @@ export {
   Hotels,
   Clubs,
   Users,
+  Enquiry,
 };
