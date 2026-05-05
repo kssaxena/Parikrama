@@ -45,6 +45,8 @@ import AddNewClub from "./pages/admin/AddNewClub";
 import FoodKiosk from "./pages/kiosks/FoodKiosk";
 import CommunityFeed from "./pages/community/communityFeed";
 import CurrentCommunity from "./pages/community/currentCommunity";
+import LoginRegister from "./pages/login-register/LoginRegister";
+import ContactUs from "./pages/contactus/ContactUs";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -173,11 +175,13 @@ function App() {
         <Routes>
           {/* ================= PUBLIC ================= */}
           <Route path="/" element={<Hero />} />
+          <Route path="/contact-us/parikrama-global" element={<ContactUs />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/search-feed/places" element={<SearchPage />} />
           <Route path="/live-telecasts" element={<LiveTelecast />} />
           <Route path="/login/admin" element={<Login />} />
           <Route path="/login/facilitator" element={<FacilitatorAuth />} />
+          <Route path="/authentication" element={<LoginRegister />} />
           <Route
             path="/admin/register-admin"
             element={<AdminRegistrationForm />}

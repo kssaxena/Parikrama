@@ -3,7 +3,7 @@ import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/Logo1.png";
 import logo2 from "../assets/Logo3.png";
-import { CiMenuFries } from "react-icons/ci";
+import { CiMenuFries, CiSearch } from "react-icons/ci";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
@@ -17,6 +17,7 @@ import {
 import { FaBusSimple, FaUserTie } from "react-icons/fa6";
 import { FaUserCircle, FaUserCog, FaUsersCog } from "react-icons/fa";
 import { GiClubs } from "react-icons/gi";
+import InputBox from "./InputBox";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -30,147 +31,39 @@ const Header = () => {
     setPopup2(false);
   };
 
-  const buttons = [
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <FaUserCog className="text-2xl" />
-          Facilitator Login
-        </h1>
-      ),
-      url: "/login/facilitator",
-    },
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <FaUsersCog className="text-2xl" />
-          Community
-        </h1>
-      ),
-      url: "/community/feed",
-    },
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <FaUserCircle className="text-2xl" />
-          User Login
-        </h1>
-      ),
-      url: "/login-register/user",
-    },
-    {
-      className: "w-full md:hidden block",
-      label: "Add your near by popular place",
-      url: "/guest/register-new-place",
-    },
-  ];
-
-  const facilityButtons = [
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <MdLocalOffer className="text-2xl" />
-          Travel Packages
-        </h1>
-      ),
-      url: "/travel-packages",
-    },
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <LiaHotelSolid className="text-2xl" />
-          Hotel Booking
-        </h1>
-      ),
-      url: "/hotels",
-    },
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <MdOutlineFlight className="text-2xl" />
-          Flight Booking
-        </h1>
-      ),
-      url: "/flights-busses",
-    },
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <FaBusSimple className="text-2xl" />
-          Bus Booking
-        </h1>
-      ),
-      url: "/flights-busses",
-    },
-    {
-      className: "w-full",
-      label: (
-        <h1 className="flex justify-between items-center">
-          <GiClubs className="text-2xl" />
-          Club Memberships
-        </h1>
-      ),
-      url: "/clubs",
-    },
-  ];
-
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
-      {/* {window.location.pathname === "/" ? (
-        <button
-          onClick={() => LinkNavigate("/login/facilitator")}
-          className="w-full h-fit bg-[#FFC20E] text-xs md:text-sm px-5 flex justify-between items-center py-1"
-        >
-          <h1>
-            You can register yourself as a Facilitator (Pandit, Temple Guide,
-            Tour Guide, Photographer etc.)
-          </h1>
-          <span className="md:flex justify-center items-center gap-2 hidden">
-            Register / Login <BiArrowFromLeft />
-          </span>
-        </button>
-      ) : (
-        ""
-      )} */}
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="mx-auto px-4 py-3 md:py-1 flex items-center justify-between w-full gap-10 md:gap-40">
         {/* Logo Section */}
         <Link to={"/"} className="flex items-center">
-          <img src={logo} className="w-10" />
-          <img src={logo2} className="w-28" />
+          <img src={logo} className="w-10 md:w-16" />
+          <img src={logo2} className="w-28 hidden md:block" />
         </Link>
         {localStorage.role === "Admin" ? (
           ""
         ) : (
-          <div className="flex justify-center items-center gap-5">
+          <div className="flex justify-end md:justify-center items-center gap-5 w-full">
+            <div className="hidden md:flex justify-center items-center w-full relative">
+              <InputBox
+                onClick={() => navigate("/search-feed/places")}
+                Placeholder="Search by place, city, state, category..."
+                className="w-full pr-10"
+              />
+              <CiSearch className="absolute right-3 text-gray-500" />
+            </div>
             <Button
               label={
-                <h1 className="flex justify-center items-center gap-2">
-                  <MdOutlineExplore className="text-xl" />
+                <h1 className="flex justify-center items-center gap-2 text-nowrap text-xs md:text-base">
+                  <MdOutlineExplore className="text-xs md:text-xl" />
                   Explore More
                 </h1>
               }
               onClick={() => LinkNavigate("/explore")}
-              className={"md:block hidden"}
             />
-            <button
-              onClick={() => LinkNavigate("/explore")}
-              className="bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out md:hidden text-xs flex justify-center items-center gap-1"
-            >
-              <MdOutlineExplore />
-              Explore More
-            </button>
             <Button
-              className={"lg:block hidden"}
+              className={"lg:block hidden text-nowrap"}
               label={"Add your near by place"}
               onClick={() => setPopup2(true)}
-              // onClick={() => LinkNavigate("/guest/register-new-place")}
             />
             <button onClick={() => setPopup(true)}>
               <CiMenuFries className="font-bold text-xl" />
@@ -179,6 +72,7 @@ const Header = () => {
         )}
       </div>
       <AnimatePresence>
+        {/* hamburger  */}
         {popup && (
           <motion.div
             whileInView={{ opacity: 1, x: 0 }}
@@ -200,55 +94,30 @@ const Header = () => {
                 <img src={logo} className="w-20 md:w-40" />
                 <img src={logo2} className="w-20 md:w-40" />
               </div>
-              {/* parikrama facility buttons  */}
+              {/* buttons */}
               <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-                {facilityButtons.map((b, index) => (
-                  <Button
-                    key={index}
-                    className={b.className}
-                    onClick={() => LinkNavigate(b.url)}
-                    label={b.label}
-                  />
-                ))}
-              </div>
-              {/* parikrama logins buttons  */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-                {buttons.map((b, index) => (
-                  <Button
-                    key={index}
-                    className={b.className}
-                    onClick={() => LinkNavigate(b.url)}
-                    label={b.label}
-                  />
-                ))}
-                {/* <div className="hidden md:flex items-center gap-4">
-                  {user?.role === "Admin" ? (
-                    <Link
-                      onClick={() => setPopup(false)}
-                      to={`/admin/dashboard`}
-                      className="bg-gray-400 px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-center"
-                    >
-                      {window.location.pathname === "/"
-                        ? "Go to Dashboard"
-                        : `Welcome admin ${user.name}`}
-                    </Link>
-                  ) : (
-                    <Button
-                      className={"w-full bg-gray-400 text-white"}
-                      label={
-                        <h1 className="flex justify-between items-center">
-                          <FaUserTie className="text-2xl text-black" />
-                          Admin Login
-                        </h1>
-                      }
-                      onClick={() => LinkNavigate("/login")}
-                    />
-                  )}
-                </div> */}
+                <Button
+                  label={"Add your near by place"}
+                  onClick={() => {
+                    setPopup2(true);
+                    setPopup(false);
+                  }}
+                />
+                <Button
+                  label={
+                    <h1 className="flex justify-between items-center">
+                      <FaUserCircle className="text-2xl" />
+                      Login
+                    </h1>
+                  }
+                  onClick={() => LinkNavigate("/authentication")}
+                  className={"w-full"}
+                />
               </div>
             </div>
           </motion.div>
         )}
+        {/* add place popup  */}
         {popup2 && (
           <motion.div
             whileInView={{ opacity: 1, x: 0 }}

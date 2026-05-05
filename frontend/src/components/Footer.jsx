@@ -11,7 +11,7 @@ import { AiFillInstagram } from "react-icons/ai";
 const links = [
   { label: "Terms of service", path: "/terms-of-service" },
   { label: "Privacy Policy", path: "/privacy-policy" },
-  { label: "Contact us", path: "/" },
+  { label: "Contact us", path: "/contact-us/parikrama-global" },
   { label: "About us", path: "/" },
   { label: "How this site works", path: "/how-this-site-works" },
 ];

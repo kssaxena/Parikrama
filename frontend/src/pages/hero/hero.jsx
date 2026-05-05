@@ -10,6 +10,8 @@ import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { TbLivePhotoFilled } from "react-icons/tb";
 import logo from "../../assets/Logo1.png";
+import FloatNavBar from "../../components/ui/FloatNavBar";
+import { FaAngleDoubleDown } from "react-icons/fa";
 
 const Hero = ({ stopLoading, startLoading }) => {
   const [data, setData] = useState([]);
@@ -144,55 +146,31 @@ const Hero = ({ stopLoading, startLoading }) => {
   return (
     <div className="flex justify-center items-center flex-col pb-10">
       {/* TOP BANNER */}
+      <FloatNavBar />
       <div className="md:w-[99%] hidden md:block">
-        <RandomImageSlider images={top} className="md:h-[300px] h-[200px]" />
+        <RandomImageSlider images={top} className="md:h-[350px] h-[200px]" />
       </div>
       <div className="w-full md:hidden">
         <RandomImageSlider images={topMobile} className="h-[200px]" />
       </div>
-      {/* <div className="bg-neutral-200 p-2 rounded-md shadow hidden md:flex justify-center items-center md:gap-5 my-2 w-[98vw] border border-neutral-400/10">
-        Click Here for Live Darshan{" "}
-        <Button
-          label={"Live Darshan"}
-          onClick={() => navigate("/live-telecasts")}
-        />
-      </div> */}
 
       {/* CONTENT */}
-      <div className="flex justify-center w-full py-10 md:px-0 px-2">
+      <div className="flex justify-center w-full md:px-0 px-2 py-5">
         {/* LEFT SLIDER */}
         <div className="w-fit h-fit flex flex-col gap-10">
           <div className="w-96 h-96 bg-neutral-500 rounded-xl md:flex hidden justify-center items-center flex-col">
             <RandomImageSlider images={left} />
           </div>
-          {/* <div className="w-96 h-96 bg-gray-300 sticky top-24 left-0 flex justify-center items-center">
-            <h1>Flight Booking</h1>
-          </div> */}
         </div>
 
         {/* SEARCH + RESULTS */}
-
-        <div className="md:p-4 w-fit overflow-hidden">
-          {/* SEARCH BAR */}
-          <div className="flex justify-center items-center w-full relative">
-            <InputBox
-              onClick={() => navigate("/search-feed/places")}
-              // Value={searchInput}
-              // onChange={(e) => setSearchInput(e.target.value)}
-              Placeholder="Search by place, city, state, category..."
-              className="w-full pr-10"
-            />
-            {/* <InputBox
-              Value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              Placeholder="Search by place, city, state, category..."
-              className="w-full pr-10"
-            /> */}
-            <CiSearch className="absolute right-3 text-gray-500" />
-          </div>
-
+        <div className="md:px-4 w-fit overflow-hidden">
+          <h1 className="font-semibold text-2xl tracking-tight pb-5 w-full flex justify-around items-center">
+            Recommendations for you
+            <FaAngleDoubleDown />
+          </h1>
           {/* RESULTS */}
-          <div className="flex gap-2 flex-col xl:w-[650px] mt-4">
+          <div className="flex gap-2 flex-col xl:w-[650px]">
             {searchInput ? (
               filteredPlaces.length > 0 ? (
                 filteredPlaces.slice(0, 20).map((place) => (
@@ -275,6 +253,8 @@ const Hero = ({ stopLoading, startLoading }) => {
           </div>
         </div>
       </div>
+
+      {/* live telecast button  */}
       <div className="sticky md:bottom-10 bottom-5 w-full flex justify-end items-end px-10">
         <button
           onClick={() => navigate("/live-telecasts")}
