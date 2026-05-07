@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import Button from "./Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/Logo1.png";
 import logo2 from "../assets/Logo3.png";
 import { CiMenuFries, CiSearch } from "react-icons/ci";
@@ -24,6 +24,8 @@ const Header = () => {
   const { user } = useSelector((state) => state.auth);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === "/search-feed/places";
 
   const LinkNavigate = (link) => {
     navigate(link);
@@ -33,7 +35,7 @@ const Header = () => {
 
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
-      <div className="mx-auto px-4 py-3 md:py-1 flex items-center justify-between w-full gap-10 md:gap-40">
+      <div className="mx-auto px-4 py-3 md:py-1 flex items-center justify-around w-full gap-10 md:gap-40">
         {/* Logo Section */}
         <Link to={"/"} className="flex items-center">
           <img src={logo} className="w-10 md:w-16" />
@@ -42,15 +44,20 @@ const Header = () => {
         {localStorage.role === "Admin" ? (
           ""
         ) : (
-          <div className="flex justify-end md:justify-center items-center gap-5 w-full">
-            <div className="hidden md:flex justify-center items-center w-full relative">
-              <InputBox
-                onClick={() => navigate("/search-feed/places")}
-                Placeholder="Search by place, city, state, category..."
-                className="w-full pr-10"
-              />
-              <CiSearch className="absolute right-3 text-gray-500" />
-            </div>
+          <div className="flex justify-end md:justify-end items-center gap-5 w-full">
+            {isHome ? (
+              ""
+            ) : (
+              <div className="hidden md:flex justify-center items-center w-full relative ">
+                <InputBox
+                  onClick={() => navigate("/search-feed/places")}
+                  Placeholder="Search by place, city, state, category..."
+                  className="w-full pr-10"
+                />
+                <CiSearch className="absolute right-3 text-gray-500" />
+              </div>
+            )}
+
             <Button
               label={
                 <h1 className="flex justify-center items-center gap-2 text-nowrap text-xs md:text-base">

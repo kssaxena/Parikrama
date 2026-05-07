@@ -19,6 +19,7 @@ import {
   Clubs,
   Users,
   Enquiry,
+  Country,
 } from "../../components/ui/TableUI";
 import { RiImageAddFill } from "react-icons/ri";
 import { MdAdd, MdAddLocationAlt, MdOutlineRule } from "react-icons/md";
@@ -41,6 +42,7 @@ import PackageRegisteration from "./PackageRegisteration";
 import FoodKiosk from "../kiosks/FoodKiosk";
 import AddNewHotel from "./AddNewHotel";
 import AddNewClub from "./AddNewClub";
+import AddCountry from "./AddCountry";
 
 const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [placeData, setPlaceData] = useState([]);
@@ -56,6 +58,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [clubData, setClubData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [enquiryData, setEnquiryData] = useState([]);
+  const [countryData, setCountryData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
   const [popup3, setPopup3] = useState(false);
@@ -63,6 +66,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [popup5, setPopup5] = useState(false);
   const [popup6, setPopup6] = useState(false);
   const [popup7, setPopup7] = useState(false);
+  const [popup8, setPopup8] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -100,6 +104,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
       setFoodKioskData(res.data.data.foodCourts);
       setUserData(res.data.data.users);
       setEnquiryData(res.data.data.enquiry);
+      setCountryData(res.data.data.country);
 
       // Fetch hotels separately
       const hotelRes = await FetchData("hotels", "get");
@@ -236,6 +241,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
     "Non-Verified Facilitator",
     "Cities",
     "States",
+    "Countries",
     "Packages",
     "Promotions",
   ];
@@ -466,6 +472,12 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
           {activeSection === "States" && (
             <State TableData={stateData} Text="Listed States" />
           )}
+          {activeSection === "Countries" && (
+            <div className="">
+              <Button label={"Add country"} onClick={() => setPopup8(true)} />
+              <Country TableData={countryData} Text="Listed Countries" />
+            </div>
+          )}
           {activeSection === "Inactive Places" && (
             <InactivePlace
               TableData={inactivePlaceData}
@@ -503,7 +515,11 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
           )}
           {activeSection === "Enquiries" && (
             <div className="w-full h-full flex flex-col justify-start items-start">
-              <Enquiry TableData={enquiryData} Text="Enquiries" />
+              <Enquiry
+                TableData={enquiryData}
+                Text="Enquiries"
+                user={user?._id}
+              />
             </div>
           )}
         </main>
@@ -725,6 +741,17 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
             className="fixed top-0 left-0 h-screen w-full flex justify-start items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
           >
             <AddNewClub onCancel={() => setPopup7(false)} adminId={user?._id} />
+          </motion.div>
+        )}
+        {popup8 && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
+          >
+            <AddCountry onCancel={() => setPopup8(false)} adminId={user?._id} />
           </motion.div>
         )}
       </AnimatePresence>

@@ -5,6 +5,9 @@ import { FetchData } from "../../utils/FetchFromApi";
 import { truncateString } from "../../utils/Utility-functions";
 import Button from "../Button";
 import { formatDateTimeString } from "../../utils/mongoDB_DateTime";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef } from "react";
+import { parseErrorMessage } from "../../utils/ErrorMessageParser";
 
 const Place = ({ Text = "", TableData = [] }) => {
   const [search, setSearch] = useState("");
@@ -1231,6 +1234,8 @@ const Users = ({ Text = "", TableData = [] }) => {
 const Enquiry = ({ Text = "", TableData = [], user }) => {
   const [search, setSearch] = useState("");
   const [request, setRequest] = useState();
+  const [popup, setPopup] = useState(false);
+  const formRef = useRef();
 
   const TableHeaders = [
     "Enquiry Category",
@@ -1254,11 +1259,76 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
     try {
       const response = await FetchData(
         `enquiry/admin/get/enquiry-by-id/${user}/${enquiryId}`,
+        "get",
       );
       console.log(response);
       setRequest(response.data.data || []);
+      setPopup(true);
     } catch (err) {
       console.log(err);
+    }
+  };
+  const data = [
+    {
+      label: "Enquiry Type",
+      value: (
+        <span>
+          {request?.enquiryType === "ContactUsForm" ? "Contact Form" : ""}
+          {request?.enquiryType === "flightBusHotel"
+            ? "Flights, Buses, Hotels"
+            : ""}
+          {request?.enquiryType === "PackageEnquiryForm"
+            ? "Travel Packages"
+            : ""}
+        </span>
+      ),
+    },
+    { label: "Customer Name", value: request?.formDetails?.contactPersonName },
+    {
+      label: "Contact Number",
+      value: request?.formDetails?.contactPersonPhone,
+      className: "font-semibold",
+    },
+    { label: "Email", value: request?.formDetails?.contactPersonEmail },
+    {
+      label: "Comments",
+      value: request?.formDetails?.comments,
+      className: "font-semibold",
+    },
+    {
+      label: "Current Location",
+      value: request?.formDetails?.fromCity,
+    },
+    { label: "Destination", value: request?.formDetails?.toCity },
+    {
+      label: "From Date(DDMMYY)",
+      value: formatDateTimeString(request?.formDetails?.fromDate),
+    },
+    {
+      label: "To Date(DDMMYY)",
+      value: formatDateTimeString(request?.formDetails?.toDate),
+    },
+    {
+      label: "Number of persons",
+      value: request?.formDetails?.numberOfPerson,
+    },
+  ];
+
+  console.log(request?._id);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(formRef.current);
+      const response = await FetchData(``, "post", formData);
+      console.log(response);
+      formRef.current.reset();
+      setPopup(false);
+      alert(response.data.message);
+      alert("Kindly reload dashboard");
+    } catch (err) {
+      // console.log(err);
+      parseErrorMessage(err.response.data);
     }
   };
 
@@ -1317,10 +1387,140 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
                     {formatDateTimeString(data?.createdAt)}
                   </td>
                   <td>
-                    <button onClick={() => getRequest((enquiryId = data?._id))}>
+                    <button
+                      onClick={() => getRequest({ enquiryId: data?._id })}
+                    >
                       Open
                     </button>
                   </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="text-center py-6 text-gray-500">
+                  No Data found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <AnimatePresence>
+        {popup && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
+          >
+            <div className="bg-white rounded-md p-5 w-[60vw] flex justify-center items-center gap-10 flex-col">
+              {request ? (
+                <div>
+                  {data?.map((r, index) => (
+                    <h1
+                      className="flex w-full justify-between items-start gap-40 border-b p-1"
+                      key={index}
+                    >
+                      <strong>{r?.label}</strong>{" "}
+                      <span className={`text-justify ${r?.className}`}>
+                        {r.value || "na"}
+                      </span>
+                    </h1>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
+              <div className="flex flex-col justify-center items-center">
+                <form ref={formRef} onSubmit={handleSubmit}>
+                  <InputBox
+                    Name="customerFeedBack"
+                    Placeholder="Customer feedback"
+                    LabelName="What did the customer said ?"
+                    Type="text"
+                  />
+                </form>
+                <div className="flex justify-center items-center gap-10">
+                  <Button
+                    label={"Close"}
+                    onClick={() => {
+                      setPopup(false);
+                      formRef.current.reset();
+                    }}
+                  />
+                  <Button label={"Mark as reviewed"} type={"submit"} />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const Country = ({ Text = "", TableData = [] }) => {
+  const [search, setSearch] = useState("");
+
+  const TableHeaders = ["Country Name", "Code", "Total States"];
+
+  const filteredData = useMemo(() => {
+    if (!search.trim()) return TableData;
+
+    const q = search.toLowerCase();
+
+    return TableData.filter((s) =>
+      `${s?.name} ${s?.code}`.toLowerCase().includes(q),
+    );
+  }, [search, TableData]);
+
+  return (
+    <div className="">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-bold">
+          {Text} (<span className="text-sm">{filteredData.length}</span>)
+        </h2>
+
+        <div className="w-96">
+          <InputBox
+            Type="text"
+            Placeholder="Search country..."
+            Value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-white"
+          />
+        </div>
+      </div>
+
+      <div className="w-full mt-1 h-[500px] overflow-scroll">
+        <table className="w-full text-sm text-left bg-white rounded-xl shadow-sm">
+          <thead className="bg-gray-100 text-gray-600">
+            <tr>
+              {TableHeaders.map((header, index) => (
+                <th key={index} className="px-5 py-3 font-medium">
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((data) => (
+                <tr key={data._id} className="hover:bg-gray-50 border-b">
+                  <td className="px-5 py-3">
+                    {data?.name}
+                    {/* <Link
+                      to={`/current/state-city/${data?._id}`}
+                      className="hover:text-blue-500 hover:underline"
+                    >
+                      {data?.name}
+                    </Link> */}
+                  </td>
+                  <td className="px-5 py-3">{data?.code}</td>
+                  <td className="px-5 py-3">{data?.totalStates}</td>
                 </tr>
               ))
             ) : (
@@ -1351,4 +1551,5 @@ export {
   Clubs,
   Users,
   Enquiry,
+  Country,
 };
