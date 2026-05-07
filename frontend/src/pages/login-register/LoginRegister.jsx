@@ -13,7 +13,7 @@ const LoginRegister = () => {
     <div className="flex flex-col justify-center items-center gap-10">
       <div className="flex justify-center items-center w-fit">
         <nav>
-          <ul className="flex gap-20 items-center justify-center">
+          <ul className="flex md:gap-20 gap-5 items-center justify-center">
             {sections.map((section, idx) => (
               <li
                 key={idx}

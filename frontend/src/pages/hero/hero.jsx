@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { TbLivePhotoFilled } from "react-icons/tb";
 import logo from "../../assets/Logo1.png";
 import FloatNavBar from "../../components/ui/FloatNavBar";
-import { FaAngleDoubleDown } from "react-icons/fa";
+import { FaAngleDoubleDown, FaAngleDoubleRight } from "react-icons/fa";
 
 const Hero = ({ stopLoading, startLoading }) => {
   const [data, setData] = useState([]);
@@ -150,9 +150,9 @@ const Hero = ({ stopLoading, startLoading }) => {
       <div className="md:w-[99%] hidden md:block">
         <RandomImageSlider images={top} className="md:h-[350px] h-[200px]" />
       </div>
-      <div className="w-full md:hidden">
+      {/* <div className="w-full md:hidden">
         <RandomImageSlider images={topMobile} className="h-[200px]" />
-      </div>
+      </div> */}
 
       {/* CONTENT */}
       <div className="flex justify-center w-full md:px-0 px-2 py-5">
@@ -165,9 +165,15 @@ const Hero = ({ stopLoading, startLoading }) => {
 
         {/* SEARCH + RESULTS */}
         <div className="md:px-4 w-fit overflow-hidden">
-          <h1 className="font-semibold text-2xl tracking-tight pb-5 w-full flex justify-around items-center">
+          <h1 className="font-semibold md:text-2xl tracking-tighter pb-5 w-full flex justify-around items-center">
             Recommendations for you
-            <FaAngleDoubleDown />
+            {/* <FaAngleDoubleDown /> */}
+            <button
+              onClick={() => navigate("/explore")}
+              className="text-blue-400 text-xs flex justify-center items-center gap-1"
+            >
+              Explore <FaAngleDoubleRight />
+            </button>
           </h1>
           {/* RESULTS */}
           <div className="flex gap-2 flex-col xl:w-[650px]">

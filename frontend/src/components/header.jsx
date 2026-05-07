@@ -103,7 +103,7 @@ const Header = () => {
                 <img src={logo2} className="w-20 md:w-40" />
               </div>
               {/* buttons */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3">
                 <Button
                   label={
                     <h1 className="flex justify-between items-center">

@@ -1261,7 +1261,6 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
         `enquiry/admin/get/enquiry-by-id/${user}/${enquiryId}`,
         "get",
       );
-      console.log(response);
       setRequest(response.data.data || []);
       setPopup(true);
     } catch (err) {
@@ -1314,13 +1313,15 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
     },
   ];
 
-  console.log(request?._id);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData(formRef.current);
-      const response = await FetchData(``, "post", formData);
+      const response = await FetchData(
+        `enquiry/mark-as-reviewed/${user}/${request?._id}`,
+        "post",
+        formData,
+      );
       console.log(response);
       formRef.current.reset();
       setPopup(false);
@@ -1328,7 +1329,7 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
       alert("Kindly reload dashboard");
     } catch (err) {
       // console.log(err);
-      parseErrorMessage(err.response.data);
+      alert(parseErrorMessage(err.response.data));
     }
   };
 
@@ -1342,7 +1343,7 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
         <div className="w-96">
           <InputBox
             Type="text"
-            Placeholder="Search user..."
+            Placeholder="Search enquiry..."
             Value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-white"
@@ -1442,17 +1443,17 @@ const Enquiry = ({ Text = "", TableData = [], user }) => {
                     LabelName="What did the customer said ?"
                     Type="text"
                   />
+                  <div className="flex justify-center items-center gap-10">
+                    <Button
+                      label={"Close"}
+                      onClick={() => {
+                        setPopup(false);
+                        formRef.current.reset();
+                      }}
+                    />
+                    <Button label={"Mark as reviewed"} type={"submit"} />
+                  </div>
                 </form>
-                <div className="flex justify-center items-center gap-10">
-                  <Button
-                    label={"Close"}
-                    onClick={() => {
-                      setPopup(false);
-                      formRef.current.reset();
-                    }}
-                  />
-                  <Button label={"Mark as reviewed"} type={"submit"} />
-                </div>
               </div>
             </div>
           </motion.div>

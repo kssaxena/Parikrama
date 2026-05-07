@@ -9,6 +9,7 @@ import {
   verifyCommunity,
   toggleCommunityStatus,
   refreshCommunityToken,
+  followRequest,
 } from "../controllers/community.controllers.js";
 import { VerifyAdmin } from "../middlewares/adminAuth.middleware.js";
 import { upload } from "../middlewares/multer.middlewares.js";
@@ -52,6 +53,8 @@ router
 router
   .route("/community/admin/delete-community/:adminId/:communityId")
   .delete(VerifyAdmin, deleteCommunity);
+
+router.route("/community/follow-request/:communityId").post(followRequest);
 
 /* ================= FUTURE SAFE ROUTES ================= */
 

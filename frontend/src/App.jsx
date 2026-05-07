@@ -169,7 +169,7 @@ function App() {
       <Header />
 
       {/* Top padding because header is fixed */}
-      <div className="pt-24">
+      <div className="pt-20 md:pt-24">
         <ScrollToTop />
         {/* <SearchPage /> */}
         <Routes>

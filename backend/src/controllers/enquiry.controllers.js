@@ -76,4 +76,47 @@ const getEnquiriesById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, enquiry, "Data fetched successfully !"));
 });
 
-export { createEnquiry, getEnquiriesById };
+const markEnquiryAsReviewed = asyncHandler(async (req, res) => {
+  const { customerFeedBack } = req.body;
+  const { adminId, enquiryId } = req.params;
+
+  console.log("from controller", customerFeedBack, adminId);
+
+  if (!customerFeedBack || !adminId)
+    throw new ApiError(400, "Not a valid request");
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new ApiError(400, "Invalid admin");
+
+  const enquiry = await EnquiryDetails.findByIdAndUpdate(enquiryId, {
+    customerFeedBack: customerFeedBack,
+    adminId: adminId,
+    reviewedByAdmin: true,
+  });
+  if (!enquiry)
+    throw new ApiError(400, "Something went wrong, please try again later");
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, enquiry, "Enquiry marked as reviewed."));
+});
+
+const deleteEnquiry = asyncHandler(async (req, res) => {
+  const { adminId, enquiryId } = req.body;
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new ApiError(400, "Invalid admin");
+
+  const enquiry = await EnquiryDetails.findByIdAndDelete(enquiryId);
+  if (!enquiry) throw new ApiError(400, "Unable to delete the enquiry");
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, enquiry, "Enquiry deleted."));
+});
+
+export {
+  createEnquiry,
+  getEnquiriesById,
+  markEnquiryAsReviewed,
+  deleteEnquiry,
+};
