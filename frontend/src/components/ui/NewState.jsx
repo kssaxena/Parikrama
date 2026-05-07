@@ -7,28 +7,32 @@ import { FetchData } from "../../utils/FetchFromApi";
 import LoadingUI from "../LoadingUI";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const NewState = ({ startLoading, stopLoading }) => {
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [states, setStates] = useState([]);
   const formRef = useRef();
-  //   console.log(states);
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   useEffect(() => {
-    const fetchStates = async () => {
+    const fetchCountries = async () => {
       try {
         startLoading();
-        const res = await FetchData("states", "get");
-        setStates(res?.data?.data || []);
+        const res = await FetchData("country/get/all-country", "get");
+        console.log(res);
+        setCountries(res?.data?.data || []);
       } catch (err) {
         console.error(err);
       } finally {
         stopLoading();
       }
     };
-    fetchStates();
+    fetchCountries();
   }, []);
 
   const addNewState = async (e) => {
@@ -39,7 +43,7 @@ const NewState = ({ startLoading, stopLoading }) => {
       const response = await FetchData(
         "states/add/new/state",
         "post",
-        formData
+        formData,
       );
       setSuccess(response.data.data.message);
       formRef.current.reset();
@@ -52,35 +56,56 @@ const NewState = ({ startLoading, stopLoading }) => {
     }
   };
 
-  return user ? (
+  return localStorage.role === "admin" || localStorage.role === "Admin" ? (
     <div className="w-full ">
-      <h1>Add New State</h1>
-      {states?.length === 36 ? (
+      <form ref={formRef} onSubmit={addNewState} className="py-10">
+        {error && <p className="text-red-500">{error}</p>}
+        {success && <p className="text-green-500">{success}</p>}
+        <div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Country</label>
+            <select
+              name="country"
+              required
+              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:ring-[#FFC20E] focus:border-[#FFC20E] outline-none transition duration-200 ease-in-out hover:shadow-md"
+              onChange={(e) => setSelectedCountry(e.target.value)}
+            >
+              <option value="">Select Country</option>
+              {countries?.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <InputBox
+            Placeholder="State name"
+            LabelName="State Name"
+            Name="name"
+          />
+          <InputBox
+            Placeholder="Eg: MP, RJ, etc"
+            LabelName="State Code"
+            Name="code"
+          />
+        </div>
+        <div className="flex justify-center items-center gap-2">
+          <Button
+            label={"Cancel"}
+            onClick={() => {
+              formRef.current.reset();
+              navigate("/admin/dashboard");
+            }}
+          />
+          <Button label={"Submit"} type={"submit"} />
+        </div>
+      </form>
+      {/* {states?.length === 36 ? (
         ""
       ) : (
-        <form ref={formRef} onSubmit={addNewState}>
-          {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">{success}</p>}
-          <div>
-            <InputBox
-              Placeholder="State name"
-              LabelName="State Name"
-              Name="name"
-            />
-            <InputBox
-              Placeholder="Eg: MP, RJ, etc"
-              LabelName="State Code"
-              Name="code"
-            />
-          </div>
-          <div className="flex justify-center items-center gap-2">
-            <Button label={"Cancel"} />
-            <Button label={"Submit"} type={"submit"} />
-          </div>
-        </form>
-      )}
+      )} */}
 
-      {states?.length === 36 ? (
+      {/* {states?.length === 36 ? (
         <div className="flex flex-wrap">
           <h1 className="font-semibold">
             All {states?.length} states are listed you cannot add more !
@@ -95,7 +120,7 @@ const NewState = ({ startLoading, stopLoading }) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
     </div>
   ) : (
     <div className="flex justify-center items-center w-full">

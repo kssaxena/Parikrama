@@ -103,7 +103,7 @@ const clubSchema = new mongoose.Schema(
         ref: "UserSchema",
       },
     ],
-    
+
     parikramaHotels: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -148,6 +148,48 @@ const clubSchema = new mongoose.Schema(
     },
 
     foundedYear: Number,
+
+    // follow requests
+    userFollowRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserSchema",
+      },
+    ],
+    communityFollowRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Community",
+      },
+    ],
+
+    // accepted requests
+    acceptedRequestsUser: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserSchema",
+      },
+    ],
+    acceptedRequestsCommunity: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Community",
+      },
+    ],
+
+    // rejected requests
+    rejectedRequestsUser: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserSchema",
+      },
+    ],
+    rejectedRequestsCommunity: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Community",
+      },
+    ],
 
     adminVerified: {
       type: Boolean,
