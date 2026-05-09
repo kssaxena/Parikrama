@@ -3,22 +3,29 @@ import mongoose from "mongoose";
 const travelPackageSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    state: { type: String },
-    city: { type: String },
-    // place: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Place",
-    //   required: true,
-    // },
+    place: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Place",
+      },
+    ],
     description: String,
     durationNight: Number,
     durationDay: Number,
+    days: Number,
     price: Number,
+    numberOfPerson: Number,
     tags: [String],
+    isVerified: { type: Boolean, default: false },
     priority: {
       type: String,
-      enum: ["hotDeals", "trendingDeals", "exclusiveDeals"],
-      default: "exclusiveDeals",
+      enum: [
+        "hotDeals",
+        "trendingDeals",
+        "exclusiveDeals",
+        "lastMomentPackage",
+      ],
+      default: "lastMomentPackage",
     },
     image: [
       {
