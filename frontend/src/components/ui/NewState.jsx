@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const NewState = ({ startLoading, stopLoading }) => {
   const { user } = useSelector((state) => state.auth);
+  const adminId = user?._id;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -24,7 +25,6 @@ const NewState = ({ startLoading, stopLoading }) => {
       try {
         startLoading();
         const res = await FetchData("country/get/all-country", "get");
-        console.log(res);
         setCountries(res?.data?.data || []);
       } catch (err) {
         console.error(err);
@@ -41,13 +41,15 @@ const NewState = ({ startLoading, stopLoading }) => {
       startLoading();
       const formData = new FormData(formRef.current);
       const response = await FetchData(
-        "states/add/new/state",
+        `states/add/new/state/${adminId}`,
         "post",
         formData,
       );
-      setSuccess(response.data.data.message);
+      console.log(response);
+      setSuccess(response.data.message);
       formRef.current.reset();
       navigate("/admin/dashboard");
+      alert(response.data.message);
     } catch (err) {
       console.log(err);
       setError(err.response.data.message || "Something went wrong");
