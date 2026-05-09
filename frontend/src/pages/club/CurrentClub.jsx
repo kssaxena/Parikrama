@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FetchData } from "../../utils/FetchFromApi";
 import LoadingUI from "../../components/LoadingUI";
 import RandomImageSlider from "../../components/ui/RandomImageSlider";
@@ -13,11 +13,19 @@ import {
   BiCalendar,
   BiGroup,
 } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CurrentClub = ({ startLoading, stopLoading }) => {
   const { clubId } = useParams();
+  const { user } = useSelector((state) => state.auth);
+  const userId = user?._id;
+  const [popup, setPopup] = useState(false);
+  const navigate = useNavigate();
   const [club, setClub] = useState(null);
   const [error, setError] = useState("");
+  const userType = localStorage.getItem("role");
+  console.log(club);
 
   const loadClub = async () => {
     try {
@@ -54,25 +62,68 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
         ? [club.images.coverImage.url]
         : [];
 
+  const followRequest = async () => {
+    if (userType === "club" || userType === "Club") {
+      alert(
+        "you are registered as Club, kindly register as Community or a normal user to follow other communities. ",
+      );
+      return;
+    }
+    try {
+      const response = await FetchData(
+        `clubs/club/follow-request/${clubId}`,
+        "post",
+        { userType, userId },
+      );
+      console.log(response);
+      alert(response.data.message || "Request sent successfully");
+    } catch (err) {
+      console.log(err);
+      alert(parseErrorMessage(err.response.data));
+    }
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 space-y-8">
       <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
         <div className="space-y-6">
-          <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-sm">
-            {imageList.length > 0 ? (
+          <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-sm h-96">
+            {/* {imageList.length > 0 ? (
               <RandomImageSlider images={imageList} />
             ) : (
               <div className="h-96 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                 <span className="text-gray-500">No images available</span>
               </div>
-            )}
+            )} */}
+            <img
+              src={club?.images?.coverImage?.url}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <div className="space-y-4">
+            {user === null ? (
+              <Button
+                label={"Follow"}
+                onClick={() => {
+                  setPopup(true);
+                  setTimeout(() => {
+                    setPopup(false);
+                  }, 4000);
+                }}
+              />
+            ) : user?._id === clubId ? (
+              ""
+            ) : (
+              <Button label={"Follow"} onClick={() => followRequest()} />
+            )}
             <div>
               <p className="text-sm text-gray-500 flex items-center gap-2">
                 <BiMap /> {club.location?.address || "No address"},{" "}
-                {club.location?.city}, {club.location?.state}
+                {club.location?.city?.name}, {club.location?.state?.name}{" "}
+                <span className="font-semibold text-base">
+                  {club.location?.country?.name}
+                </span>
               </p>
               <h1 className="text-3xl font-bold text-gray-900 mt-3">
                 {club.clubName}
@@ -144,15 +195,25 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
         </div>
 
         <div className="space-y-6">
-          {club.images?.logo?.url && (
+          {/* {console.log(club)} */}
+          {club?.images?.gallery.map((i) => (
+            <div className="rounded-3xl border border-gray-200 bg-white p-2 shadow-sm grid grid-cols-1 md:grid-cols-4">
+              <img
+                src={i.url}
+                alt={club.clubName}
+                className="w-60 h-auto rounded-lg"
+              />
+            </div>
+          ))}
+          {/* {club.images?.gallery && (
             <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
               <img
-                src={club.images.logo.url}
+                src={club.images.gallery[0].url}
                 alt={club.clubName}
                 className="w-full h-auto rounded-lg"
               />
             </div>
-          )}
+          )} */}
 
           <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold mb-4">Amenities</h2>
@@ -235,6 +296,34 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
           </div>
         </div>
       )}
+      <AnimatePresence>
+        {popup && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-white"
+          >
+            <div className="flex justify-center items-center flex-col gap-5 bg-neutral-200 shadow-2xl p-5 rounded-xl">
+              <h1 className="flex justify-center items-center gap-2">
+                Please login or register as community or normal user to Follow{" "}
+                <span className="font-semibold">{club.clubName}</span>
+              </h1>
+              <div className="flex justify-center items-center gap-5">
+                <Button
+                  label={"Register"}
+                  onClick={() => navigate("/authentication")}
+                />
+                <Button
+                  label={"Login"}
+                  onClick={() => navigate("/authentication")}
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
