@@ -44,11 +44,17 @@ const clubSchema = new mongoose.Schema(
 
     location: {
       address: String,
-      city: String,
-      state: String,
+      city: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "City",
+      },
+      state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+      },
       country: {
-        type: String,
-        default: "India",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Country",
       },
       coordinates: {
         lat: Number,
