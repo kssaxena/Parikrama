@@ -56,7 +56,7 @@ const CommunityFeed = ({ startLoading, stopLoading }) => {
           </div>
         ) : (
           <div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-10">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 p-10 w-full">
               {communities.map((community) => (
                 <CommunityCard key={community._id} community={community} />
               ))}
