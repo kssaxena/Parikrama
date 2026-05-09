@@ -3,17 +3,19 @@ import InputBox from "../../components/InputBox";
 import { FetchData } from "../../utils/FetchFromApi";
 import LoadingUI from "../../components/LoadingUI";
 import Button from "../../components/Button";
+import { parseErrorMessage } from "../../utils/ErrorMessageParser";
+import { subAdminFormInputs } from "../../constants/Constants";
 
-const SubAdmin = ({ startLoading, stopLoading }) => {
+const SubAdmin = ({ startLoading, stopLoading, onCancel }) => {
   const formRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const fromData = new FormData(formRef.current);
-      // for (let pair of formData.entries()) {
-      //   console.log(pair[0] + ": " + pair[1]);
-      // }
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
       startLoading();
       const response = await FetchData(
         `admin/register-sub-admin`,
@@ -21,35 +23,38 @@ const SubAdmin = ({ startLoading, stopLoading }) => {
         fromData,
       );
       console.log(response);
+      formRef.current.reset();
+      alert(response.data.message);
+      onCancel();
     } catch (err) {
       console.log(err);
+      alert(parseErrorMessage(err.response.data));
     } finally {
       stopLoading();
     }
   };
+
   return (
     <div>
       <form ref={formRef} onSubmit={handleSubmit}>
-        <InputBox Name="name" LabelName="Name" Placeholder="Name" Type="text" />
-        <InputBox
-          Name="email"
-          LabelName="Email"
-          Placeholder="Email"
-          Type="text"
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          {subAdminFormInputs.map((i) => {
+            <InputBox
+              LabelName={i.label}
+              Name={i.name}
+              Placeholder={i.placeHolder}
+              Type={i.type}
+              PasswordIndication={i.passwordTrue}
+            />;
+          })}
+        </div>
+        <Button
+          label={"Cancel"}
+          onClick={() => {
+            formRef.current.reset();
+            onCancel();
+          }}
         />
-        <InputBox
-          Name="employeeId"
-          LabelName="Employee ID"
-          Placeholder="Employee ID"
-          Type="text"
-        />
-        <InputBox
-          Name="phoneNumber"
-          LabelName="Contact Number"
-          Placeholder="Contact Number"
-          Type="text"
-        />
-        <InputBox Name="password" LabelName="Password" Placeholder="*****" />
         <Button label={"Submit"} type={"submit"} />
       </form>
     </div>

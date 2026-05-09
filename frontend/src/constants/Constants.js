@@ -505,3 +505,37 @@ export const contactUsFormInputs = [
     type: "text",
   },
 ];
+
+export const subAdminFormInputs = [
+  {
+    label: "Name",
+    placeHolder: "Enter name",
+    name: "name",
+    type: "text",
+  },
+  {
+    label: "Employee ID",
+    placeHolder: "Enter employee id",
+    name: "employeeId",
+    type: "text",
+  },
+  {
+    label: "Email",
+    placeHolder: "Enter email",
+    name: "email",
+    type: "email",
+  },
+  {
+    label: "Contact Number",
+    placeHolder: "Enter your contact number",
+    name: "phoneNumber",
+    type: "text",
+  },
+  {
+    label: "Password",
+    placeHolder: "Password",
+    name: "password",
+    type: "password",
+    passwordTrue: true,
+  },
+];
