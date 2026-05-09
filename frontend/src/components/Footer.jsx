@@ -127,7 +127,7 @@ const Footer = () => {
             initial={{ opacity: 0, x: -100 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
-            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70"
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70 z-50"
           >
             <div className="bg-white p-5 rounded-xl flex flex-col md:flex-row justify-center items-start gap-5 md:gap-10  w-full md:w-fit">
               <Button label={"Close"} onClick={() => setPopup(false)} />

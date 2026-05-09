@@ -26,7 +26,9 @@ const Header = () => {
   const [popup, setPopup] = useState(false);
   const [popup2, setPopup2] = useState(false);
   const location = useLocation();
-  const isHome = location.pathname === "/search-feed/places";
+  const isHome =
+    location.pathname === "/search-feed/places" ||
+    location.pathname === "/clubs/register";
 
   const LinkNavigate = (link) => {
     navigate(link);
