@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingUI from "../../components/LoadingUI";
 import { FetchData } from "../../utils/FetchFromApi";
+import { MdVerified } from "react-icons/md";
+import { IoLocation } from "react-icons/io5";
 
 const CurrentFoodKiosk = ({ startLoading, stopLoading }) => {
   const { foodCourtId } = useParams();
@@ -34,17 +36,88 @@ const CurrentFoodKiosk = ({ startLoading, stopLoading }) => {
       ) : (
         <div className="space-y-6">
           {/* 🔥 Header */}
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
-            <h1 className="text-2xl font-bold">{data.name}</h1>
-            <span
-              className={`px-3 py-1 rounded-full text-sm ${
-                data.verified
-                  ? "bg-green-100 text-green-600"
-                  : "bg-red-100 text-red-600"
-              }`}
-            >
-              {data.verified ? "Verified" : "Not Verified"}
-            </span>
+          <div className="w-fit">
+            <div className="flex justify-start items-start">
+              <h1 className="text-2xl font-bold">{data.name}</h1>
+              <span
+                className={`px-3 py-1 rounded-full text-xs w-fit ${
+                  data.verified
+                    ? "bg-green-100 text-green-600"
+                    : "bg-red-100 text-red-600"
+                }`}
+              >
+                {data.verified ? <MdVerified /> : "Not Verified"}
+              </span>
+            </div>
+            <h1 className="flex justify-start items-center">
+              <IoLocation /> {data?.city?.name}, {data?.state?.name}
+            </h1>
+
+          </div>
+
+          {/* 🍜 Special Food */}
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Special Food</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.specialFood?.map((item, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1 bg-[#FFC20E] uppercase rounded-full text-sm"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 w-full">
+            {/* 🏪 Store Images */}
+            <div className="">
+              <h2 className="text-lg font-semibold mb-2">Store Images</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {data.storeImages?.map((img) => (
+                  <img
+                    key={img.fileId}
+                    src={img.url}
+                    alt="img"
+                    onClick={() => setPreviewImage(img.url)}
+                    className="w-40 h-40 object-cover rounded-lg shadow cursor-pointer hover:scale-105 transition"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* 🍲 Food Images */}
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Food Images</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {data.foodImages?.map((img) => (
+                  <img
+                    key={img.fileId}
+                    src={img.url}
+                    alt="img"
+                    onClick={() => setPreviewImage(img.url)}
+                    className="w-40 h-40 object-cover rounded-lg shadow cursor-pointer hover:scale-105 transition"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* 📜 Menu Images */}
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Menu</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {data.menuImages?.map((img) => (
+                  <img
+                    key={img.fileId}
+                    src={img.url}
+                    alt="img"
+                    onClick={() => setPreviewImage(img.url)}
+                    className="w-40 h-40 object-cover rounded-lg shadow cursor-pointer hover:scale-105 transition"
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* 📍 Basic Info */}
@@ -83,69 +156,6 @@ const CurrentFoodKiosk = ({ startLoading, stopLoading }) => {
             <p>
               <b>Entry Fee:</b> ₹{data.place?.entryFee}
             </p>
-          </div>
-
-          {/* 🍜 Special Food */}
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Special Food</h2>
-            <div className="flex flex-wrap gap-2">
-              {data.specialFood?.map((item, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 bg-[#FFC20E] uppercase rounded-full text-sm"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* 🏪 Store Images */}
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Store Images</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {data.storeImages?.map((img) => (
-                <img
-                  key={img.fileId}
-                  src={img.url}
-                  alt="img"
-                  onClick={() => setPreviewImage(img.url)}
-                  className="w-40 h-40 object-cover rounded-lg shadow cursor-pointer hover:scale-105 transition"
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* 🍲 Food Images */}
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Food Images</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {data.foodImages?.map((img) => (
-                <img
-                  key={img.fileId}
-                  src={img.url}
-                  alt="img"
-                  onClick={() => setPreviewImage(img.url)}
-                  className="w-40 h-40 object-cover rounded-lg shadow cursor-pointer hover:scale-105 transition"
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* 📜 Menu Images */}
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Menu</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {data.menuImages?.map((img) => (
-                <img
-                  key={img.fileId}
-                  src={img.url}
-                  alt="img"
-                  onClick={() => setPreviewImage(img.url)}
-                  className="w-40 h-40 object-cover rounded-lg shadow cursor-pointer hover:scale-105 transition"
-                />
-              ))}
-            </div>
           </div>
         </div>
       )}

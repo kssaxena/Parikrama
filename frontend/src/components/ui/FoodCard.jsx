@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BiMap, BiSolidStar, BiUser, BiCalendar } from "react-icons/bi";
 import { FaTag } from "react-icons/fa";
 import { truncateString } from "../../utils/Utility-functions";
+import { MdVerified } from "react-icons/md";
 
 const FoodCard = ({ f }) => {
   return f?.map((data) => (
@@ -23,8 +24,17 @@ const FoodCard = ({ f }) => {
               <BiMap /> Nearest tourist place{" "}
               <span className="font-semibold">{data?.place?.name}</span>
             </p>
-            <h3 className="text-xl font-semibold text-gray-900 mt-2">
+            <h3 className="text-xl font-semibold text-gray-900 mt-2 flex justify-start items-center ">
               {data?.name}
+              <span
+                className={`px-3 py-1 rounded-full text-xs w-fit ${
+                  data.verified
+                    ? "bg-green-100 text-green-600"
+                    : "bg-red-100 text-red-600"
+                }`}
+              >
+                {data.verified ? <MdVerified /> : ""}
+              </span>
             </h3>
           </div>
           <div className="text-right">
