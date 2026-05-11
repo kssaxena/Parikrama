@@ -448,7 +448,7 @@ export const foodKiosksFormInputs = [
     placeHolder: "Enter email",
     name: "email",
     type: "email",
-    // required: false,
+    required: false,
   },
   {
     label: "Contact number",

@@ -4,7 +4,7 @@ const foodCourtSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     contactNumber: { type: String, required: true, trim: true, unique: true },
-    email: { type: String, required: true, trim: true, unique: true },
+    email: { type: String, trim: true },
     specialFood: [String],
     category: {
       type: String,

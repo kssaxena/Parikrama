@@ -22,12 +22,12 @@ const communitySchema = new mongoose.Schema(
     communityDetails: {
       communityName: { type: String },
       gst: { type: String },
-      communityContactNumber: { type: String, unique: true },
+      communityContactNumber: { type: String },
       communityEmail: {
         type: String,
         lowercase: true,
         trim: true,
-        unique: true,
+        // unique: true,
       },
       profession: { type: String, trim: true },
       bankDetails: {

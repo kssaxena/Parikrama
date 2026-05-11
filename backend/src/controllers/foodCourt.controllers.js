@@ -28,7 +28,7 @@ const createFoodCourtAdmin = asyncHandler(async (req, res) => {
   if (
     !name ||
     !contactNumber ||
-    !email ||
+    // !email ||
     !specialFood ||
     !category ||
     !lat ||
@@ -158,7 +158,7 @@ const createFoodCourt = asyncHandler(async (req, res) => {
   if (
     !name ||
     !contactNumber ||
-    !email ||
+    // !email ||
     !specialFood ||
     !category ||
     !place ||
