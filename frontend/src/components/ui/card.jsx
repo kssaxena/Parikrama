@@ -2,7 +2,7 @@ import React from "react";
 import { BiSolidNavigation } from "react-icons/bi";
 import Button from "../../components/Button";
 import { truncateString } from "../../utils/Utility-functions";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Card = ({
   name,
@@ -19,6 +19,8 @@ const Card = ({
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${long}`;
     window.open(url, "_blank");
   };
+  const location = useLocation();
+  const showDirection = location.pathname === "/search-feed/places";
   return (
     <Link
       to={`/current/place/${placeId}`}
@@ -46,14 +48,18 @@ const Card = ({
             className="object-cover object-center rounded-xl w-full h-full"
           />
         </div>
-        <button
-          onClick={openMaps}
-          className="group flex justify-center items-center gap-2 bg-transparent rounded-2xl drop-shadow-xl hover:drop-shadow-2xl text-xs"
-        >
-          <span>Directions</span>
+        {showDirection ? (
+          ""
+        ) : (
+          <button
+            onClick={openMaps}
+            className="group flex justify-center items-center gap-2 bg-transparent rounded-2xl drop-shadow-xl hover:drop-shadow-2xl text-xs"
+          >
+            <span>Directions</span>
 
-          <BiSolidNavigation className="transition duration-150 ease-in-out text-neutral-500 group-hover:text-[#FFC20E] group-hover:rotate-45" />
-        </button>
+            <BiSolidNavigation className="transition duration-150 ease-in-out text-neutral-500 group-hover:text-[#FFC20E] group-hover:rotate-45" />
+          </button>
+        )}
       </div>
     </Link>
   );
