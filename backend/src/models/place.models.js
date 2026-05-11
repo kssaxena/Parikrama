@@ -51,6 +51,23 @@ const placeSchema = new mongoose.Schema(
     popularityScore: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
     isLiveTelecast: { type: Boolean, default: true },
+    sponsor: {
+      type: String,
+      enum: [
+        "first",
+        "second",
+        "third",
+        "fourth",
+        "fifth",
+        "sixth",
+        "seventh",
+        "eighth",
+        "ninth",
+        "tenth",
+        "none",
+      ],
+      default: "none",
+    },
     telecastLink: String,
     telecastedUser: {
       type: mongoose.Schema.Types.ObjectId,
