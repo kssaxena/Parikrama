@@ -469,7 +469,9 @@ const ExpandedPlaceCard = ({ place, facilitator, foodStore }) => {
             >
               <div className="bg-white md:w-3/4 w-full h-full flex flex-col justify-start items-center py-10 overflow-scroll">
                 {foodStore.length > 0 ? (
-                  <FoodCard f={foodStore} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FoodCard f={foodStore} />
+                  </div>
                 ) : (
                   "No data available"
                 )}
