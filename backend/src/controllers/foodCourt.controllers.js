@@ -464,6 +464,67 @@ const deleteFoodCourt = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "Food Court deleted successfully"));
 });
 
+const markAsActive = asyncHandler(async (req, res) => {
+  const { foodCourtId, adminId } = req.params;
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) return new ApiError(400, "Invalid request");
+
+  const foodCourt = await FoodCourt.findByIdAndUpdate(foodCourtId, {
+    active: true,
+  });
+
+  await foodCourt.save();
+  if (!foodCourt) throw new ApiError(400, "Food Court not found");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, foodCourt, "Activated successfully !"));
+});
+
+const verifyByAdmin = asyncHandler(async (req, res) => {
+  const { foodCourtId, adminId } = req.params;
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) return new ApiError(400, "Invalid request");
+
+  const foodCourt = await FoodCourt.findByIdAndUpdate(foodCourtId, {
+    verified: true,
+  });
+
+  await foodCourt.save();
+  if (!foodCourt) throw new ApiError(400, "Food Court not found");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, foodCourt, "Verified successfully !"));
+});
+
+const markAsInactiveAndNonVerified = asyncHandler(async (req, res) => {
+  const { foodCourtId, adminId } = req.params;
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) return new ApiError(400, "Invalid request");
+
+  const foodCourt = await FoodCourt.findByIdAndUpdate(foodCourtId, {
+    verified: false,
+    active: false,
+  });
+
+  await foodCourt.save();
+  if (!foodCourt) throw new ApiError(400, "Food Court not found");
+
+  res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        foodCourt,
+        "This food court has been marked as inactive and non verified",
+      ),
+    );
+});
+
 export {
   // create
   createFoodCourtAdmin,
@@ -472,9 +533,13 @@ export {
   getAllFoodCourts,
   getFoodCourtById,
   getFoodCourtByPlaceId,
-  foodCourtFeed,
   // update
   updateFoodCourt,
   // delete
   deleteFoodCourt,
+  // extras
+  foodCourtFeed,
+  verifyByAdmin,
+  markAsActive,
+  markAsInactiveAndNonVerified,
 };
