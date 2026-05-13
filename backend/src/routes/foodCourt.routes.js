@@ -7,6 +7,9 @@ import {
   foodCourtFeed,
   getFoodCourtById,
   getFoodCourtByPlaceId,
+  markAsActive,
+  markAsInactiveAndNonVerified,
+  verifyByAdmin,
 } from "../controllers/foodCourt.controllers.js";
 
 const router = Router();
@@ -43,7 +46,16 @@ router.route("/update/food-court/by-id/:foodCourtId").post(
   createFoodCourtAdmin,
 );
 router
-  .route("/delete/food-court/by-id/:adminId/:foodCourtId")
+  .route("/active/food-court/by-id/:foodCourtId/:adminId")
+  .post(markAsActive);
+router
+  .route("/verify/food-court/by-id/:foodCourtId/:adminId")
+  .post(verifyByAdmin);
+router
+  .route("/deactivate/food-court/by-id/:foodCourtId/:adminId")
+  .post(markAsInactiveAndNonVerified);
+router
+  .route("/delete/food-court/by-id/:foodCourtId/:adminId")
   .delete(deleteFoodCourt);
 
 export default router;
