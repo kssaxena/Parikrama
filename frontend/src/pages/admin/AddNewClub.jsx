@@ -13,6 +13,11 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [country, setCountry] = useState([]);
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
   const [imagePreviews, setImagePreviews] = useState({
     logo: null,
     coverImage: null,
@@ -21,6 +26,54 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
 
   const { user } = useSelector((state) => state.auth);
   const currentAdminId = adminId || user?._id;
+
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        startLoading();
+        const res = await FetchData("states", "get");
+        setStates(res?.data?.data || []);
+      } catch (err) {
+        // console.error(err);
+      } finally {
+        stopLoading();
+      }
+    };
+    fetchStates();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedState) return;
+
+    const fetchCities = async () => {
+      try {
+        const res = await FetchData(`cities/state/${selectedState}`, "get");
+        setCities(res?.data?.data || []);
+      } catch (err) {
+        // console.error(err);
+      }
+    };
+
+    fetchCities();
+  }, [selectedState]);
+
+  useEffect(() => {
+    if (!selectedState) return;
+
+    const fetchCountry = async () => {
+      try {
+        const res = await FetchData(
+          `country/get/country/by-stateId/${selectedState}`,
+          "get",
+        );
+        setCountry(res?.data?.data || []);
+      } catch (err) {
+        // console.error(err);
+      }
+    };
+
+    fetchCountry();
+  }, [selectedState]);
 
   const clubAmenities = [
     "Accommodation",
@@ -86,14 +139,14 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
         ? `clubs/create/${currentAdminId}`
         : "clubs/register/public";
       const res = await FetchData(endpoint, "post", formData, true);
-      console.log(res);
+      // console.log(res);
       setSuccess("Club created successfully");
       formRef.current.reset();
       setImagePreviews({ logo: null, coverImage: null, gallery: [] });
       alert("Club created successfully");
       if (onCancel) onCancel();
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       setError("Failed to create club. Please check all required fields.");
     } finally {
       stopLoading();
@@ -189,20 +242,75 @@ const AddNewClub = ({ startLoading, stopLoading, onCancel, adminId }) => {
             Placeholder="Enter full address"
             required
           />
+          <div className="flex justify-center items-center w-full">
+            <div className="py-4 w-full">
+              <label className="block text-sm font-medium mb-1">State*</label>
+              <select
+                name="state"
+                required
+                className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:ring-[#FFC20E] focus:border-[#FFC20E] outline-none transition duration-200 ease-in-out hover:shadow-md"
+                onChange={(e) => setSelectedState(e.target.value)}
+              >
+                <option value="">Select State</option>
+                {states?.map((state) => (
+                  <option key={state._id} value={state._id}>
+                    {state.name}, {state?.country?.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-center items-center w-full">
+            <div className="py-4 w-full">
+              <label className="block text-sm font-medium mb-1">City*</label>
+              <select
+                name="city"
+                required
+                className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:ring-[#FFC20E] focus:border-[#FFC20E] outline-none transition duration-200 ease-in-out hover:shadow-md"
+                // onChange={(e) => setSelectedState(e.target.value)}
+              >
+                <option value="">Select City</option>
+                {cities?.map((city) => (
+                  <option key={city._id} value={city._id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          {country ? (
+            <input
+              className="hidden"
+              value={country?.id || ""}
+              name="country"
+              onChange={(e) => setSelectedCountry(e.target.value)}
+            />
+          ) : (
+            ""
+          )}
+          {/* <input
+            className="hidden"
+            value={country?.id}
+            name="country"
+            onChange={(e) => setSelectedCountry(e.target.value)}
+          /> */}
           <InputBox
-            Type="number"
+            LabelName="Country"
+            Placeholder={country?.name}
+            Value={country?.name}
+          />
+          <InputBox
+            Type="text"
             Name="lat"
             LabelName="Latitude "
             Placeholder="Latitude"
-            step="0.000001"
             required
           />
           <InputBox
-            Type="number"
+            Type="text"
             Name="lng"
             LabelName="Longitude"
             Placeholder="Longitude"
-            step="0.000001"
             required
           />
         </div>

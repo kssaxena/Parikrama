@@ -6,7 +6,6 @@ import { truncateString } from "../../utils/Utility-functions";
 const HotelCard = ({ hotel }) => {
   const imageUrl =
     hotel?.images?.cover?.url || hotel?.images?.gallery?.[0]?.url || "";
-
   return (
     <Link
       to={`/hotels/${hotel?._id}`}
@@ -29,7 +28,8 @@ const HotelCard = ({ hotel }) => {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm text-gray-500 flex items-center gap-2">
-              <BiMap /> {hotel?.address?.city?.name}, {hotel?.address?.state?.name}
+              <BiMap /> {hotel?.address?.city?.name},{" "}
+              {hotel?.address?.state?.name}
             </p>
             <h3 className="text-xl font-semibold text-gray-900 mt-2">
               {hotel?.name}
@@ -37,7 +37,7 @@ const HotelCard = ({ hotel }) => {
           </div>
           <div className="text-right">
             <div className="inline-flex items-center gap-1 rounded-full bg-[#FFC20E]/20 px-3 py-1 text-sm font-medium text-[#6B4A00]">
-              <BiSolidStar /> {hotel?.ratings?.average || 0}
+              <BiSolidStar /> {hotel?.starRating || 0}
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@ const HotelCard = ({ hotel }) => {
               {hotel.propertyType}
             </span>
           )}
-          {hotel?.tags?.slice(0, 2).map((tag) => (
+          {hotel?.amenities?.slice(0, 2).map((tag) => (
             <span
               key={tag}
               className="text-xs px-3 py-1 rounded-full bg-[#FFC20E]/20 text-[#6B4A00]"
@@ -63,11 +63,16 @@ const HotelCard = ({ hotel }) => {
           ))}
         </div>
 
-        <div className="flex items-center justify-between text-sm text-gray-500 pt-3">
-          <span>{hotel?.rooms?.length || 0} room type(s)</span>
-          <span>
-            ₹{hotel?.pricing?.minPrice || "NA"} - ₹{hotel?.pricing?.maxPrice || "NA"}
+        <div className="flex items-center justify-center text-sm text-gray-500 p-3 bg-green-200 rounded-xl gap-5">
+          {/* <span>{hotel?.rooms?.length || 0} room type(s)</span> */}
+          Start's From:{" "}
+          <span className="text-xl font-semibold text-green-700">
+            ₹{hotel?.pricing?.minPrice || "NA"}
           </span>
+          {/* <span>
+            ₹{hotel?.pricing?.minPrice || "NA"} - ₹
+            {hotel?.pricing?.maxPrice || "NA"}
+          </span> */}
         </div>
       </div>
     </Link>

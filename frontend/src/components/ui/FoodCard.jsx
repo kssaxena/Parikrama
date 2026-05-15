@@ -55,7 +55,7 @@ const FoodCard = ({ f }) => {
           </div>
           <div className="text-right">
             <div className="inline-flex items-center gap-1 rounded-full bg-[#FFC20E]/20 px-3 py-1 text-sm font-medium text-[#6B4A00]">
-              <BiSolidStar /> {data?.ratings?.average || 0}
+              <BiSolidStar /> {data?.ratings?.overallAvg || 0}
             </div>
           </div>
         </div>
