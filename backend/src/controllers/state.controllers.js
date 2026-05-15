@@ -87,7 +87,9 @@ export const createState = asyncHandler(async (req, res) => {
  * GET ALL STATES
  */
 export const getAllStates = asyncHandler(async (req, res) => {
-  const states = await State.find().sort({ name: 1 });
+  const states = await State.find()
+    .sort({ name: 1 })
+    .populate("country", "name");
   res.status(200).json(new ApiResponse(200, states));
 });
 
