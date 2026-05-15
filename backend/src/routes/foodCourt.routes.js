@@ -10,6 +10,7 @@ import {
   markAsActive,
   markAsInactiveAndNonVerified,
   verifyByAdmin,
+  addFoodPlaceReview,
 } from "../controllers/foodCourt.controllers.js";
 
 const router = Router();
@@ -45,6 +46,9 @@ router.route("/update/food-court/by-id/:foodCourtId").post(
   ]),
   createFoodCourtAdmin,
 );
+
+router.route("/user/:foodPlaceId/reviews").post(addFoodPlaceReview);
+
 router
   .route("/active/food-court/by-id/:foodCourtId/:adminId")
   .post(markAsActive);
