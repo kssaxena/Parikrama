@@ -320,11 +320,12 @@ const AddNewHotel = ({ startLoading, stopLoading, onCancel, adminId }) => {
             Name="website"
             Placeholder="https://yourwebsite.com"
           />
-          <InputBox
+          {/* can uncomment below if you want to add booking URL field in hotel creation form */}
+          {/* <InputBox
             LabelName="Booking URL"
             Name="bookingUrl"
             Required={false}
-          />
+          /> */}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>

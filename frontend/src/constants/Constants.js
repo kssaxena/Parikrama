@@ -250,6 +250,89 @@ const mockPackages = {
 
 export default mockPackages;
 
+// corporateData.js
+export const whyChooseUs = [
+  "Customized corporate and leisure travel solutions",
+  "Reliable ticket booking and accommodation management",
+  "Dedicated customer support and travel coordination",
+  "Transparent pricing with no hidden charges",
+  "Strong vendor network across destinations",
+  "Personalized travel assistance and facilitation",
+];
+
+export const services = [
+  {
+    title: "Air Bookings",
+    icon: "plane",
+    description:
+      "Domestic and international airline booking support with optimized fares and travel routes.",
+  },
+  {
+    title: "Hotel Bookings",
+    icon: "hotel",
+    description:
+      "Premium hotel booking solutions tailored for business and leisure travelers.",
+  },
+  {
+    title: "Visa Assistance",
+    icon: "visa",
+    description:
+      "Complete visa support including documentation, applications and embassy coordination.",
+  },
+  {
+    title: "Cab & Bus Services",
+    icon: "bus",
+    description:
+      "Reliable cab, luxury car, tempo traveller and bus arrangements for corporate teams.",
+  },
+  {
+    title: "Train Bookings",
+    icon: "train",
+    description:
+      "Authorized railway booking services with smooth and hassle-free arrangements.",
+  },
+  {
+    title: "Tour Packages",
+    icon: "globe",
+    description:
+      "Customized domestic and international travel packages for every requirement.",
+  },
+];
+
+export const paymentModels = [
+  {
+    title: "Prepaid Model",
+    subtitle: "Best for high-volume bookings",
+    features: [
+      "No service charges on air & hotel bookings",
+      "Discounted rail booking charges",
+      "Periodic ledger sharing",
+      "Prepaid deposit management",
+    ],
+  },
+  {
+    title: "Standard Cycle",
+    subtitle: "Flexible monthly payment cycle",
+    features: [
+      "Structured billing cycles",
+      "Domestic & international bookings",
+      "Corporate support assistance",
+      "Optimized payment scheduling",
+    ],
+  },
+  {
+    title: "Extended Credit",
+    subtitle: "Longer payment flexibility",
+    features: [
+      "Extended due dates",
+      "Flexible credit management",
+      "Visa processing support",
+      "Corporate-friendly structure",
+    ],
+  },
+];
+
+// input constants
 export const packagesInputs = [
   {
     label: "Name",
@@ -537,5 +620,38 @@ export const subAdminFormInputs = [
     name: "password",
     type: "password",
     passwordTrue: true,
+  },
+];
+
+export const corporateEnquiryForm = [
+  {
+    label: "Company's Name",
+    placeHolder: "Company name",
+    name: "companyName",
+    type: "text",
+  },
+  {
+    label: "Company's Email",
+    placeHolder: "Company's email",
+    name: "companyEmail",
+    type: "email",
+  },
+  {
+    label: "Contact Person Name",
+    placeHolder: "Contact person's name",
+    name: "contactPersonName",
+    type: "text",
+  },
+  {
+    label: "Contact Person Designation",
+    placeHolder: "Contact person's designation",
+    name: "contactPersonDesignation",
+    type: "text",
+  },
+  {
+    label: "Contact Number",
+    placeHolder: "Contact number",
+    name: "contactNumber",
+    type: "text",
   },
 ];
