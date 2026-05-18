@@ -251,12 +251,12 @@ const CorporatePlan = () => {
             initial={{ opacity: 0, x: -100 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
-            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center z-50 bg-black/80"
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-start md:items-center z-50 bg-black/80 overflow-scroll p-4"
           >
             <form
               ref={formRef}
               onSubmit={handleSubmit}
-              className="grid grid-cols-2 gap-4 bg-white w-1/2 p-5 rounded-xl "
+              className="grid md:grid-cols-2  gap-1 md:gap-4 bg-white w-full md:w-1/2 p-5 rounded-xl "
             >
               {corporateEnquiryForm.map((i) => (
                 <InputBox
