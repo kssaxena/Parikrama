@@ -183,9 +183,10 @@ const createHotel = asyncHandler(async (req, res) => {
   // ✅ FIX CHECKBOXES
   parsedPolicies = {
     ...parsedPolicies,
-    petsAllowed: req.body["policies[petsAllowed]"] === "on",
-    childrenAllowed: req.body["policies[childrenAllowed]"] === "on",
-    smokingAllowed: req.body["policies[smokingAllowed]"] === "on",
+
+    petsAllowed: !!req.body?.policies?.petsAllowed,
+    childrenAllowed: !!req.body?.policies?.childrenAllowed,
+    smokingAllowed: !!req.body?.policies?.smokingAllowed,
   };
 
   const parsedRooms = parseJsonField(req.body.rooms) || [];

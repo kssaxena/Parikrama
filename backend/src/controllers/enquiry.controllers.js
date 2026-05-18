@@ -4,6 +4,45 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Admin } from "../models/admin.models.js";
 import { EnquiryDetails } from "../models/enquiry.models.js";
 
+const createCorporateEnquiry = asyncHandler(async (req, res) => {
+  const {
+    enquiryType,
+    companyName,
+    companyEmail,
+    contactPersonName,
+    contactPersonDesignation,
+    contactNumber,
+    comments,
+    reviewedByAdmin,
+    cityId,
+    stateId,
+    placeId,
+  } = req.body;
+
+  if (!enquiryType || !companyName || !companyEmail || !contactNumber)
+    throw new ApiError(400, "Invalid response, please try again later");
+
+  const enquiry = await EnquiryDetails.create({
+    enquiryType: enquiryType,
+    corporate: {
+      contactPersonName: contactPersonName,
+      companyName: companyName,
+      companyEmail: companyEmail,
+      contactPersonDesignation: contactPersonDesignation,
+      contactNumber: contactNumber,
+      comments: comments,
+    },
+    cityId: cityId,
+    stateId: stateId,
+    placeId: placeId,
+  });
+  if (!enquiry) throw new ApiError(400, "Unable to send request !");
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, enquiry, "Response submitted successfully !"));
+});
+
 const createEnquiry = asyncHandler(async (req, res) => {
   const {
     enquiryType,
@@ -21,13 +60,6 @@ const createEnquiry = asyncHandler(async (req, res) => {
     placeId,
     reviewedByAdmin,
   } = req.body;
-
-  console.log(
-    enquiryType,
-    contactPersonName,
-    contactPersonPhone,
-    contactPersonEmail,
-  );
 
   if (
     !enquiryType ||
@@ -115,6 +147,7 @@ const deleteEnquiry = asyncHandler(async (req, res) => {
 });
 
 export {
+  createCorporateEnquiry,
   createEnquiry,
   getEnquiriesById,
   markEnquiryAsReviewed,
