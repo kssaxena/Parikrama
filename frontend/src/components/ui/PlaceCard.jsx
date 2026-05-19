@@ -349,10 +349,10 @@ const ExpandedPlaceCard = ({ place, facilitator, foodStore }) => {
                   ? facilitator.map((fac) => (
                       <div className="flex flex-col justify-between items-center bg-neutral-200 px-10 py-5 w-[90%] rounded-xl">
                         <div className="flex flex-col md:flex-row justify-center items-start md:items-center md:gap-5">
-                          <div className="w-10 h-10 md:w-20 md:h-20 rounded-full overflow-hidden object-fill bg-red-500 flex justify-center items-center ">
+                          <div className="w-10 h-10 md:w-20 md:h-20 rounded-full overflow-hidden object-fill bg-neutral-500 flex justify-center items-center ">
                             <img
                               src={fac?.images[0]?.url}
-                              className="h-full w-full"
+                              className="h-full w-full object-cover"
                             />
                           </div>
                           <h2 className="flex flex-col w-48 text-nowrap overflow-hidden">
