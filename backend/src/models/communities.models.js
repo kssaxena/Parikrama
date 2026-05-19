@@ -40,6 +40,16 @@ const communitySchema = new mongoose.Schema(
     },
     communityEstablishment: { type: Number },
     about: { type: String },
+    members: [
+      {
+        name: { type: String, trim: true },
+        email: { type: String, trim: true },
+        contactNumber: { type: String, trim: true },
+        address: { type: String },
+        city: { type: mongoose.Schema.Types.ObjectId, ref: "City" },
+        state: { type: mongoose.Schema.Types.ObjectId, ref: "State" },
+      },
+    ],
     adminVerified: { type: Boolean, default: false },
     isValid: { type: Boolean, default: false },
     isActive: { type: Boolean, default: false },

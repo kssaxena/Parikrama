@@ -258,6 +258,90 @@ const updateCommunity = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, community, "Community updated successfully"));
 });
 
+const completeProfile = asyncHandler(async (req, res) => {
+  const { communityId } = req.params;
+  const {
+    bio,
+    communityName,
+    gst,
+    communityContactNumber,
+    communityEmail,
+    profession,
+    bankName,
+    ifsc,
+    accountNumber,
+    accountHolderName,
+    communityEstablishment,
+    pan,
+    aadhar,
+  } = req.body;
+  if (!communityName || !communityContactNumber || !profession)
+    throw new ApiError(400, "Required fields are missing.");
+
+  let companyLogo = {};
+  if (req.files?.companyLogo?.[0]) {
+    const upload = await UploadImages(req.files.companyLogo[0].filename, {
+      folderStructure: "community/logo",
+    });
+    companyLogo = { url: uploaded.url, fileId: uploaded.fileId };
+  }
+
+  const community = await Community.findByIdAndUpdate(communityId, {
+    communityDetails: {
+      communityName: communityName,
+      gst: gst,
+      communityContactNumber: communityContactNumber,
+      communityEmail: communityEmail,
+      profession: profession,
+      bankDetails: {
+        bankName: bankName,
+        ifsc: ifsc,
+        branch: branch || "",
+        accountNumber: accountNumber,
+        accountHolderName: accountHolderName,
+      },
+    },
+    communityEstablishment: communityEstablishment,
+    about: bio,
+    images: { companyLogo },
+  });
+  if (!community) throw new ApiError(400, "Invalid request");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, community, "Profile updated successfully !"));
+});
+
+const addCommunityMember = asyncHandler(async (req, res) => {
+  const { communityId } = req.params;
+  const { name, email, phone, address, cityId, stateId } = req.body;
+
+  if (!communityId || !name) {
+    throw new ApiError(400, "Community ID and member name are required");
+  }
+
+  const community = await Community.findById(communityId);
+  if (!community) {
+    throw new ApiError(404, "community not found");
+  }
+
+  const member = {
+    name,
+    email,
+    contactNumber: phone,
+    address,
+    city: cityId,
+    state: stateId,
+  };
+
+  community.members.push(member);
+  await community.save();
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, community.members, "Member added successfully"));
+});
+
 const deleteCommunity = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -457,6 +541,8 @@ export {
   getCommunityById,
   getCommunityDashboardData,
   updateCommunity,
+  completeProfile,
+  addCommunityMember,
   deleteCommunity,
   verifyCommunity,
   toggleCommunityStatus,

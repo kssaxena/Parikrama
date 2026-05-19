@@ -13,6 +13,8 @@ import {
   getCommunityDashboardData,
   acceptFollowRequest,
   rejectFollowRequest,
+  addCommunityMember,
+  completeProfile,
 } from "../controllers/community.controllers.js";
 import { VerifyAdmin } from "../middlewares/adminAuth.middleware.js";
 import { upload } from "../middlewares/multer.middlewares.js";
@@ -26,6 +28,13 @@ router.route("/community/auth/register").post(
     { name: "companyLogo", maxCount: 1 },
   ]),
   registerCommunity,
+);
+router.route("/complete/profile/:communityId").post(
+  upload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "companyLogo", maxCount: 1 },
+  ]),
+  completeProfile,
 );
 
 router.route("/community/auth/login").post(loginCommunity);
@@ -46,6 +55,8 @@ router.route("/community/profile/update/:communityId").patch(
   updateCommunity,
 );
 
+router.route("/add-new/:communityId/member").post(addCommunityMember);
+
 router.route("/community/auth/refresh-token").post(refreshCommunityToken);
 
 router
@@ -64,7 +75,9 @@ router.route("/community/follow-request/:communityId").post(followRequest);
 router
   .route("/community/accept-request/:communityId")
   .post(acceptFollowRequest);
-router.route("/community/reject-request/:communityId").post(rejectFollowRequest);
+router
+  .route("/community/reject-request/:communityId")
+  .post(rejectFollowRequest);
 
 /* ================= FUTURE SAFE ROUTES ================= */
 
