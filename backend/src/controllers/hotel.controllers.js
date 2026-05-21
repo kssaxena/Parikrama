@@ -219,6 +219,19 @@ const createHotel = asyncHandler(async (req, res) => {
 
   const roomTotals = computeRoomTotals(parsedRooms);
 
+  const generateUniquePin = async () => {
+    let pin;
+    let exists = true;
+
+    while (exists) {
+      pin = Math.floor(100000 + Math.random() * 900000); // 6 digits
+      exists = await Hotels.exists({ accessPin: pin });
+    }
+
+    return pin;
+  };
+  const accessPin = await generateUniquePin();
+
   const hotel = await Hotels.create({
     name: req.body.name.trim(),
     slug: generateSlug(req.body.name),
@@ -270,6 +283,7 @@ const createHotel = asyncHandler(async (req, res) => {
     partnerClub: partnerClub?._id,
     listedBy: req.body.listedBy,
     createdBy: admin._id,
+    accessPin,
 
     isActive: true,
     isVerified: req.body.isVerified === "true" || req.body.isVerified === true,

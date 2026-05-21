@@ -223,6 +223,13 @@ const hotelSchema = new mongoose.Schema(
     availableRooms: Number,
     awards: [String],
     certifications: [String],
+    accessPin: {
+      type: Number,
+      unique: true,
+      index: true,
+      min: 100000,
+      max: 999999,
+    },
     externalReferences: {
       sabreId: String,
       amadeusId: String,
