@@ -5,6 +5,7 @@ import { Admin } from "../models/admin.models.js";
 import { Place } from "../models/place.models.js";
 import { FoodCourt } from "../models/foodCourt.models.js";
 import { DeleteBulkImage, UploadImages } from "../utils/imageKit.io.js";
+import { getIo } from "../socket.js";
 
 const createFoodCourtAdmin = asyncHandler(async (req, res) => {
   const {
@@ -258,6 +259,24 @@ const createFoodCourt = asyncHandler(async (req, res) => {
     // active: true,
     // verified: true,
   });
+
+  try {
+    getIo()
+      .to("admins")
+      .emit("new-food-place", {
+        _id: newFoodCourt._id,
+        name: newFoodCourt.name,
+        contactNumber: newFoodCourt.contactNumber,
+        email: newFoodCourt.email,
+        place: newFoodCourt.place,
+        city: newFoodCourt.city,
+        state: newFoodCourt.state,
+        createdAt: newFoodCourt.createdAt,
+        message: `New food place registered: ${newFoodCourt.name}`,
+      });
+  } catch (socketError) {
+    console.warn("Socket emit failed:", socketError.message);
+  }
 
   res
     .status(201)

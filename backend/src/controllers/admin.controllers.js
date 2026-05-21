@@ -112,42 +112,77 @@ const loginAdmin = asyncHandler(async (req, res) => {
 });
 
 const dashboardData = asyncHandler(async (req, res) => {
-  const state = await State.find().populate("country");
-  const city = await City.find().populate("state");
-  const place = await Place.find({ isActive: true }).populate("city state");
-  const inactivePlace = await Place.find({ isActive: false }).populate(
-    "city state",
-  );
-  const activeFacilitator = await Facilitator.find({
-    isVerified: true,
-  }).populate("state city place");
-  const inactiveFacilitator = await Facilitator.find({
-    isVerified: false,
-  }).populate("state city place");
-  const promotions = await Promotion.find().populate("place");
-  const packages = await TravelPackages.find();
-  const foodCourts = await FoodCourt.find().populate("place");
-  const users = await UserSchema.find();
+  // states , city, country
+  const state = await State.find().populate("country").sort({ createdAt: -1 });
+  const city = await City.find().populate("state").sort({ createdAt: -1 });
+  const country = await Country.find().sort({ createdAt: -1 });
+
+  // food courts or kiosks
+  const foodCourts = await FoodCourt.find()
+    .populate("place")
+    .sort({ createdAt: -1 });
+  const underReviewCount = await FoodCourt.find({
+    active: false,
+    verified: false,
+  }).select("name");
+
+  //extras
+  const users = await UserSchema.find().sort({ createdAt: -1 });
+
+  // places
+  const place = await Place.find({ isActive: true })
+    .populate("city state")
+    .sort({ createdAt: -1 });
+  const inactivePlace = await Place.find({ isActive: false })
+    .populate("city state")
+    .sort({ createdAt: -1 });
+
+  // promotions
+  const promotions = await Promotion.find()
+    .populate("place")
+    .sort({ createdAt: -1 });
+  const packages = await TravelPackages.find().sort({ createdAt: -1 });
   const enquiry = await EnquiryDetails.find({
     reviewedByAdmin: false,
-  }).populate("stateId cityId placeId");
-  const country = await Country.find();
+  })
+    .populate("stateId cityId placeId")
+    .sort({ createdAt: -1 });
+  const reviewedEnquiry = await EnquiryDetails.find({
+    reviewedByAdmin: true,
+  })
+    .populate("stateId cityId placeId")
+    .sort({ createdAt: -1 });
+
+  // facilitators
+  const activeFacilitator = await Facilitator.find({
+    isVerified: true,
+  })
+    .populate("state city place")
+    .sort({ createdAt: -1 });
+  const inactiveFacilitator = await Facilitator.find({
+    isVerified: false,
+  })
+    .populate("state city place")
+    .sort({ createdAt: -1 });
+
   // const packages = await TravelPackages.find().populate("place");
 
   return res.status(200).json(
     new ApiResponse(200, {
       state,
       city,
+      country,
+      foodCourts,
+      underReviewCount,
+      users,
       place,
       inactivePlace,
-      activeFacilitator,
-      inactiveFacilitator,
       promotions,
       packages,
-      foodCourts,
-      users,
       enquiry,
-      country,
+      reviewedEnquiry,
+      activeFacilitator,
+      inactiveFacilitator,
     }),
   );
 });
