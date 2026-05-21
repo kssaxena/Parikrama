@@ -94,7 +94,7 @@ const CorporatePlan = () => {
               </button>
 
               <a
-                href="https://ik.imagekit.io/parikrama/Parikrama_corporate%20plan.pdf"
+                href="https://ik.imagekit.io/parikrama/Parikrama%20Corp.pdf.pdf"
                 target="blank"
                 className="border-2 border-[#FFC20D] hover:bg-[#FFC20D] transition-all duration-300 px-8 py-4 rounded-2xl font-bold flex justify-between items-center gap-3"
               >
