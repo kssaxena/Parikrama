@@ -11,12 +11,13 @@ import { MdAdd } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
-  { label: "Terms of service", path: "/terms-of-service" },
-  { label: "Privacy Policy", path: "/privacy-policy" },
   { label: "Contact us", path: "/contact-us/parikrama-global" },
-  { label: "About us", path: "/" },
-  { label: "How this site works", path: "/how-this-site-works" },
   { label: "Corporate", path: "/corporate/plans" },
+  { label: "Privacy Policy", path: "/privacy-policy" },
+  { label: "Terms of service", path: "/terms-of-service" },
+  // { label: "Club Updates", path: "/updates/for/club" },
+  // { label: "About us", path: "/" },
+  // { label: "How this site works", path: "/how-this-site-works" },
 ];
 
 const social_links = [
@@ -83,7 +84,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="flex flex-col justify-start items-start gap-2">
-          <h1 className="font-semibold">Follow us on</h1>
+          <h1 className="font-semibold">Quick Links</h1>
           <div className="flex flex-col justify-center items-start gap-1">
             {links.map((f, index) => (
               <Link
