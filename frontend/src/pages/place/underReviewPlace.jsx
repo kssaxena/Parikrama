@@ -15,6 +15,7 @@ import Button from "../../components/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import NewCity from "../../components/ui/NewCity";
 import InputBox from "../../components/InputBox";
+import { formatDateTimeString } from "../../utils/mongoDB_DateTime";
 
 const PlaceDetailsCard = ({ place }) => {
   if (!place) return null;
@@ -36,6 +37,7 @@ const PlaceDetailsCard = ({ place }) => {
     uploaderContact,
     isActive,
     customCity,
+    createdAt,
   } = place;
 
   const lat = location?.coordinates?.[1];
@@ -194,12 +196,19 @@ const PlaceDetailsCard = ({ place }) => {
             <h3 className="font-semibold mb-1">Submitted By</h3>
             <p>Name: {uploaderName}</p>
             <p>Contact: {uploaderContact}</p>
+            <p>
+              Place added <span className="text-xs">(DDMMYY)</span>:{" "}
+              {formatDateTimeString(createdAt)}
+            </p>
           </div>
           <div>
             {customCity ? (
               ""
             ) : (
-              <Button label={"Accept this place"} onClick={() => acceptPlace()} />
+              <Button
+                label={"Accept this place"}
+                onClick={() => acceptPlace()}
+              />
             )}
           </div>
         </div>
