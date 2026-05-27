@@ -51,6 +51,7 @@ const placeSchema = new mongoose.Schema(
     popularityScore: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
     isLiveTelecast: { type: Boolean, default: true },
+    kidsPlace: { type: String, enum: ["Yes", "No"], default: "No" },
     sponsor: {
       type: String,
       enum: [

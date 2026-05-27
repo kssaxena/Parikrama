@@ -275,7 +275,8 @@ const updatePlace = asyncHandler(async (req, res) => {
     "averageTimeSpent",
     "entryFee",
     "telecastLink",
-    "sponsor"
+    "sponsor",
+    "kidsPlace",
   ];
 
   allowedFields.forEach((field) => {
