@@ -8,6 +8,7 @@ import {
   loginAdmin,
   regenerateAdminRefreshToken,
   dashboardData,
+  createSubAdmin,
 } from "../controllers/admin.controllers.js";
 import {
   deletePromotion,
@@ -20,6 +21,7 @@ const router = Router();
 
 /* Admin dashboard data */
 router.route("/register/:adminId").post(registerAdmin);
+router.route("/register-sub-admin/:adminId").post(createSubAdmin);
 router.route("/login").post(loginAdmin);
 router.route("/auth/refresh-tokens").post(regenerateAdminRefreshToken);
 router.route("/dashboard/data").get(dashboardData);
@@ -38,8 +40,5 @@ router
 router
   .route("/promotions/delete/:promotionId")
   .delete(VerifyUser, deletePromotion);
-// router.route("/states").get(VerifyUser, getAllStates);
-// router.route("/cities").get(VerifyUser, getAllCities);
-// router.route("/places").get(VerifyUser, getAllPlaces);
 
 export default router;

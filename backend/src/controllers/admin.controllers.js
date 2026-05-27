@@ -82,6 +82,148 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(201, createAdmin, "Admin registered successfully"));
 });
 
+const createSubAdmin = asyncHandler(async (req, res) => {
+  const { adminId } = req.params;
+
+  const {
+    name,
+    employeeId,
+    email,
+    phoneNumber,
+    password,
+    restrictedAccess,
+    sectionList,
+  } = req.body;
+
+  /* =========================
+      VALIDATION
+  ========================= */
+
+  if (!name || !employeeId || !email || !phoneNumber || !password) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  /* =========================
+      VERIFY MAIN ADMIN
+  ========================= */
+
+  const admin = await Admin.findById(adminId);
+
+  if (!admin) {
+    throw new ApiError(404, "Invalid admin");
+  }
+
+  /* =========================
+      CHECK DUPLICATES
+  ========================= */
+
+  const existingAdmin = await Admin.findOne({
+    $or: [{ email: email.toLowerCase() }, { employeeId }, { phoneNumber }],
+  });
+
+  if (existingAdmin) {
+    if (existingAdmin.email === email.toLowerCase()) {
+      throw new ApiError(400, "Email already exists");
+    }
+
+    if (existingAdmin.employeeId === employeeId) {
+      throw new ApiError(400, "Employee ID already exists");
+    }
+
+    if (existingAdmin.phoneNumber === phoneNumber) {
+      throw new ApiError(400, "Phone number already exists");
+    }
+  }
+
+  /* =========================
+      VALIDATE SECTION LIST
+  ========================= */
+
+  const allowedSections = [
+    "Overview",
+    "Enquiries",
+    "Hotels",
+    "Clubs",
+    "Active Places",
+    "Inactive Places",
+    "Food Place",
+    "Users",
+    "Verified Facilitator",
+    "Non-Verified Facilitator",
+    "Cities",
+    "States",
+    "Countries",
+    "Packages",
+    "Promotions",
+  ];
+
+  if (restrictedAccess === true || restrictedAccess === "true") {
+    if (
+      !sectionList ||
+      !Array.isArray(sectionList) ||
+      sectionList.length === 0
+    ) {
+      throw new ApiError(400, "Please select at least one section");
+    }
+
+    const invalidSections = sectionList.filter(
+      (section) => !allowedSections.includes(section),
+    );
+
+    if (invalidSections.length > 0) {
+      throw new ApiError(
+        400,
+        `Invalid sections: ${invalidSections.join(", ")}`,
+      );
+    }
+  }
+
+  /* =========================
+      CREATE SUB ADMIN
+  ========================= */
+
+  const subAdmin = await Admin.create({
+    name,
+    employeeId,
+    email: email.toLowerCase(),
+    phoneNumber,
+    password,
+
+    role: "Admin",
+
+    restrictedAccess: restrictedAccess === true || restrictedAccess === "true",
+
+    sectionList:
+      restrictedAccess === true || restrictedAccess === "true"
+        ? sectionList
+        : [],
+  });
+
+  /* =========================
+      REMOVE PASSWORD
+  ========================= */
+
+  // const createdSubAdmin = await Admin.findById(subAdmin._id).select(
+  //   "-password",
+  // );
+
+  /* =========================
+      RESPONSE
+  ========================= */
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, subAdmin, "Sub admin created successfully"));
+
+  // 👇 this response has been commented because not to send the password to the UI, but for now i will be sending the password to UI share it to the subadmin... further when sms integration will be active then the password will be sent through the sms.
+
+  // res
+  //   .status(201)
+  //   .json(
+  //     new ApiResponse(201, createdSubAdmin, "Sub admin created successfully"),
+  //   );
+});
+
 const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -112,6 +254,10 @@ const loginAdmin = asyncHandler(async (req, res) => {
 });
 
 const dashboardData = asyncHandler(async (req, res) => {
+  //sub admins
+  const subAdmin = await Admin.find({ restrictedAccess: true }).sort({
+    createdAt: -1,
+  });
   // states , city, country
   const state = await State.find().populate("country").sort({ createdAt: -1 });
   const city = await City.find().populate("state").sort({ createdAt: -1 });
@@ -169,6 +315,7 @@ const dashboardData = asyncHandler(async (req, res) => {
 
   return res.status(200).json(
     new ApiResponse(200, {
+      subAdmin,
       state,
       city,
       country,
@@ -190,6 +337,7 @@ const dashboardData = asyncHandler(async (req, res) => {
 export {
   loginAdmin,
   regenerateAdminRefreshToken,
+  createSubAdmin,
   registerAdmin,
   dashboardData,
 };
