@@ -56,6 +56,7 @@ const EditPlace = ({ stopLoading, startLoading }) => {
         entryFee: p.entryFee,
         telecastLink: p.telecastLink,
         sponsor: p.sponsor,
+        kidsPlace: p.kidsPlace,
       });
     } catch {
       setError("Failed to load place");
@@ -245,6 +246,25 @@ const EditPlace = ({ stopLoading, startLoading }) => {
           >
             <option value="">Select options</option>
             {sponsor?.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Is this a kids place
+          </label>
+          <select
+            value={formData.kidsPlace}
+            name="kidsPlace"
+            required
+            className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:ring-[#FFC20E] focus:border-[#FFC20E] outline-none transition duration-200 ease-in-out hover:shadow-md"
+            onChange={handleChange}
+          >
+            <option value="">Select options</option>
+            {["Yes", "No"]?.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>
