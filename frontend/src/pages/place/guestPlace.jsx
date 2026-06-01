@@ -191,6 +191,24 @@ const GuestPlace = ({ startLoading, stopLoading }) => {
           <InputBox LabelName="Best Time to Visit" Name="bestTimeToVisit" />
           <InputBox LabelName="Entry Fee" Name="entryFee" Type="number" />
           <InputBox LabelName="Popularity Score" Name="popularityScore" />
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Is this a kids place
+            </label>
+            <select
+              name="kidsPlace"
+              required
+              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:ring-[#FFC20E] focus:border-[#FFC20E] outline-none transition duration-200 ease-in-out hover:shadow-md"
+              // onChange={handleChange}
+            >
+              <option value="">Select options</option>
+              {["Yes", "No"]?.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* DESCRIPTION */}
           <div className="col-span-2">

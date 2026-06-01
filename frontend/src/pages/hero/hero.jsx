@@ -148,7 +148,7 @@ const Hero = ({ stopLoading, startLoading }) => {
       {/* TOP BANNER */}
       <FloatNavBar />
       <div className="md:w-[99%] hidden md:block">
-        <RandomImageSlider images={top} className="md:h-[350px] h-[200px]" />
+        <RandomImageSlider images={top} className="md:h-[400px] h-[200px]" />
       </div>
       {/* <div className="w-full md:hidden">
         <RandomImageSlider images={topMobile} className="h-[200px]" />
