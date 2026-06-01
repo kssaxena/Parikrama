@@ -2,13 +2,14 @@ import React from "react";
 import { FaHotel, FaUsersCog } from "react-icons/fa";
 import {
   FaBusSimple,
+  FaChildren,
   FaPersonWalkingLuggage,
   FaTrainTram,
 } from "react-icons/fa6";
 import { RiBuilding2Fill } from "react-icons/ri";
 import { GiClubs } from "react-icons/gi";
 import { IoFastFoodSharp } from "react-icons/io5";
-import { MdOutlineFlight } from "react-icons/md";
+import { MdEventAvailable, MdOutlineFlight } from "react-icons/md";
 import { ImSpoonKnife } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom";
 import InputBox from "../InputBox";
@@ -60,6 +61,12 @@ const FloatNavBar = () => {
       color: "text-green-600",
     },
     {
+      label: "Events",
+      icon: <MdEventAvailable />,
+      url: "/explore/club-events",
+      color: "text--600",
+    },
+    {
       label: "Community",
       icon: <FaUsersCog />,
       url: "/community/feed",
@@ -70,6 +77,12 @@ const FloatNavBar = () => {
       icon: <ImSpoonKnife />,
       url: "/food/courts/feed",
       color: "text-pink-700",
+    },
+    {
+      label: "Kids Zone",
+      icon: <FaChildren />,
+      url: "/explore/kids/place",
+      color: "text-blue-700",
     },
   ];
   return (

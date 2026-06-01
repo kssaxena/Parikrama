@@ -32,7 +32,7 @@ import {
 } from "react-icons/md";
 import FoodCard from "./FoodCard";
 import { IoFastFoodSharp, IoLocationOutline } from "react-icons/io5";
-import { FaArrowRightLong, FaArrowUpLong, FaChild } from "react-icons/fa6";
+import { FaArrowRightLong, FaArrowUpLong, FaChild, FaChildren } from "react-icons/fa6";
 
 const PlaceCard = ({ place }) => {
   return (
@@ -191,7 +191,7 @@ const ExpandedPlaceCard = ({ place, facilitator, foodStore }) => {
               <p className="bg-[#FFC20E] px-4 py-2 rounded-2xl select-none">
                 {place?.kidsPlace === "Yes" ? (
                   <span className="flex justify-center items-center gap-1">
-                    <FaChild />
+                    <FaChildren />
                     Kids Place
                   </span>
                 ) : (

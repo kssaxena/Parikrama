@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FetchData } from "../../utils/FetchFromApi";
 import LoadingUI from "../../components/LoadingUI";
@@ -15,16 +15,21 @@ import {
 } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
+import { guestEventEnquiryInputs } from "../../constants/Constants";
+import InputBox from "../../components/InputBox";
+import { parseErrorMessage } from "../../utils/ErrorMessageParser";
 
 const CurrentClub = ({ startLoading, stopLoading }) => {
   const { clubId } = useParams();
   const { user } = useSelector((state) => state.auth);
   const userId = user?._id;
   const [popup, setPopup] = useState(false);
+  const [popup2, setPopup2] = useState(false);
   const navigate = useNavigate();
   const [club, setClub] = useState(null);
   const [error, setError] = useState("");
   const userType = localStorage.getItem("role");
+  const formRef = useRef();
 
   const loadClub = async () => {
     try {
@@ -79,6 +84,33 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
     } catch (err) {
       console.log(err);
       alert(parseErrorMessage(err.response.data));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(e);
+    try {
+      startLoading();
+      const eventId = localStorage.getItem("eventid");
+      const formData = new FormData(formRef.current);
+      const response = await FetchData(
+        `clubs/club-guest/${clubId}/events/${eventId}/join`,
+        "post",
+        formData,
+      );
+      console.log(response);
+      alert(response.data.message);
+      formRef.current.reset();
+      setPopup2(false);
+      loadClub();
+      localStorage.clear();
+      // window.location.reload();
+    } catch (err) {
+      console.log(err);
+      alert(parseErrorMessage(err.response.data));
+      loadClub();
+    } finally {
+      stopLoading();
     }
   };
 
@@ -194,7 +226,6 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
         </div>
 
         <div className="space-y-6 overflow-scroll">
-          {console.log(club)}
           <div className="flex flex-col md:flex-row justify-start items-center h-fit md:h-64 overflow-hidden md:overflow-scroll">
             {club?.images?.gallery.map((i) => (
               <div className="rounded-xl border border-gray-200 bg-white p-2 shadow-sm w-96 h-full mx-2">
@@ -292,6 +323,13 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
                     {event.description}
                   </p>
                 )}
+                <Button
+                  label={"Join"}
+                  onClick={() => {
+                    localStorage.setItem("eventid", event._id);
+                    setPopup2(true);
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -321,6 +359,44 @@ const CurrentClub = ({ startLoading, stopLoading }) => {
                   onClick={() => navigate("/authentication")}
                 />
               </div>
+            </div>
+          </motion.div>
+        )}
+        {popup2 && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70 z-50"
+          >
+            <div className="bg-white w-[90vw] md:w-[80vw] p-2 md:p-10 rounded-xl">
+              <h1 className="text-xl font-semibold">
+                Enter your details for joining participating in this Event.
+              </h1>
+              <form ref={formRef} onSubmit={handleSubmit}>
+                <div>
+                  {guestEventEnquiryInputs.map((i, index) => (
+                    <InputBox
+                      key={index}
+                      Placeholder={i.placeHolder}
+                      Name={i.name}
+                      LabelName={i.label}
+                      Type={i.type}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <Button
+                    label={"Cancel"}
+                    onClick={() => {
+                      setPopup2(false);
+                      formRef.current.reset();
+                    }}
+                  />
+                  <Button type={"submit"} label={"Submit"} />
+                </div>
+              </form>
             </div>
           </motion.div>
         )}
