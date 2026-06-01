@@ -11,7 +11,7 @@ const Button = ({
 }) => {
   const normalButton =
     "bg-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out";
-  const secondaryButton = `bg-[#F17223] rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out ${className2}`;
+  const secondaryButton = `border border-[#FFC20E] px-4 py-2 rounded-2xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out ${className2}`;
   return (
     <button
       type={type}

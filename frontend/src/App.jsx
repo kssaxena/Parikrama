@@ -51,6 +51,8 @@ import FoodCourtFeed from "./pages/kiosks/FoodCourtFeed";
 import FoodPlaceReview from "./components/ui/FoodPlaceReview";
 import CorporatePlan from "./pages/corporate/CorporatePlan";
 import ClubUpdates from "./pages/club/ClubUpdates";
+import KidsPlace from "./pages/place/KidsPlace";
+import EventFeed from "./pages/club/EventFeed";
 
 function App() {
   const { user, role, isAuthenticated } = useSelector((state) => state.auth);
@@ -114,6 +116,8 @@ function App() {
           <Route path="/contact-us/parikrama-global" element={<ContactUs />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/search-feed/places" element={<SearchPage />} />
+          <Route path="/explore/kids/place" element={<KidsPlace />} />
+          <Route path="/explore/club-events" element={<EventFeed />} />
           <Route path="/live-telecasts" element={<LiveTelecast />} />
           <Route path="/login/admin" element={<Login />} />
           <Route path="/login/facilitator" element={<FacilitatorAuth />} />

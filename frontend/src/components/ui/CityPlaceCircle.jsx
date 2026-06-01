@@ -158,6 +158,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getDistanceKm } from "../../utils/DistanceCalculator";
+import { IoClose } from "react-icons/io5";
 
 const CityPlacesCircle = ({ cityName, places = [], cityLat, cityLong }) => {
   const [selectedPlace, setSelectedPlace] = useState(places?.[0]);
@@ -221,7 +222,7 @@ const CityPlacesCircle = ({ cityName, places = [], cityLat, cityLong }) => {
                 justify-center
               "
               >
-                <FaHeart className="text-red-500" />
+                <IoClose />
               </button>
             </div>
 
@@ -259,7 +260,7 @@ const CityPlacesCircle = ({ cityName, places = [], cityLat, cityLong }) => {
                 font-semibold
               "
               >
-                View Details
+                View Place
                 <FaArrowRight />
               </Link>
             </div>
