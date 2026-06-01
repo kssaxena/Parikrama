@@ -26,6 +26,7 @@ const registerCommunity = asyncHandler(async (req, res) => {
     communityEstablishment,
     bio,
     soloTraveler,
+    travelerInfo,
   } = req.body;
 
   if (
@@ -52,6 +53,13 @@ const registerCommunity = asyncHandler(async (req, res) => {
 
   if (existing) {
     throw new ApiError(409, "Community already exists with provided details");
+  }
+
+  if (!soloTraveler) {
+    throw new ApiError(400, "Please select travel type");
+  }
+  if (soloTraveler === "No" && !travelerInfo) {
+    throw new ApiError(400, "Please specify traveller category");
   }
 
   let profileImage = {};
@@ -86,6 +94,7 @@ const registerCommunity = asyncHandler(async (req, res) => {
       aadhar,
       password,
       soloTraveler,
+      travelerInfo: soloTraveler === "No" ? travelerInfo : "",
     },
     communityDetails: {
       communityName,
@@ -260,6 +269,7 @@ const updateCommunity = asyncHandler(async (req, res) => {
 
 const completeProfile = asyncHandler(async (req, res) => {
   const { communityId } = req.params;
+
   const {
     bio,
     communityName,
@@ -272,44 +282,129 @@ const completeProfile = asyncHandler(async (req, res) => {
     accountNumber,
     accountHolderName,
     communityEstablishment,
+    branch,
     pan,
     aadhar,
+    socialLinks,
   } = req.body;
-  if (!communityName || !communityContactNumber || !profession)
-    throw new ApiError(400, "Required fields are missing.");
 
-  let companyLogo = {};
-  if (req.files?.companyLogo?.[0]) {
-    const upload = await UploadImages(req.files.companyLogo[0].filename, {
-      folderStructure: "community/logo",
-    });
-    companyLogo = { url: uploaded.url, fileId: uploaded.fileId };
+  /* =========================
+      VALIDATION
+  ========================= */
+
+  if (!communityName || !communityContactNumber || !profession) {
+    throw new ApiError(400, "Required fields are missing.");
   }
 
-  const community = await Community.findByIdAndUpdate(communityId, {
-    communityDetails: {
-      communityName: communityName,
-      gst: gst,
-      communityContactNumber: communityContactNumber,
-      communityEmail: communityEmail,
-      profession: profession,
-      bankDetails: {
-        bankName: bankName,
-        ifsc: ifsc,
-        branch: branch || "",
-        accountNumber: accountNumber,
-        accountHolderName: accountHolderName,
+  /* =========================
+      SOCIAL LINKS
+  ========================= */
+
+  let parsedSocialLinks = [];
+
+  if (socialLinks) {
+    try {
+      parsedSocialLinks =
+        typeof socialLinks === "string" ? JSON.parse(socialLinks) : socialLinks;
+
+      parsedSocialLinks = parsedSocialLinks.filter(
+        (link) => link.platformName?.trim() && link.url?.trim(),
+      );
+
+      parsedSocialLinks.forEach((link) => {
+        try {
+          new URL(link.url);
+        } catch {
+          throw new ApiError(400, `Invalid URL for ${link.platformName}`);
+        }
+      });
+    } catch (err) {
+      throw new ApiError(400, "Invalid social links format");
+    }
+  }
+
+  /* =========================
+      FIND COMMUNITY
+  ========================= */
+
+  const community = await Community.findById(communityId);
+
+  if (!community) {
+    throw new ApiError(400, "Invalid request");
+  }
+
+  /* =========================
+      HANDLE IMAGE
+  ========================= */
+
+  let companyLogo = community.images.companyLogo || {};
+
+  if (req.files?.companyLogo?.[0]) {
+    const uploaded = await UploadImages(req.files.companyLogo[0].filename, {
+      folderStructure: "community/logo",
+    });
+
+    companyLogo = {
+      url: uploaded.url,
+      fileId: uploaded.fileId,
+    };
+  }
+
+  /* =========================
+      UPDATE
+  ========================= */
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    {
+      $set: {
+        "personalDetails.socialLinks": parsedSocialLinks,
+
+        "personalDetails.pan": pan,
+
+        "personalDetails.aadhar": aadhar,
+
+        "communityDetails.communityName": communityName,
+
+        "communityDetails.gst": gst,
+
+        "communityDetails.communityContactNumber": communityContactNumber,
+
+        "communityDetails.communityEmail": communityEmail,
+
+        "communityDetails.profession": profession,
+
+        "communityDetails.bankDetails.bankName": bankName,
+
+        "communityDetails.bankDetails.ifsc": ifsc,
+
+        "communityDetails.bankDetails.branch": branch || "",
+
+        "communityDetails.bankDetails.accountNumber": accountNumber,
+
+        "communityDetails.bankDetails.accountHolderName": accountHolderName,
+
+        communityEstablishment,
+
+        about: bio,
+
+        "images.companyLogo": companyLogo,
       },
     },
-    communityEstablishment: communityEstablishment,
-    about: bio,
-    images: { companyLogo },
-  });
-  if (!community) throw new ApiError(400, "Invalid request");
+    {
+      new: true,
+    },
+  );
+
+  /* =========================
+      RESPONSE
+  ========================= */
 
   res
     .status(201)
-    .json(new ApiResponse(201, community, "Profile updated successfully !"));
+    .json(
+      new ApiResponse(201, updatedCommunity, "Profile updated successfully!"),
+    );
 });
 
 const addCommunityMember = asyncHandler(async (req, res) => {

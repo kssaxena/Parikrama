@@ -108,6 +108,7 @@ const createPlace = asyncHandler(async (req, res) => {
     entryFee,
     popularityScore,
     bestTimeToVisit,
+    kidsPlace,
   } = req.body;
 
   if (!name || !cityId || !stateId || lat == null || lng == null) {
@@ -157,6 +158,7 @@ const createPlace = asyncHandler(async (req, res) => {
     entryFee,
     popularityScore,
     bestTimeToVisit,
+    kidsPlace,
     images: uploadedImages,
     location: {
       type: "Point",
@@ -395,6 +397,7 @@ const uploaderPlace = asyncHandler(async (req, res) => {
     entryFee,
     popularityScore,
     bestTimeToVisit,
+    kidsPlace,
   } = req.body;
 
   if (!cityId || cityId === "undefined") {
@@ -466,6 +469,7 @@ const uploaderPlace = asyncHandler(async (req, res) => {
       entryFee,
       popularityScore,
       bestTimeToVisit,
+      kidsPlace,
       images: uploadedImages,
       location: {
         type: "Point",
@@ -721,6 +725,17 @@ const searchPlaces = async (req, res) => {
   }
 };
 
+const getKidsPlace = asyncHandler(async (req, res) => {
+  const places = await Place.find({ kidsPlace: "Yes" })
+    .populate("city state")
+    .sort({ createdAt: -1 });
+  if (!places) throw new ApiError(400, "No data for kids place");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, places, "Places fetched successfully !"));
+});
+
 export {
   createPlace,
   getAllPlaces,
@@ -735,4 +750,5 @@ export {
   explorePlaces,
   getPlaceMetaTags,
   searchPlaces,
+  getKidsPlace,
 };

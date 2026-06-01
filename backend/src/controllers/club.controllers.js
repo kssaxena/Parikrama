@@ -881,6 +881,89 @@ const removeGalleryImage = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, {}, "Image removed"));
 });
 
+const guestEnquiryForEvents = asyncHandler(async (req, res) => {
+  const { clubId, eventId } = req.params;
+  if (!clubId || !eventId)
+    throw new ApiError(400, "Something went wrong try again later");
+
+  const { name, contactNumber, email, address } = req.body;
+  if (!name || !contactNumber || !email || !address)
+    throw new ApiError(400, "Please fill all details");
+
+  const club = await Club.findById(clubId);
+  if (!club) throw new ApiError(400, "Invalid club request");
+
+  const event = club.events.id(eventId);
+  if (!event) throw new ApiError(404, "Event not found");
+
+  const alreadyJoined = event.joinedUsers.find(
+    (user) => user.email === email || user.contactNumber === contactNumber,
+  );
+  if (alreadyJoined) throw new ApiError(400, "You already joined this event");
+
+  event.joinedUsers.push({
+    name,
+    contactNumber,
+    email,
+    address,
+  });
+
+  await club.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, event.joinedUsers, "Successfully joined event"));
+});
+
+const getAllUpcomingAndOngoingEvents = asyncHandler(async (req, res) => {
+  const currentDate = new Date();
+
+  const events = await Club.aggregate([
+    {
+      $unwind: "$events",
+    },
+
+    {
+      $match: {
+        "events.validUpto": {
+          $gte: currentDate,
+        },
+      },
+    },
+
+    {
+      $project: {
+        clubId: "$_id",
+        clubName: 1,
+        clubImage: "$images.coverImage",
+        // location: "$city.name",
+
+        eventId: "$events._id",
+        title: "$events.title",
+        description: "$events.description",
+        validFrom: "$events.validFrom",
+        validUpto: "$events.validUpto",
+
+        totalParticipants: {
+          $size: {
+            $ifNull: ["$events.joinedUsers", []],
+          },
+        },
+      },
+    },
+
+    {
+      $sort: {
+        validFrom: 1,
+      },
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, events, "Events fetched successfully"));
+});
+
 export {
   createClubPublic,
   createClub,
@@ -906,4 +989,6 @@ export {
   verifyOtp,
   uploadGalleryImages,
   removeGalleryImage,
+  guestEnquiryForEvents,
+  getAllUpcomingAndOngoingEvents,
 };
