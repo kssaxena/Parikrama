@@ -93,19 +93,20 @@ const Header = () => {
             initial={{ opacity: 0, x: -100 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
-            className="fixed top-0 left-0 h-screen w-full flex justify-center items-end"
+            className="fixed top-0 left-0 h-screen bg-black/90 w-full flex justify-center items-center"
           >
-            <div
+            {/* <div
               className="bg-black/80 w-[10%] md:w-full h-full"
               onClick={() => setPopup(false)}
-            ></div>
-            <div className="md:w-1/2 w-[90%] bg-white flex md:justify-between justify-evenly items-start flex-col h-full py-5 px-5">
+            ></div> */}
+            <div className="bg-white flex md:justify-between justify-evenly items-start flex-col h-fit py-5 px-5 rounded-xl">
+              {/* <div className="md:w-1/2 w-[90%] bg-white flex md:justify-between justify-evenly items-start flex-col h-full py-5 px-5"> */}
               <div className="flex justify-between items-center gap-5 p-5 w-full">
                 <Button label={<IoMdClose />} onClick={() => setPopup(false)} />
               </div>
               {/* logo  */}
-              <div className="hidden md:flex items-center justify-center flex-col w-full">
-                <img src={logo} className="w-20 md:w-40" />
+              <div className="flex items-center justify-center flex-col w-full">
+                <img src={logo} className="w-26 md:w-40" />
                 <img src={logo2} className="w-20 md:w-40" />
               </div>
               {/* buttons */}
@@ -132,7 +133,7 @@ const Header = () => {
                     ) : (
                       <h1 className="flex justify-between items-center">
                         <FaUserCircle className="text-2xl" />
-                        Login
+                        Register / Login
                       </h1>
                     )
                   }

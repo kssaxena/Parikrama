@@ -24,24 +24,10 @@ const Card = ({
   return (
     <Link
       to={`/current/place/${placeId}`}
-      className="bg-neutral-100 w-full md:px-10 px-1 py-2 flex justify-between items-center rounded-xl hover:shadow-xl duration-300 ease-in-out"
+      className="hover:bg-[#FFF7E3] border-neutral-200 border shadow-md w-full md:px-5 px-1 py-2 flex justify-start items-center rounded-xl hover:shadow-xl duration-300 ease-in-out gap-2 h-40 md:h-48"
     >
-      <div className="h-full flex flex-col items-start gap-2">
-        <h1 className="md:text-xl text-base md:tracking-wide uppercase">
-          {name}
-        </h1>
-        <h2 className="text-xs">
-          <span>{city}</span>, <span>{state}</span>
-        </h2>
-        <h1 className="inline-block w-fit text-xs px-2 py-1 rounded-full bg-[#FFC20E]">
-          {category}
-        </h1>
-        <h1 className="text-xs hidden md:block">
-          {truncateString(description, 50)}
-        </h1>
-      </div>
       <div className="flex justify-center items-center flex-col gap-3">
-        <div className="h-28 w-32 bg-neutral-200 flex justify-center items-center rounded-xl overflow-hidden">
+        <div className="h-28 md:h-36 w-32 md:w-72 bg-neutral-200 flex justify-center items-center rounded-xl overflow-hidden">
           <img
             src={image}
             alt="No image found"
@@ -60,6 +46,20 @@ const Card = ({
             <BiSolidNavigation className="transition duration-150 ease-in-out text-neutral-500 group-hover:text-[#FFC20E] group-hover:rotate-45" />
           </button>
         )}
+      </div>
+      <div className="h-full flex flex-col items-start justify-between gap-2 py-5 px-2 w-full">
+        <h1 className="md:text-xl text-base md:tracking-wide uppercase font-semibold">
+          {name}
+        </h1>
+        <h2 className="text-xs">
+          <span>{city}</span>, <span>{state}</span>
+        </h2>
+        <h1 className="inline-block w-fit text-xs px-2 py-1 rounded-full bg-[#FFC20E]">
+          {category}
+        </h1>
+        <h1 className="text-xs hidden md:block">
+          {truncateString(description, 200)}
+        </h1>
       </div>
     </Link>
   );
