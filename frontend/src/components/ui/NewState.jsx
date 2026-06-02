@@ -27,7 +27,7 @@ const NewState = ({ startLoading, stopLoading }) => {
         const res = await FetchData("country/get/all-country", "get");
         setCountries(res?.data?.data || []);
       } catch (err) {
-        console.error(err);
+     //   console.error(err);
       } finally {
         stopLoading();
       }
@@ -45,13 +45,13 @@ const NewState = ({ startLoading, stopLoading }) => {
         "post",
         formData,
       );
-      console.log(response);
+     // console.log(response);
       setSuccess(response.data.message);
       formRef.current.reset();
       navigate("/admin/dashboard");
       alert(response.data.message);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       setError(err.response.data.message || "Something went wrong");
     } finally {
       stopLoading();

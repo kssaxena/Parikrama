@@ -25,7 +25,7 @@ const NewCity = ({ startLoading, stopLoading }) => {
         const res = await FetchData("states", "get");
         setStates(res?.data?.data || []);
       } catch (err) {
-        console.error(err);
+        // console.error(err);
       } finally {
         stopLoading();
       }
@@ -46,7 +46,7 @@ const NewCity = ({ startLoading, stopLoading }) => {
       formRef.current.reset();
       navigate("/admin/dashboard");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setError(err.response.data.message || "Something went wrong");
     }
   };

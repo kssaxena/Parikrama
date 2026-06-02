@@ -29,7 +29,7 @@ const AddNewHotel = ({ startLoading, stopLoading, onCancel, adminId }) => {
         const res = await FetchData("states", "get");
         setStates(res?.data?.data || []);
       } catch (err) {
-        console.error(err);
+      //  console.error(err);
       }
     };
     fetchStates();
@@ -42,7 +42,7 @@ const AddNewHotel = ({ startLoading, stopLoading, onCancel, adminId }) => {
         const res = await FetchData(`cities/state/${selectedState}`, "get");
         setCities(res?.data?.data || []);
       } catch (err) {
-        console.error(err);
+      //  console.error(err);
       }
     };
     fetchCities();
@@ -102,7 +102,7 @@ const AddNewHotel = ({ startLoading, stopLoading, onCancel, adminId }) => {
         formData,
         true,
       );
-      console.log(res);
+     // console.log(res);
       setSuccess("Hotel listed successfully");
       formRef.current.reset();
       setImagePreviews([]);
@@ -111,7 +111,7 @@ const AddNewHotel = ({ startLoading, stopLoading, onCancel, adminId }) => {
       alert("Hotel listed successfully");
       if (onCancel) onCancel();
     } catch (err) {
-      console.error(err);
+   //   console.error(err);
       setError("Failed to list hotel. Please check all required fields.");
     } finally {
       stopLoading();

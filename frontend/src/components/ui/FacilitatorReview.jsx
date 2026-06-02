@@ -31,7 +31,7 @@ const FacilitatorReview = ({ startLoading, stopLoading }) => {
       );
       setData(response.data.data);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     } finally {
       stopLoading();
     }
@@ -97,7 +97,7 @@ const FacilitatorReview = ({ startLoading, stopLoading }) => {
         },
       );
 
-      console.log(res);
+      // console.log(res);
 
       setSuccess("Thank you for your feedback!");
       setCustomerName("");
@@ -108,7 +108,7 @@ const FacilitatorReview = ({ startLoading, stopLoading }) => {
       setComment("");
       alert(res.data.data.message);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setError(err?.response?.data?.message || "Failed to submit review");
     } finally {
       setLoading(false);

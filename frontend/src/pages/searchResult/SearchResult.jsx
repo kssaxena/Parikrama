@@ -26,8 +26,8 @@ const SearchPage = () => {
           Search for your desired Destination
         </h1>
         <div className="hidden md:flex justify-center items-center gap-5 text-sm">
-          {category.map((c) => (
-            <li
+          {category.map((c,index) => (
+            <li key={index}
               onClick={() => {
                 localStorage.setItem("activeCategory", c);
                 setQuery(c);

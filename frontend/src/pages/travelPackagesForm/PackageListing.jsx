@@ -64,7 +64,6 @@ function Section({ title, data }) {
       <h2 className="text-2xl font-bold mb-6 border-l-4 border-[#FFC20E] pl-3">
         {title}
       </h2>
-      {console.log(data)}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {data.map((pkg) => (
           <PackageCard key={pkg.id} data={pkg} />

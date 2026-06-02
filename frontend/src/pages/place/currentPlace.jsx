@@ -71,7 +71,7 @@ const CurrentPlace = ({ startLoading, stopLoading }) => {
       </div>
 
       {/* Content + Sticky Circle */}
-      <div className="flex  gap-10 md:px-20 px-5 py-20 ">
+      <div className="flex  gap-10 lg:px-20 px-5 py-20 ">
         {/* LEFT CONTENT (SCROLLS) */}
         <div className="flex flex-col justify-start items-start gap-6 w-full">
           <div className="w-full overflow-x-hidden flex flex-col gap-2 justify-center items-center md:hidden">

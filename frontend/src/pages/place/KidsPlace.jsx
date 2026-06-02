@@ -16,10 +16,10 @@ const KidsPlace = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const response = await FetchData("places/kids/explore/places", "get");
-      console.log(response);
+      // console.log(response);
       setData(response.data.data || []);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     } finally {
       stopLoading();
     }
@@ -29,7 +29,6 @@ const KidsPlace = ({ startLoading, stopLoading }) => {
     getKidsPlace();
   }, []);
 
-  console.log(data);
   return (
     <div className="flex flex-col justify-center items-start md:px-20 px-5 pb-10">
       <div className="space-y-3 m-5 w-full">

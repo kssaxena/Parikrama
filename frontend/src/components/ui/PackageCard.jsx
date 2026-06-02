@@ -21,12 +21,12 @@ const PackageCard = ({ data }) => {
         "post",
         formData,
       );
-      console.log(response);
+     // console.log(response);
       alert(response.data.message);
       formRef.current.reset();
       setModel(false);
     } catch (err) {
-      console.log(err);
+     // console.log(err);
       alert(parseErrorMessage(err.response.data));
     }
   };

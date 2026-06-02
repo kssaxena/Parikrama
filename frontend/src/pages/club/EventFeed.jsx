@@ -19,7 +19,6 @@ const EventFeed = ({ startLoading, stopLoading }) => {
     try {
       startLoading();
       const response = await FetchData("clubs/club/get-all/events", "get");
-      console.log(response);
       setData(response.data.data);
     } catch (err) {
       console.log(err);
