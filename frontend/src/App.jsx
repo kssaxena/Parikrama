@@ -1,66 +1,119 @@
 import { Route, Routes, useLocation } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
 import Header from "./components/header";
-import Hero from "./pages/hero/hero";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import Login from "./pages/authentication/login";
+import Footer from "./components/Footer";
+import ScrollToTop from "./components/hooks/ScrollToTop";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, clearUser, stopAuthLoading } from "./redux/slices/authSlice";
 import { FetchData } from "./utils/FetchFromApi";
-import { useEffect } from "react";
-import AdminRegistrationForm from "./pages/admin/AdminRegistrationForm";
-import SearchPage from "./pages/searchResult/SearchResult";
-import CurrentPlace from "./pages/place/currentPlace";
-import AddNewPlace from "./pages/place/addNewPlace";
-import AddNewStateCity from "./pages/state-city/addNewState-City";
-import CurrentStateCity from "./pages/state-city/currentState-City";
-import EditPlace from "./pages/place/editPlace";
-import FacilitatorAuth from "./pages/facilitator/FacilitatorAuth";
-import ScrollToTop from "./components/hooks/ScrollToTop";
-import FacilitatorDashboard from "./pages/facilitator/FacilitatorDashboard";
-import FacilitatorReview from "./components/ui/FacilitatorReview";
-import CurrentFacilitator from "./pages/facilitator/CurrentFacilitator";
-import GuestPlace from "./pages/place/guestPlace";
-import UnderReviewPlace from "./pages/place/underReviewPlace";
-import Explore from "./pages/explore/explore";
-import Footer from "./components/Footer";
-import TermsOfService from "./pages/cms/termsOfService";
-import PrivacyPolicy from "./pages/cms/privacyPolicy";
-import HowThisSiteWorks from "./pages/cms/howThisSiteWorks";
-import FlightBus from "./pages/flightBus/FlightBus";
-// import TravelPackagesForm from "./pages/travelPackagesForm/TravelPackagesForm";
-// import PackagesListing from "./pages/travelPackagesForm/PackageListing";
-import LiveTelecast from "./pages/liveTelecast/LiveTelecast";
-import CommunityRegForm from "./pages/community/communityRegForm";
-import PackagesListing from "./pages/travelPackagesForm/PackageListing";
-import UserDashboard from "./pages/user/User";
-import UserRegisterLogin from "./pages/user/RegisterLogin";
-import CommunityLogin from "./pages/community/communityLogin";
-import CommunityDashboard from "./pages/community/communityDashboard";
-import CurrentFoodKiosk from "./pages/kiosks/CurrentFoodKiosk";
-import HotelListing from "./pages/hotel/HotelListing";
-import CurrentHotel from "./pages/hotel/CurrentHotel";
-import ClubListing from "./pages/club/ClubListing";
-import CurrentClub from "./pages/club/CurrentClub";
-import AddNewClub from "./pages/admin/AddNewClub";
-import FoodKiosk from "./pages/kiosks/FoodKiosk";
-import CommunityFeed from "./pages/community/communityFeed";
-import CurrentCommunity from "./pages/community/currentCommunity";
-import LoginRegister from "./pages/login-register/LoginRegister";
-import ContactUs from "./pages/contactus/ContactUs";
-import FoodCourtFeed from "./pages/kiosks/FoodCourtFeed";
-import FoodPlaceReview from "./components/ui/FoodPlaceReview";
-import CorporatePlan from "./pages/corporate/CorporatePlan";
-import ClubUpdates from "./pages/club/ClubUpdates";
-import KidsPlace from "./pages/place/KidsPlace";
-import EventFeed from "./pages/club/EventFeed";
-import EditSubAdmin from "./pages/admin/EditSubAdmin";
+
+/* ================= LAZY LOADED PAGES ================= */
+// HOME
+const Hero = lazy(() => import("./pages/hero/hero"));
+// ADMIN
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminRegistrationForm = lazy(
+  () => import("./pages/admin/AdminRegistrationForm"),
+);
+const EditSubAdmin = lazy(() => import("./pages/admin/EditSubAdmin"));
+const AddNewClub = lazy(() => import("./pages/admin/AddNewClub"));
+// AUTH
+const Login = lazy(() => import("./pages/authentication/login"));
+const LoginRegister = lazy(
+  () => import("./pages/login-register/LoginRegister"),
+);
+const FacilitatorAuth = lazy(
+  () => import("./pages/facilitator/FacilitatorAuth"),
+);
+const UserRegisterLogin = lazy(() => import("./pages/user/RegisterLogin"));
+const CommunityLogin = lazy(() => import("./pages/community/communityLogin"));
+// SEARCH & EXPLORE
+const SearchPage = lazy(() => import("./pages/searchResult/SearchResult"));
+const Explore = lazy(() => import("./pages/explore/explore"));
+const KidsPlace = lazy(() => import("./pages/place/KidsPlace"));
+const EventFeed = lazy(() => import("./pages/club/EventFeed"));
+// PLACES
+const CurrentPlace = lazy(() => import("./pages/place/currentPlace"));
+const AddNewPlace = lazy(() => import("./pages/place/addNewPlace"));
+const EditPlace = lazy(() => import("./pages/place/editPlace"));
+const GuestPlace = lazy(() => import("./pages/place/guestPlace"));
+const UnderReviewPlace = lazy(() => import("./pages/place/underReviewPlace"));
+// STATE CITY
+const AddNewStateCity = lazy(
+  () => import("./pages/state-city/addNewState-City"),
+);
+const CurrentStateCity = lazy(
+  () => import("./pages/state-city/currentState-City"),
+);
+// FACILITATOR
+const FacilitatorDashboard = lazy(
+  () => import("./pages/facilitator/FacilitatorDashboard"),
+);
+const FacilitatorReview = lazy(
+  () => import("./components/ui/FacilitatorReview"),
+);
+const CurrentFacilitator = lazy(
+  () => import("./pages/facilitator/CurrentFacilitator"),
+);
+// CMS
+const TermsOfService = lazy(() => import("./pages/cms/termsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/cms/privacyPolicy"));
+const HowThisSiteWorks = lazy(() => import("./pages/cms/howThisSiteWorks"));
+// TRAVEL
+const FlightBus = lazy(() => import("./pages/flightBus/FlightBus"));
+const PackagesListing = lazy(
+  () => import("./pages/travelPackagesForm/PackageListing"),
+);
+// TELECAST
+const LiveTelecast = lazy(() => import("./pages/liveTelecast/LiveTelecast"));
+// USER
+const UserDashboard = lazy(() => import("./pages/user/User"));
+// COMMUNITY
+const CommunityRegForm = lazy(
+  () => import("./pages/community/communityRegForm"),
+);
+const CommunityDashboard = lazy(
+  () => import("./pages/community/communityDashboard"),
+);
+const CommunityFeed = lazy(() => import("./pages/community/communityFeed"));
+const CurrentCommunity = lazy(
+  () => import("./pages/community/currentCommunity"),
+);
+// FOOD KIOSK
+const CurrentFoodKiosk = lazy(() => import("./pages/kiosks/CurrentFoodKiosk"));
+const FoodKiosk = lazy(() => import("./pages/kiosks/FoodKiosk"));
+const FoodCourtFeed = lazy(() => import("./pages/kiosks/FoodCourtFeed"));
+const FoodPlaceReview = lazy(() => import("./components/ui/FoodPlaceReview"));
+// HOTELS
+const HotelListing = lazy(() => import("./pages/hotel/HotelListing"));
+const CurrentHotel = lazy(() => import("./pages/hotel/CurrentHotel"));
+// CLUBS
+const ClubListing = lazy(() => import("./pages/club/ClubListing"));
+const CurrentClub = lazy(() => import("./pages/club/CurrentClub"));
+const ClubUpdates = lazy(() => import("./pages/club/ClubUpdates"));
+// CONTACT
+const ContactUs = lazy(() => import("./pages/contactus/ContactUs"));
+// CORPORATE
+const CorporatePlan = lazy(() => import("./pages/corporate/CorporatePlan"));
+/* ================= LOADING SCREEN ================= */
+
+const PageLoader = () => {
+  return (
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-[#D5D5D7]  z-50 transition-opacity duration-300 ease-in-out">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-16 h-16 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-black text-lg font-medium">Please wait ...</p>
+      </div>
+    </div>
+  );
+};
 
 function App() {
-  const { user, role, isAuthenticated } = useSelector((state) => state.auth);
-  // console.log(user);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const location = useLocation();
   const isHome = location.pathname === "/";
+  /* ================= AUTO LOGIN ================= */
 
   useEffect(() => {
     const refreshToken = localStorage.getItem("RefreshToken");
@@ -72,10 +125,10 @@ function App() {
       try {
         const role = localStorage.getItem("role");
         const refreshToken = localStorage.getItem("RefreshToken");
-
         if (!role || !refreshToken) {
           throw new Error("Missing auth data");
         }
+
         const endpointMap = {
           Admin: "admin/auth/refresh-tokens",
           User: "users/auth/refresh-tokens",
@@ -86,7 +139,10 @@ function App() {
         if (!endpoint) {
           throw new Error("Invalid role");
         }
-        const res = await FetchData(endpoint, "post", { refreshToken });
+
+        const res = await FetchData(endpoint, "post", {
+          refreshToken,
+        });
         const { user, tokens } = res.data.data;
         localStorage.setItem("AccessToken", tokens.AccessToken);
         localStorage.setItem("RefreshToken", tokens.RefreshToken);
@@ -104,222 +160,128 @@ function App() {
   }, []);
 
   return (
-    // <div className="font-montserrat">
-    //   <Header />
-
-    //   {/* Top padding because header is fixed */}
-    //   <div className="pt-20 md:pt-24">
-    //     <ScrollToTop />
-    //     {/* <SearchPage /> */}
-    //     <Routes>
-    //       {/* ================= PUBLIC ================= */}
-    //       <Route path="/" element={<Hero />} />
-    //       <Route path="/contact-us/parikrama-global" element={<ContactUs />} />
-    //       <Route path="/explore" element={<Explore />} />
-    //       <Route path="/search-feed/places" element={<SearchPage />} />
-    //       <Route path="/explore/kids/place" element={<KidsPlace />} />
-    //       <Route path="/explore/club-events" element={<EventFeed />} />
-    //       <Route path="/live-telecasts" element={<LiveTelecast />} />
-    //       <Route path="/login/admin" element={<Login />} />
-    //       <Route path="/login/facilitator" element={<FacilitatorAuth />} />
-    //       <Route path="/authentication" element={<LoginRegister />} />
-    //       <Route
-    //         path="/admin/register-admin"
-    //         element={<AdminRegistrationForm />}
-    //       />
-    //       <Route path="/current/place/:placeId" element={<CurrentPlace />} />
-    //       <Route
-    //         path="/review/current/place/:placeId"
-    //         element={<UnderReviewPlace />}
-    //       />
-    //       <Route
-    //         path="/current/state-city/:stateId"
-    //         element={<CurrentStateCity />}
-    //       />
-    //       <Route path="/guest/register-new-place" element={<GuestPlace />} />
-    //       <Route
-    //         path="/guest/register-new-food-place"
-    //         element={<FoodKiosk />}
-    //       />
-    //       <Route path="/admin/register-place" element={<AddNewPlace />} />
-    //       <Route path="/admin/edit-place/:placeId" element={<EditPlace />} />
-    //       <Route
-    //         path="/admin/register-city-state"
-    //         element={<AddNewStateCity />}
-    //       />
-    //       <Route path="/admin/dashboard" element={<AdminDashboard />} />
-    //       <Route
-    //         path="/current/facilitator/:facilitatorId"
-    //         element={<CurrentFacilitator />}
-    //       />
-    //       <Route
-    //         path="/current/food-court/:foodCourtId"
-    //         element={<CurrentFoodKiosk />}
-    //       />
-    //       <Route path="/food/courts/feed" element={<FoodCourtFeed />} />
-    //       <Route
-    //         path="/facilitator/dashboard"
-    //         element={<FacilitatorDashboard />}
-    //       />
-    //       <Route
-    //         path="/facilitator/review/:facilitatorId"
-    //         element={<FacilitatorReview />}
-    //       />
-    //       <Route
-    //         path="/foodPlace/review/:foodPlaceId"
-    //         element={<FoodPlaceReview />}
-    //       />
-    //       <Route path="/login-register/user" element={<UserRegisterLogin />} />
-    //       <Route path="/user/dashboard" element={<UserDashboard />} />
-    //       <Route path="/flights-busses" element={<FlightBus />} />
-    //       <Route path="/travel-packages" element={<PackagesListing />} />
-    //       <Route path="/hotels" element={<HotelListing />} />
-    //       <Route path="/hotels/:hotelId" element={<CurrentHotel />} />
-    //       <Route path="/clubs" element={<ClubListing />} />
-    //       <Route path="/clubs/register" element={<AddNewClub />} />
-    //       <Route path="/clubs/:clubId" element={<CurrentClub />} />
-    //       <Route path="/community/feed" element={<CommunityFeed />} />
-    //       <Route path="/community/form" element={<CommunityRegForm />} />
-    //       <Route path="/login/community" element={<CommunityLogin />} />
-    //       <Route path="/dashboard/community" element={<CommunityDashboard />} />
-    //       <Route
-    //         path="/current/community/:communityId"
-    //         element={<CurrentCommunity />}
-    //       />
-    //       <Route path="/terms-of-service" element={<TermsOfService />} />
-    //       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-    //       <Route path="/corporate/plans" element={<CorporatePlan />} />
-    //       <Route path="/how-this-site-works" element={<HowThisSiteWorks />} />
-    //       <Route path="/updates/for/club" element={<ClubUpdates />} />
-    //       {/* ================= FALLBACK ================= */}
-    //     </Routes>
-    //   </div>
-    //   {isHome && <Footer />}
-    // </div>
     <div className="font-montserrat min-h-screen flex flex-col bg-white">
       {/* ================= HEADER ================= */}
       <Header />
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* ================= MAIN ================= */}
       <main className="flex-1 pt-20 md:pt-24">
         <ScrollToTop />
-
-        <Routes>
-          {/* ================= HOME ================= */}
-          <Route path="/" element={<Hero />} />
-
-          {/* ================= EXPLORE ================= */}
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/search-feed/places" element={<SearchPage />} />
-          <Route path="/explore/kids/place" element={<KidsPlace />} />
-          <Route path="/explore/club-events" element={<EventFeed />} />
-          <Route path="/live-telecasts" element={<LiveTelecast />} />
-
-          {/* ================= CONTACT & INFO ================= */}
-          <Route path="/contact-us/parikrama-global" element={<ContactUs />} />
-          <Route path="/how-this-site-works" element={<HowThisSiteWorks />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/corporate/plans" element={<CorporatePlan />} />
-
-          {/* ================= AUTH ================= */}
-          <Route path="/authentication" element={<LoginRegister />} />
-          <Route path="/login/admin" element={<Login />} />
-          <Route path="/login/facilitator" element={<FacilitatorAuth />} />
-          <Route path="/login-register/user" element={<UserRegisterLogin />} />
-          <Route path="/login/community" element={<CommunityLogin />} />
-
-          {/* ================= USER DASHBOARD ================= */}
-          <Route path="/user/dashboard" element={<UserDashboard />} />
-
-          {/* ================= ADMIN ================= */}
-          <Route
-            path="/admin/register-admin"
-            element={<AdminRegistrationForm />}
-          />
-          <Route path="/admin/register-place" element={<AddNewPlace />} />
-          <Route path="/admin/edit-place/:placeId" element={<EditPlace />} />
-          <Route
-            path="/admin/register-city-state"
-            element={<AddNewStateCity />}
-          />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route
-            path="/current/edit-sub-admin/:adminId"
-            element={<EditSubAdmin />}
-          />
-
-          {/* ================= PLACES ================= */}
-          <Route path="/current/place/:placeId" element={<CurrentPlace />} />
-          <Route
-            path="/review/current/place/:placeId"
-            element={<UnderReviewPlace />}
-          />
-          <Route
-            path="/current/state-city/:stateId"
-            element={<CurrentStateCity />}
-          />
-
-          {/* ================= FACILITATORS ================= */}
-          <Route
-            path="/current/facilitator/:facilitatorId"
-            element={<CurrentFacilitator />}
-          />
-          <Route
-            path="/facilitator/dashboard"
-            element={<FacilitatorDashboard />}
-          />
-          <Route
-            path="/facilitator/review/:facilitatorId"
-            element={<FacilitatorReview />}
-          />
-
-          {/* ================= GUEST REGISTRATION ================= */}
-          <Route path="/guest/register-new-place" element={<GuestPlace />} />
-          <Route
-            path="/guest/register-new-food-place"
-            element={<FoodKiosk />}
-          />
-
-          {/* ================= FOOD COURTS ================= */}
-          <Route
-            path="/current/food-court/:foodCourtId"
-            element={<CurrentFoodKiosk />}
-          />
-          <Route path="/food/courts/feed" element={<FoodCourtFeed />} />
-          <Route
-            path="/foodPlace/review/:foodPlaceId"
-            element={<FoodPlaceReview />}
-          />
-
-          {/* ================= TRAVEL ================= */}
-          <Route path="/flights-busses" element={<FlightBus />} />
-          <Route path="/travel-packages" element={<PackagesListing />} />
-
-          {/* ================= HOTELS ================= */}
-          <Route path="/hotels" element={<HotelListing />} />
-          <Route path="/hotels/:hotelId" element={<CurrentHotel />} />
-
-          {/* ================= CLUBS ================= */}
-          <Route path="/clubs" element={<ClubListing />} />
-          <Route path="/clubs/register" element={<AddNewClub />} />
-          <Route path="/clubs/:clubId" element={<CurrentClub />} />
-          <Route path="/updates/for/club" element={<ClubUpdates />} />
-
-          {/* ================= COMMUNITY ================= */}
-          <Route path="/community/feed" element={<CommunityFeed />} />
-          <Route path="/community/form" element={<CommunityRegForm />} />
-          <Route path="/dashboard/community" element={<CommunityDashboard />} />
-          <Route
-            path="/current/community/:communityId"
-            element={<CurrentCommunity />}
-          />
-
-          {/* ================= FALLBACK ================= */}
-          {/* <Route path="*" element={<NotFound />} /> */}
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* ================= HOME ================= */}
+            <Route path="/" element={<Hero />} />
+            {/* ================= EXPLORE ================= */}
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/search-feed/places" element={<SearchPage />} />
+            <Route path="/explore/kids/place" element={<KidsPlace />} />
+            <Route path="/explore/club-events" element={<EventFeed />} />
+            <Route path="/live-telecasts" element={<LiveTelecast />} />
+            {/* ================= CONTACT ================= */}
+            <Route
+              path="/contact-us/parikrama-global"
+              element={<ContactUs />}
+            />
+            {/* ================= CMS ================= */}
+            <Route path="/how-this-site-works" element={<HowThisSiteWorks />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            {/* ================= CORPORATE ================= */}
+            <Route path="/corporate/plans" element={<CorporatePlan />} />
+            {/* ================= AUTH ================= */}
+            <Route path="/authentication" element={<LoginRegister />} />
+            <Route path="/login/admin" element={<Login />} />
+            <Route path="/login/facilitator" element={<FacilitatorAuth />} />
+            <Route
+              path="/login-register/user"
+              element={<UserRegisterLogin />}
+            />
+            <Route path="/login/community" element={<CommunityLogin />} />
+            {/* ================= USER ================= */}
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+            {/* ================= ADMIN ================= */}
+            <Route
+              path="/admin/register-admin"
+              element={<AdminRegistrationForm />}
+            />
+            <Route path="/admin/register-place" element={<AddNewPlace />} />
+            <Route path="/admin/edit-place/:placeId" element={<EditPlace />} />
+            <Route
+              path="/admin/register-city-state"
+              element={<AddNewStateCity />}
+            />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route
+              path="/current/edit-sub-admin/:adminId"
+              element={<EditSubAdmin />}
+            />
+            {/* ================= PLACES ================= */}
+            <Route path="/current/place/:placeId" element={<CurrentPlace />} />
+            <Route
+              path="/review/current/place/:placeId"
+              element={<UnderReviewPlace />}
+            />
+            {/* ================= STATE CITY ================= */}
+            <Route
+              path="/current/state-city/:stateId"
+              element={<CurrentStateCity />}
+            />
+            {/* ================= FACILITATOR ================= */}
+            <Route
+              path="/current/facilitator/:facilitatorId"
+              element={<CurrentFacilitator />}
+            />
+            <Route
+              path="/facilitator/dashboard"
+              element={<FacilitatorDashboard />}
+            />
+            <Route
+              path="/facilitator/review/:facilitatorId"
+              element={<FacilitatorReview />}
+            />
+            {/* ================= GUEST ================= */}
+            <Route path="/guest/register-new-place" element={<GuestPlace />} />
+            <Route
+              path="/guest/register-new-food-place"
+              element={<FoodKiosk />}
+            />
+            {/* ================= FOOD COURTS ================= */}
+            <Route
+              path="/current/food-court/:foodCourtId"
+              element={<CurrentFoodKiosk />}
+            />
+            <Route path="/food/courts/feed" element={<FoodCourtFeed />} />
+            <Route
+              path="/foodPlace/review/:foodPlaceId"
+              element={<FoodPlaceReview />}
+            />
+            {/* ================= TRAVEL ================= */}
+            <Route path="/flights-busses" element={<FlightBus />} />
+            <Route path="/travel-packages" element={<PackagesListing />} />
+            {/* ================= HOTELS ================= */}
+            <Route path="/hotels" element={<HotelListing />} />
+            <Route path="/hotels/:hotelId" element={<CurrentHotel />} />
+            {/* ================= CLUBS ================= */}
+            <Route path="/clubs" element={<ClubListing />} />
+            <Route path="/clubs/register" element={<AddNewClub />} />
+            <Route path="/clubs/:clubId" element={<CurrentClub />} />
+            <Route path="/updates/for/club" element={<ClubUpdates />} />
+            {/* ================= COMMUNITY ================= */}
+            <Route path="/community/feed" element={<CommunityFeed />} />
+            <Route path="/community/form" element={<CommunityRegForm />} />
+            <Route
+              path="/dashboard/community"
+              element={<CommunityDashboard />}
+            />
+            <Route
+              path="/current/community/:communityId"
+              element={<CurrentCommunity />}
+            />
+            {/* ================= FALLBACK ================= */}
+            {/* <Route path="*" element={<NotFound />} /> */}
+          </Routes>
+        </Suspense>
       </main>
-
       {/* ================= FOOTER ================= */}
       {isHome && <Footer />}
     </div>
