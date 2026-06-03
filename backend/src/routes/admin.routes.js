@@ -11,6 +11,8 @@ import {
   createSubAdmin,
   getSubAdminById,
   updateSubAdmin,
+  activateSubAdmin,
+  deActivateSubAdmin,
 } from "../controllers/admin.controllers.js";
 import {
   deletePromotion,
@@ -34,6 +36,10 @@ router.route("/places").get(getAllPlaces);
 
 router.route("/sub-admin/get-by/id/:subAdminId").get(getSubAdminById);
 router.route("/sub-admin/update/:subAdminId").post(updateSubAdmin);
+router.route("/sub-admin/activate/:subAdminId/:adminId").post(activateSubAdmin);
+router
+  .route("/sub-admin/de-activate/:subAdminId/:adminId")
+  .post(deActivateSubAdmin);
 
 //routes for promotions
 router

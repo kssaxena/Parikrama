@@ -407,11 +407,54 @@ const getSubAdminById = asyncHandler(async (req, res) => {
   const { subAdminId } = req.params;
   const subAdmin = await Admin.findById(subAdminId);
   if (!subAdmin) throw new ApiError(400, "Sub Admin not found");
-  console.log(subAdmin);
 
   res
     .status(201)
     .json(new ApiResponse(201, subAdmin, "Sub admin fetched successfully !"));
+});
+
+const deActivateSubAdmin = asyncHandler(async (req, res) => {
+  const { subAdminId, adminId } = req.params;
+  console.log(subAdminId, adminId);
+  const admin = await Admin.find({
+    _id: adminId,
+    restrictedAccess: false,
+  });
+  console.log(admin);
+  if (!admin) throw new ApiError(400, "Invalid access");
+
+  const subAdmin = await Admin.find({
+    _id: subAdminId,
+    restrictedAccess: true,
+    isActive: true,
+  });
+  if (!subAdmin) throw new ApiError(400, "Invalid sub admin");
+
+  subAdmin.isActive = false;
+  await subAdmin.save();
+
+  res.status(201).json(new ApiResponse(201, subAdmin, "Marked as Inactive"));
+});
+
+const activateSubAdmin = asyncHandler(async (req, res) => {
+  const { subAdminId, adminId } = req.params;
+  const admin = await Admin.find({
+    _id: adminId,
+    restrictedAccess: false,
+  });
+  if (!admin) throw new ApiError(400, "Invalid access");
+
+  const subAdmin = await Admin.find({
+    _id: subAdminId,
+    restrictedAccess: true,
+    isActive: false,
+  });
+  if (!subAdmin) throw new ApiError(400, "Invalid sub admin");
+
+  subAdmin.isActive = true;
+  await subAdmin.save();
+
+  res.status(201).json(new ApiResponse(201, subAdmin, "Marked as Active"));
 });
 
 export {
@@ -422,4 +465,6 @@ export {
   registerAdmin,
   dashboardData,
   getSubAdminById,
+  activateSubAdmin,
+  deActivateSubAdmin,
 };
