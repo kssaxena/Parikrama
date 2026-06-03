@@ -14,6 +14,10 @@ const placeSchema = new mongoose.Schema(
       required: true,
     },
 
+    // new object addition
+    cityName: { type: String, lowercase: true, trim: true },
+    stateName: { type: String, lowercase: true, trim: true },
+
     description: String,
     category: {
       type: String,

@@ -28,6 +28,8 @@ export async function getFuzzyMatches(query, excludeIds) {
       { name: { $in: regex } },
       { cityName: { $in: regex } },
       { stateName: { $in: regex } },
+      { description: { $in: regex } },
+      { category: { $in: regex } },
       { tags: { $in: terms } },
     ],
   })
