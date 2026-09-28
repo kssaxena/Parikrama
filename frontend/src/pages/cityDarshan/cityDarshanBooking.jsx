@@ -423,7 +423,7 @@ const CityDarshanBooking = ({ startLoading, stopLoading }) => {
 
             <div className="flex gap-3 items-center">
               <FaUsers className="text-[#FFC20E]" />
-              <span>{Number(adults) + Number(children)} Travellers</span>
+              <span>{selectedVehicle?.maxPersons} Travellers</span>
             </div>
 
             <hr />
