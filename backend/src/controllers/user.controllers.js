@@ -47,10 +47,10 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const contactNumber = req.body;
-  const { phone } = contactNumber;
+  const { contactNumber } = req.body;
+  const phone = contactNumber;
 
-  const user = await UserSchema.findOne(contactNumber);
+  const user = await UserSchema.findOne({ contactNumber: contactNumber });
   if (!user) throw new ApiError(404, "User not found");
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
