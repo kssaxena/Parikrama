@@ -276,6 +276,10 @@ const facilitatorSchema = new mongoose.Schema(
     otp: {
       type: Number,
     },
+    adminAddedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
   },
   { timestamps: true },
 );

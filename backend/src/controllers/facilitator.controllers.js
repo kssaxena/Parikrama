@@ -58,6 +58,40 @@ const registerFacilitator = asyncHandler(async (req, res) => {
   );
 });
 
+const registerFacilitatorByAdmin = asyncHandler(async (req, res) => {
+  const { name, phone, password, role, email, otherRole, city } = req.body;
+  if (!name || !phone || !password) {
+    throw new ApiError(400, "Required fields missing");
+  }
+
+  const { adminId } = req.params;
+  if (!adminId) throw new ApiError(400, "Invalid request");
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new ApiError(400, "Admin not found");
+
+  const existing = await Facilitator.findOne({ phone: phone });
+
+  if (existing) {
+    throw new ApiError(409, "You are already registered, kindly login !");
+  }
+
+  const facilitator = await Facilitator.create({
+    name,
+    email,
+    phone,
+    password,
+    role,
+    otherRole,
+    city,
+    adminAddedBy: adminId,
+    isVerified: true,
+  });
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, facilitator, "Facilitator added successfully"));
+});
+
 const verifyOTP = asyncHandler(async (req, res) => {
   const { facilitatorId, otp } = req.body;
   if (!facilitatorId || !otp) {
@@ -612,6 +646,7 @@ const deleteTemporaryRegistration = asyncHandler(async (req, res) => {
 
 export {
   registerFacilitator,
+  registerFacilitatorByAdmin,
   verifyOTP,
   loginFacilitator,
   completeFacilitatorProfileByHimself,
