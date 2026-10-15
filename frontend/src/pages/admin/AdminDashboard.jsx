@@ -48,6 +48,7 @@ import SubAdmin from "./SubAdmin.jsx";
 import PricingModelForm from "./PricingModelForm.jsx";
 import RegisterExecutive from "../sales-marketing/RegisterExecutive.jsx";
 import VisitorAnalyticsChart from "../../components/ui/VisitorAnalyticsChart.jsx";
+import AddFacilitatorByAdmin from "./AddFacilitator.jsx";
 
 const AdminDashboard = ({ startLoading, stopLoading }) => {
   // hooks
@@ -73,6 +74,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
   const [popup9, setPopup9] = useState(false);
   const [popup10, setPopup10] = useState(false);
   const [popup11, setPopup11] = useState(false);
+  const [popup12, setPopup12] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // quick options drop down
   // extras
@@ -532,7 +534,7 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
           </div>
 
           {/* buttons  */}
-          <div className="flex h-14 justify-center items-center gap-2">
+          <div className="flex h-14 justify-center items-center gap-2 text-sm">
             <Button
               label={
                 <h1 className="flex justify-center items-center gap-2">
@@ -553,6 +555,15 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
               }
               className={"w-full text-nowrap"}
               onClick={() => setPopup(true)}
+            />
+            <Button
+              label={
+                <h1 className="flex justify-center items-center gap-2">
+                  <MdAdd /> New Facilitator
+                </h1>
+              }
+              className={"w-full text-nowrap"}
+              onClick={() => setPopup12(true)}
             />
             {commands.map((item, index) => (
               <Button
@@ -860,6 +871,25 @@ const AdminDashboard = ({ startLoading, stopLoading }) => {
               handleReload={() =>
                 fetchDashboard({
                   query: localStorage.getItem("query"),
+                })
+              }
+              adminId={user?._id}
+            />
+          </motion.div>
+        )}
+        {popup12 && (
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ type: "spring", duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center flex-col z-50 bg-black/90 overflow-scroll no-scrollbar"
+          >
+            <AddFacilitatorByAdmin
+              onClose={() => setPopup12(false)}
+              handleReload={() =>
+                fetchDashboard({
+                  query: localStorage.getItem("overview"),
                 })
               }
               adminId={user?._id}
