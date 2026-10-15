@@ -18,6 +18,7 @@ import {
   deleteFacilitator,
   completeFacilitatorProfileByHimself,
   deleteTemporaryRegistration,
+  registerFacilitatorByAdmin,
 } from "../controllers/facilitator.controllers.js";
 
 import { VerifyFacilitator } from "../middlewares/facilitatorAuth.middleware.js";
@@ -39,6 +40,8 @@ router.route("/register").post(registerFacilitator);
 //   registerFacilitator,
 // );
 router.route("/verify-otp").post(verifyOTP);
+
+router.route("/by-admin/register/:adminId").post(registerFacilitatorByAdmin);
 
 router.route("/facilitator/profile/update/:facilitatorId").post(
   upload.fields([
