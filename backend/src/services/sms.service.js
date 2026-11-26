@@ -56,18 +56,18 @@ export const sendSMS = async ({ phone, message, templateId }) => {
     }
 
     const params = {
-      user: process.env.SMS_USER,
-      authkey: process.env.SMS_AUTH_KEY,
-      sender: process.env.SMS_SENDER_ID,
-      mobile,
+      username: process.env.SMS_USER,
+      apiKey: process.env.SMS_AUTH_KEY,
+      from: process.env.SMS_SENDER_ID,
+      to: mobile,
       text: message,
-      templateid: templateId,
-      rpt: 1,
+      unicode: false,
+      templateId,
     };
 
     console.log("SMS Request:", {
       ...params,
-      authkey: "***HIDDEN***",
+      apiKey: "***HIDDEN***",
     });
 
     const response = await axios.get(process.env.SMS_BASE_URL, {
